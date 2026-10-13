@@ -1,0 +1,9 @@
+/* No changes to the original prototype components or layout tokens. */
+.sop-boot-status{position:fixed;inset:0;z-index:999999;background:#fff;color:#4b5563;display:flex;align-items:center;justify-content:center;font-family:Inter,system-ui,sans-serif;font-size:13px;}
+.sop-load-bar{position:absolute;left:0;top:0;height:3px;width:100%;overflow:hidden;background:#e1e4ea}
+.sop-load-bar::before{content:"";display:block;width:30%;height:100%;background:#4268ff;animation:sop-loading 1.2s ease-in-out infinite alternate}
+@keyframes sop-loading{from{transform:translateX(0)}to{transform:translateX(235%)}}
+.sop-api-progress{display:none;position:fixed;top:0;left:0;right:0;height:3px;z-index:999998;background:#e1e4ea;overflow:hidden}
+.sop-api-busy .sop-api-progress{display:block}
+.sop-api-progress div{height:100%;width:30%;background:#4268ff;animation:sop-loading 1.2s ease-in-out infinite alternate}
+@media(prefers-reduced-motion:reduce){.sop-load-bar::before,.sop-api-progress div{animation:none;width:100%}}

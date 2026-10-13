@@ -1,0 +1,11 @@
+node_modules/
+vendor/
+.env
+!.env.example
+dist/
+coverage/
+playwright-report/
+test-results/
+storage/logs/*.log
+storage/framework/cache/*
+.DS_Store

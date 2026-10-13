@@ -1,0 +1,10 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
+import 'iconify-icon';
+import './styles/prototype.css';
+import './styles/bridge.css';
+import {AuthProvider} from './app/AuthContext';
+import {ExactPrototype} from './pages/ExactPrototype';
+const client=new QueryClient({defaultOptions:{queries:{retry:1,staleTime:30000}}});
+createRoot(document.getElementById('root')!).render(<QueryClientProvider client={client}><AuthProvider><ExactPrototype/></AuthProvider></QueryClientProvider>);
