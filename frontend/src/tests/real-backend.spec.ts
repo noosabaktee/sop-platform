@@ -103,6 +103,17 @@ test.describe('real Laravel + PostgreSQL browser flow',()=>{
     await expect(workspace.locator('.ws-panel[data-panel]')).toHaveCount(9);
     await expect(workspace.getByText('Follow-up PT Nusantara',{exact:true})).toHaveCount(0);
 
+    await page.evaluate(()=>{location.hash='#/corporate'});
+    const corporate=page.locator('[data-prototype-page][data-route="/corporate"]');
+    await expect(corporate).toBeVisible();
+    const corporateMarker=`Agenda E2E ${Date.now()}`;
+    const prompts=[corporateMarker,'board','2030-01-15 09:00','Jakarta'];
+    page.on('dialog',dialog=>{if(dialog.type()==='prompt')void dialog.accept(prompts.shift()||'');else void dialog.dismiss();});
+    const created=page.waitForResponse(response=>response.url().includes('/api/v1/corporate/meetings')&&response.request().method()==='POST'&&response.status()===201);
+    await corporate.locator('[data-action="cor:new"]').click();
+    await created;
+    await expect(corporate.getByText(corporateMarker,{exact:true})).toBeVisible({timeout:30_000});
+
     for(const route of routes){
       await page.evaluate(next=>{location.hash='#'+next},route);
       await expect(page.locator(`[data-prototype-page][data-route="${route}"]`)).toBeVisible({timeout:15_000});

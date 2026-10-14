@@ -15,6 +15,7 @@ import {InventoryTransferNativeBridge} from '../api/inventoryTransferNativeBridg
 import {CompletionBridge} from '../api/completionBridge';
 import {ExternalNativeBridge} from '../api/externalNativeBridge';
 import {CrmWorkflowBridge} from '../api/crmWorkflowBridge';
+import {CorporateNativeBridge} from '../api/corporateNativeBridge';
 
 type Snapshot={route:string;panel_id:string;rows:{__id:string;[key:string]:unknown}[];version:number};
 const originals=['/prototype-original.js','/prototype-extras.js'];
@@ -61,6 +62,7 @@ export function ExactPrototype(){
     const completion=new CompletionBridge(bridge);
     const external=new ExternalNativeBridge();
     const crmWorkflow=new CrmWorkflowBridge(bridge);
+    const corporate=new CorporateNativeBridge();
     const docs=new DocumentVaultBridge();
     const audit=new SecurityAuditBridge();
     const approvals=new ApprovalWorkflowBridge(Boolean(auth.current.user && ['super_admin','admin','manager'].includes(auth.current.user.role)));
@@ -207,7 +209,7 @@ export function ExactPrototype(){
           // Resolve real SQL-backed panels before allowing native fixture snapshots
           // to seed, otherwise a slow API can momentarily expose demo transactions.
           const preparations:Promise<unknown>[]=[quotation.install(),approvals.install(),docs.install(),
-            refreshSalesOperationalGrids(bridge),operational.refresh(),completion.install()];
+          refreshSalesOperationalGrids(bridge),operational.refresh(),completion.install(),corporate.install()];
           if(['super_admin','admin','manager','auditor'].includes(auth.current.user.role))preparations.push(audit.install());
           const results=await Promise.allSettled(preparations);
           results.forEach(item=>{if(item.status==='rejected')console.error('Inisialisasi domain gagal:',item.reason)});
@@ -218,7 +220,7 @@ export function ExactPrototype(){
         setStatus('');
       }catch(e){setStatus('Gagal memuat fungsi prototype: '+String(e));console.error(e)}
     })();
-    return()=>{cancelled=true;document.removeEventListener('click',onDomainProtection,true);document.removeEventListener('input',onDomainProtection,true);document.removeEventListener('focusin',onDomainProtection,true);document.removeEventListener('change',onDomainProtection,true);transfers.uninstall();external.uninstall();crmWorkflow.uninstall();completion.uninstall();quotation.uninstall();approvals.uninstall();docs.uninstall();audit.uninstall();window.removeEventListener('hashchange',guard);window.removeEventListener('hashchange',onWorkspaceRoute);document.removeEventListener('click',onDashboardTab,true);document.removeEventListener('change',onDashboardTab,true);document.removeEventListener('click',onWorkspaceAction,true);document.removeEventListener('change',onWorkspaceAction,true);document.removeEventListener('submit',onSubmit,true);document.removeEventListener('click',onLogout,true);document.removeEventListener('click',onImport,true);document.removeEventListener('click',onExport,true);document.removeEventListener('click',onNativeAction,true);document.removeEventListener('change',onNativeAction,true);document.removeEventListener('drop',onNativeAction,true);document.removeEventListener('keyup',onNativeAction,true);document.removeEventListener('submit',onNativeAction,true);document.removeEventListener('click',onRefresh,true)};
+    return()=>{cancelled=true;document.removeEventListener('click',onDomainProtection,true);document.removeEventListener('input',onDomainProtection,true);document.removeEventListener('focusin',onDomainProtection,true);document.removeEventListener('change',onDomainProtection,true);transfers.uninstall();external.uninstall();crmWorkflow.uninstall();corporate.uninstall();completion.uninstall();quotation.uninstall();approvals.uninstall();docs.uninstall();audit.uninstall();window.removeEventListener('hashchange',guard);window.removeEventListener('hashchange',onWorkspaceRoute);document.removeEventListener('click',onDashboardTab,true);document.removeEventListener('change',onDashboardTab,true);document.removeEventListener('click',onWorkspaceAction,true);document.removeEventListener('change',onWorkspaceAction,true);document.removeEventListener('submit',onSubmit,true);document.removeEventListener('click',onLogout,true);document.removeEventListener('click',onImport,true);document.removeEventListener('click',onExport,true);document.removeEventListener('click',onNativeAction,true);document.removeEventListener('change',onNativeAction,true);document.removeEventListener('drop',onNativeAction,true);document.removeEventListener('keyup',onNativeAction,true);document.removeEventListener('submit',onNativeAction,true);document.removeEventListener('click',onRefresh,true)};
   },[html,bridge,modules]);
 
   // Initial GridSnapshot data already loaded in the first Promise.all. Re-fetching
