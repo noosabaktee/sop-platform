@@ -25,7 +25,11 @@ use App\Http\Controllers\Api\BankReconciliationController;
 use App\Http\Controllers\Api\CorporateMeetingController;
 use App\Http\Controllers\Api\ExternalServicesController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\CrmWorkflowController;
 Route::middleware('throttle:12,1')->post('/login',[AuthController::class,'login']);
+Route::middleware('throttle:10,1')->post('/two-factor-challenge',[AuthController::class,'twoFactorChallenge']);
+Route::middleware('throttle:5,1')->post('/forgot-password',[AuthController::class,'forgotPassword']);
+Route::middleware('throttle:5,1')->post('/reset-password',[AuthController::class,'resetPassword']);
 Route::middleware('auth:sanctum')->group(function(){
  Route::post('/logout',[AuthController::class,'logout']);
  Route::prefix('v1')->group(function(){
@@ -54,6 +58,13 @@ Route::middleware('auth:sanctum')->group(function(){
   Route::get('/reports/data',[ReportController::class,'index']);
   Route::get('/reports/export.csv',[ReportController::class,'csv']);
   Route::get('/me',[AuthController::class,'me']);
+  Route::get('/security/login-history',[AuthController::class,'loginHistory']);
+  Route::get('/security/sessions',[AuthController::class,'sessions']);
+  Route::post('/security/two-factor/setup',[AuthController::class,'twoFactorSetup']);
+  Route::post('/security/two-factor/enable',[AuthController::class,'twoFactorEnable']);
+  Route::delete('/security/two-factor',[AuthController::class,'twoFactorDisable']);
+  Route::delete('/security/sessions',[AuthController::class,'revokeOtherSessions']);
+  Route::delete('/security/sessions/{id}',[AuthController::class,'revokeSession']);
   Route::get('/dashboard',[DashboardController::class,'index']);
   Route::get('/operational/sales',[SalesOperationalViewController::class,'index']);
   Route::get('/operational/procurement',[ProcurementWorkflowController::class,'index']);
@@ -106,6 +117,7 @@ Route::middleware('auth:sanctum')->group(function(){
   Route::put('/domains/{domain}/{id}',[DomainController::class,'update']);
   Route::delete('/domains/{domain}/{id}',[DomainController::class,'destroy']);
   Route::post('/workflows/quotations/{id}/submit',[SalesWorkflowController::class,'submitQuotation']);
+  Route::post('/workflows/crm/leads/{rowKey}/convert',[CrmWorkflowController::class,'convertLead']);
   Route::post('/workflows/quotations/{id}/decision',[SalesWorkflowController::class,'decideQuotation']);
   Route::post('/workflows/quotations/{id}/convert',[SalesWorkflowController::class,'convertQuotation']);
   Route::post('/workflows/sales-orders/{id}/invoice',[SalesWorkflowController::class,'invoiceOrder']);

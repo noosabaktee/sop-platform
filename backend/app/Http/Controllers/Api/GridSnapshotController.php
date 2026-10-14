@@ -31,12 +31,21 @@ class GridSnapshotController extends Controller {
             'snapshots'=>['required','array','min:1','max:250'],
             'snapshots.*.route'=>['required','string','max:120','regex:/^\/[a-z0-9\/-]+$/'],
             'snapshots.*.panel_id'=>['required','string','max:120','regex:/^[a-zA-Z0-9_.-]+$/'],
-            'snapshots.*.rows'=>['required','array','max:2000'],
+            // An empty array is a valid persisted state after the user deletes the final row.
+            'snapshots.*.rows'=>['present','array','max:2000'],
             'snapshots.*.rows.*'=>['required','array'],
             'snapshots.*.rows.*.__id'=>['required','string','max:160'],
             'snapshots.*.version'=>['nullable','integer','min:1'],
             'seed_only'=>['sometimes','boolean'],
         ]);
+        // Laravel only returns explicitly validated nested keys. Grid rows intentionally
+        // have dynamic column names, so restore the already shape-validated row payloads
+        // instead of silently reducing every row to only `__id`.
+        $submittedSnapshots = $request->input('snapshots', []);
+        foreach ($data['snapshots'] as $index => &$snapshot) {
+            $snapshot['rows'] = $submittedSnapshots[$index]['rows'];
+        }
+        unset($snapshot);
         $companyId = $request->user()->company_id;
         $seedOnly = (bool)($data['seed_only'] ?? false);
         $result = DB::transaction(function () use ($request,$data,$seedOnly,$companyId) {

@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 Write-Host 'SOP End-to-End verification (NO DOCKER; no database reset)' -ForegroundColor Cyan
-foreach ($tool in @('php','composer','npm')) {
+foreach ($tool in @('php','composer','npm.cmd')) {
   if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) { throw "Missing executable: $tool" }
 }
 try {
@@ -44,7 +44,7 @@ try {
   Push-Location (Join-Path $root 'frontend')
   if (-not (Test-Path 'node_modules')) { throw 'Run npm install in frontend first.' }
   Write-Host 'Checking frontend build' -ForegroundColor Yellow
-  npm run build
+  npm.cmd run build
   if ($LASTEXITCODE -ne 0) { throw 'Frontend build failed.' }
   Write-Host 'Checking local grid/module bridge simulations' -ForegroundColor Yellow
   node src/tests/grid_bridge_test.cjs

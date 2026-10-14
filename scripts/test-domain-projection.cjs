@@ -4,8 +4,9 @@ const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
 const cp=require('node:child_process');
-let ts;try{ts=require('typescript')}catch{
- const root=cp.execFileSync('npm',['root','-g'],{encoding:'utf8'}).trim();ts=require(path.join(root,'typescript'));
+let ts;try{ts=require(path.join(__dirname,'../frontend/node_modules/typescript'))}catch{
+ const npm=process.platform==='win32'?'npm.cmd':'npm';
+ const root=cp.execFileSync(npm,['root','-g'],{encoding:'utf8'}).trim();ts=require(path.join(root,'typescript'));
 }
 const source=fs.readFileSync(path.join(__dirname,'../frontend/src/api/gridBridge.ts'),'utf8');
 const compiled=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}});

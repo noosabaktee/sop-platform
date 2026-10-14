@@ -1,7 +1,10 @@
 /** Mocked frontend event-to-API contract. PostgreSQL test is a separate Laravel test. */
 const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');
 const cp=require('node:child_process');const vm=require('node:vm');
-let ts;try{ts=require('typescript')}catch{ts=require(path.join(cp.execFileSync('npm',['root','-g'],{encoding:'utf8'}).trim(),'typescript'))}
+let ts;try{ts=require(path.join(__dirname,'../frontend/node_modules/typescript'))}catch{
+ const npm=process.platform==='win32'?'npm.cmd':'npm';
+ ts=require(path.join(cp.execFileSync(npm,['root','-g'],{encoding:'utf8'}).trim(),'typescript'));
+}
 const file=path.join(__dirname,'../frontend/src/api/inventoryTransferNativeBridge.ts');
 const compiled=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}});
 const calls=[];const alerts=[];

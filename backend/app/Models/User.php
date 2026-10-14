@@ -9,8 +9,9 @@ class User extends Authenticatable {
  use HasApiTokens,Notifiable,HasUlids,HasFactory;
  public $incrementing=false;protected $keyType='string';
  protected $fillable=['company_id','name','email','password','role','is_active'];
- protected $hidden=['password','remember_token'];
- protected function casts():array{return ['email_verified_at'=>'datetime','password'=>'hashed','is_active'=>'boolean'];}
+ protected $hidden=['password','remember_token','two_factor_secret','two_factor_recovery_codes'];
+ protected function casts():array{return ['email_verified_at'=>'datetime','password'=>'hashed','is_active'=>'boolean',
+  'two_factor_secret'=>'encrypted','two_factor_recovery_codes'=>'encrypted:array','two_factor_confirmed_at'=>'datetime'];}
  public function company(){return $this->belongsTo(Company::class);}
  public function canManageRecords():bool{return in_array($this->role,['super_admin','admin','manager'],true);}
 }

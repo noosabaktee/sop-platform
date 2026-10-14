@@ -1,11 +1,16 @@
 node_modules/
 vendor/
 .env
+.env.testing
 !.env.example
 dist/
 coverage/
 playwright-report/
 test-results/
+.phpunit.result.cache
+storage/framework/testing/
+backend/storage/framework/testing/
+backend/storage/logs/e2e-server.*.log
 storage/logs/*.log
 storage/framework/cache/*
 .DS_Store

@@ -9,6 +9,6 @@ php artisan config:clear
 php artisan test --filter OperationalCompletionTest
 if ($LASTEXITCODE -ne 0) { throw 'Feature test Laravel gagal.' }
 Set-Location "$root\frontend"
-npm run build
+npm.cmd run build
 if ($LASTEXITCODE -ne 0) { throw 'Build React gagal.' }
 Write-Host 'Feature tests and React build succeeded. Continue with Playwright on live servers.'

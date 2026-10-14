@@ -20,10 +20,6 @@ class FullSalesCycleTest extends TestCase {
   $payload=['customer_id'=>$customer->id,'owner_id'=>$sales->id,'currency'=>'IDR',
    'valid_until'=>today()->addDays(10)->format('Y-m-d'),'discount_percent'=>0,'tax_percent'=>11,
    'items'=>[['description'=>'Product A','quantity'=>2,'unit_price'=>'1000000.00']]];
-  foreach([['1100','Kas','asset'],['1200','Piutang','asset'],['4100','Pendapatan','income'],['2300','PPN Keluaran','liability']] as [$code,$name,$type]){
-   DB::table('chart_of_accounts')->insert(['id'=>(string)\Illuminate\Support\Str::ulid(),
-    'company_id'=>$company->id,'code'=>$code,'name'=>$name,'type'=>$type,'created_at'=>now(),'updated_at'=>now()]);
-  }
   $this->actingAs($sales);
   $draft=$this->postJson('/api/v1/quotation-builder/draft',$payload)->assertCreated()->json('data');
   $this->assertSame('2220000.00',(string)$draft['total']);

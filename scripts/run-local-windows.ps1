@@ -5,5 +5,5 @@ if (-not (Test-Path "$root\backend\.env")) {Copy-Item "$root\backend\.env.exampl
 if (-not (Test-Path "$root\frontend\.env")) {Copy-Item "$root\frontend\.env.example" "$root\frontend\.env"}
 Write-Host 'Periksa backend menggunakan: php scripts/check-requirements.php'
 Write-Host 'Terminal 1: cd backend; composer install; php artisan key:generate; php artisan migrate --seed; php artisan serve'
-Write-Host 'Terminal 2: cd frontend; npm install; npm run dev'
+Write-Host 'Terminal 2: cd frontend; npm.cmd install; npm.cmd run dev'
 Write-Host 'Buka http://localhost:5173/#/login'

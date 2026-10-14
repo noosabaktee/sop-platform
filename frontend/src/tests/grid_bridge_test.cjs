@@ -30,6 +30,13 @@ await first.importCSV(route,panel_id,'name\n"CSV Name"');assert.strictEqual(db.g
 state.rows=state.rows.filter(r=>r.__id!=='leads-1');await first.persistDirty();assert.strictEqual(db.get(route+'|'+panel_id).rows.length,1);
 const reload=new GridBridge([...db.values()]);const mounted={rows:[{__id:'fixture-1',name:'WRONG'}],staged:new Map(),selected:new Set(),seq:1};reload.attach(route,panel_id,mounted,()=>{});
 assert.strictEqual(mounted.rows.length,1);assert.strictEqual(mounted.rows[0].name,'CSV Name');
+// Warm start has no missing snapshots and may complete without an internal
+// await. It must still clear the initialization handle and become writable.
+await reload.seedUninitialized();assert.strictEqual(reload.isReady,true);
+const redactedRows=[{__id:'leads-1',email:'same@example.test'},{__id:'leads-2',email:'same@example.test'}];
+const repaired=new GridBridge([{route,panel_id,rows:redactedRows,version:1}]);
+const repairedState={rows:[],staged:new Map(),selected:new Set()};repaired.attach(route,panel_id,repairedState,()=>{});
+assert.strictEqual(new Set(repairedState.rows.map(row=>row.email)).size,2);
 // A native panel can mount while a previous seed request is still in flight.
 // The bridge must drain the new missing panel before initialization resolves.
 const racing=new GridBridge([]);

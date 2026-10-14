@@ -114,4 +114,5 @@ export class ModuleStateBridge{
   this.queue=this.queue.then(operation,operation);await this.queue;
  }
  get size(){return this.mounted.size}
+ get isReady(){return this.active}
 }

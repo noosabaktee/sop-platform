@@ -1,13 +1,13 @@
-# Matriks Implementasi Semua Route (13 Oktober 2026)
+# Matriks Implementasi Semua Route (14 Oktober 2026)
 
 **Baca kolom batasan sebelum menganggap modul selesai.** Tidak ada perubahan pada file CSS dan markup HTML prototype yang telah disetujui. JavaScript prototype hanya ditambah hook state untuk persistence.
 
 | Route | UI/UX | Data API/PostgreSQL | Batasan penting |
 |---|---|---|---|
-| `/login` | Asli | Sanctum session login/logout | Forgot password, 2FA, SSO belum lengkap |
-| `/overview` | Asli | 3 KPI dasar dari API PostgreSQL | Chart/list, pemilihan periode masih fixture |
-| `/my-workspace` | Asli | Tiga tabel inti diproyeksikan dari tugas/proyek/approval PostgreSQL milik user login | Tab workspace lainnya masih fixture; tombol CRUD workspace belum end-to-end |
-| `/dashboard` | Asli | Sebagian judul KPI diproyeksikan dari endpoint PostgreSQL | Filter periode, drill down, banyak grafik dan KPI masih fixture |
+| `/login` | Asli | Sanctum login/logout, reset token, lockout, TOTP/recovery, session revoke | SSO eksternal belum tersedia |
+| `/overview` | Asli | KPI, tren penjualan 7 hari, audit activity, dan pekerjaan personal diproyeksikan dari PostgreSQL | Sparkline/perbandingan dekoratif belum memakai historical baseline lengkap |
+| `/my-workspace` | Asli | Seluruh 9 tab diproyeksikan dari task, project, approval, audit, kalender, dokumen, notifikasi, email, dan profil per-user | Create/detail umum belum semuanya workflow penuh; centang task dan read notification sudah authoritative |
+| `/dashboard` | Asli | KPI lintas fungsi, periode bulan/kuartal/tahun, tenant dan freshness dari PostgreSQL | Grafik/tabel drill-down tertentu masih fixture; company/branch fixture dinonaktifkan |
 | `/crm-sales` | Asli | CRUD grid_rows; panel Leads yang committed ikut sinkron ke tabel `leads` | CRM customer & opportunity dan konversi penuh belum terhubung domain |
 | `/business-development` | Asli | CRUD grid_rows | Workflow bisnis lintas modul belum selesai |
 | `/quotation` | Asli | CRUD grid_rows; tersedia workflow REST untuk `quotations` ter-normalisasi | Tombol/row UI belum semua memanggil workflow tersebut; approval PDF belum tersambung |

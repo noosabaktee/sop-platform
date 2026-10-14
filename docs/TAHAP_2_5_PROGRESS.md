@@ -1,4 +1,4 @@
-# SOP Platform — Tahap 2 sampai 5 (lanjutan, 13 Oktober 2026)
+# SOP Platform — Tahap 2 sampai 5 (lanjutan, 14 Oktober 2026)
 
 ## Ketentuan yang tidak berubah
 - `frontend/src/styles/prototype.css`, `frontend/public/prototype-original.js`, `frontend/public/prototype-extras.js`, dan `frontend/public/original-body.html` tidak diedit.
@@ -33,7 +33,7 @@
 ## Tahap 5 — QA
 - Tes feature `backend/tests/Feature/OperationalCompletionTest.php` untuk stock opname, bank, RUPS, laporan, provider belum dikonfigurasi, dan pembatasan role.
 - Periksa sintaks PHP semua file, parse TS/TSX, jalankan skrip adapter bridge, dan integritas berkas UI.
-- **Belum lulus Laravel integration tests** di lingkungan pembuat: Composer dan ekstensi pdo_pgsql tidak tersedia. Tes wajib dijalankan pada database `sop_platform_test` yang terpisah dari data kerja. Jangan menganggap source-level checks sama dengan E2E.
+- Suite Laravel telah lulus 62 test/376 assertion pada PostgreSQL `sop_platform_test`; build produksi, kontrak adapter, Playwright mock, dan browser E2E nyata juga lulus. Verifier menjaga database test tetap terpisah dari data kerja.
 
 ## Status jujur
 Ini revisi nyata tahap 2–5 namun **belum 100% semua 28 halaman end-to-end**, khususnya tombol frontend workflow RUPS, bank, opname lanjutan dan beberapa integrasi provider belum terhubung ke form interaktif sepenuhnya. Semua endpoint di atas siap dihubungkan ke frontend, namun harus diverifikasi di mesin pengembang melalui PostgreSQL, login, browser dan role permissions sebelum dinyatakan selesai.

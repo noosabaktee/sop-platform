@@ -28,7 +28,8 @@ class ProcurementInventoryAccountingTest extends TestCase {
    'lines'=>[['product_id'=>$product->id,'quantity'=>'4.0000','unit_price'=>'1250.00']]
   ])->assertCreated()->json('data');
   $this->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/submit')->assertOk();
-  $this->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/order',['vendor_id'=>$vendor->id])->assertStatus(409);
+  // A requester without procurement authority is rejected before transaction state is disclosed.
+  $this->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/order',['vendor_id'=>$vendor->id])->assertForbidden();
   $this->actingAs($manager)->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/decision',['decision'=>'approved'])->assertOk();
   $po=$this->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/order',['vendor_id'=>$vendor->id])->assertCreated()->json('data');
   $line=DB::table('purchase_order_lines')->where('purchase_order_id',$po['id'])->first();

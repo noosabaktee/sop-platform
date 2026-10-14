@@ -1,3 +1,16 @@
+# Verifikasi lokal terpadu — 14 Oktober 2026
+
+Setup aman tanpa Docker:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-local.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-local.ps1
+```
+
+Verifier menolak database test yang sama dengan database aplikasi atau yang namanya tidak berakhiran `_test`/`_testing`. Hasil audit terbaru: 62 Laravel tests (380 assertions), build production, 11 Playwright UI tests, source/contract checks, serta browser E2E nyata login → Overview SQL → CRM save/reload → lead ke prospect → Dashboard/Workspace SQL → 27 route → logout telah lulus pada `sop_platform_test`. Database aplikasi `sop_platform` tidak direset.
+
+Laporan authoritative terbaru: [implementation tracker](docs/IMPLEMENTATION_TRACKER.md), [test report](docs/TEST_REPORT.md), [schema/workflow](docs/DB_SCHEMA_AND_WORKFLOWS.md), [API reference](docs/API_REFERENCE.md), dan [UI parity](docs/UI_PARITY_REPORT.md). Klaim lama di bagian bawah dipertahankan sebagai riwayat; bila bertentangan, gunakan kelima laporan terbaru tersebut.
+
 # UPDATE 13 Oktober 2026 — Tahap 2–5, login fix, tanpa Docker
 
 **UI/UX frozen:** berkas HTML/CSS/JS asli prototype tidak diubah.

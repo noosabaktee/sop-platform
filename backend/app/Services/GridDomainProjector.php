@@ -17,6 +17,7 @@ class GridDomainProjector {
   '/master-data|warehouses'=>['table'=>'warehouses','identity'=>'code'],
   '/master-data|departments'=>['table'=>'departments','identity'=>'code'],
   '/crm-sales|leads'=>['table'=>'leads','identity'=>'name','unique'=>false],
+  '/crm-sales|prospects'=>['table'=>'prospects','identity'=>'name','unique'=>false],
  ];
  public function sync(GridSnapshot $grid,array $rows):void {
   $kind=$grid->route.'|'.$grid->panel_id;
@@ -52,7 +53,7 @@ class GridDomainProjector {
    ->get(['l.grid_row_id','l.domain_id','l.domain_table']);
   foreach($links as $link){
    if(isset($incoming[$link->grid_row_id]))continue;
-   if(in_array($link->domain_table,['customers','vendors','leads'],true)){
+   if(in_array($link->domain_table,['customers','vendors','leads','prospects'],true)){
     DB::table($link->domain_table)->where('company_id',$company)->where('id',$link->domain_id)->update(['status'=>'inactive','updated_at'=>now()]);
    }elseif(in_array($link->domain_table,['products','warehouses','departments'],true)) {
     DB::table($link->domain_table)->where('company_id',$company)->where('id',$link->domain_id)->update(['is_active'=>false,'updated_at'=>now()]);
@@ -72,8 +73,12 @@ class GridDomainProjector {
     $name=$s('name');if($name==='')return null;
     $email=$s('email');if($email==='[REDACTED_EMAIL]')$email='';
     if($email!==''&&!filter_var($email,FILTER_VALIDATE_EMAIL))throw ValidationException::withMessages(['email'=>'Format email Lead tidak valid.']);
-    return ['name'=>$name,'email'=>$email?:null,'source'=>$s('source')?:null,
+    return ['name'=>$name,'company_name'=>$s('company')?:null,'email'=>$email?:null,'source'=>$s('source')?:null,
      'score'=>max(0,min(100,(int)$s('score'))),'status'=>strtolower($s('status')?:'new')];
+   case '/crm-sales|prospects':
+    $name=$s('name');if($name==='')return null;
+    return ['name'=>$name,'segment'=>$s('segment')?:'Mid','fit_score'=>max(0,min(100,(int)$s('fit'))),
+     'next_action'=>$s('next')?:null,'status'=>$s('status')?:'New'];
   }
   return null;
  }

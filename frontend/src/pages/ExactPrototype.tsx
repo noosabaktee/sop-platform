@@ -1,10 +1,10 @@
 import {useEffect,useRef,useState} from 'react';
 import {useAuth} from '../app/AuthContext';
-import {api} from '../api/client';
+import {api,csrf} from '../api/client';
 import {GridBridge} from '../api/gridBridge';
 import {ModuleStateBridge,type StateSnapshot,type ServerUser} from '../api/moduleStateBridge';
 import {refreshNativeKpis} from '../api/kpiProjection';
-import {refreshNativeWorkspace} from '../api/workspaceProjection';
+import {handleNativeWorkspaceAction,refreshNativeWorkspace} from '../api/workspaceProjection';
 import {QuotationBuilderBridge} from '../api/quotationBuilderBridge';
 import {refreshSalesOperationalGrids} from '../api/salesOperationalProjection';
 import {ApprovalWorkflowBridge} from '../api/approvalWorkflowBridge';
@@ -14,6 +14,7 @@ import {OperationalProjectionBridge} from '../api/operationalProjectionBridge';
 import {InventoryTransferNativeBridge} from '../api/inventoryTransferNativeBridge';
 import {CompletionBridge} from '../api/completionBridge';
 import {ExternalNativeBridge} from '../api/externalNativeBridge';
+import {CrmWorkflowBridge} from '../api/crmWorkflowBridge';
 
 type Snapshot={route:string;panel_id:string;rows:{__id:string;[key:string]:unknown}[];version:number};
 const originals=['/prototype-original.js','/prototype-extras.js'];
@@ -24,16 +25,16 @@ function script(url:string):Promise<void>{return new Promise((resolve,reject)=>{
 /** The original design's complete DOM and handlers are retained 1:1, without
  * the modal-based generic grid injected by the earlier React conversion. */
 export function ExactPrototype(){
-  const {user,loading,login,logout}=useAuth();
+  const {user,loading,login,verifyTwoFactor,logout}=useAuth();
   const host=useRef<HTMLDivElement>(null);
   const [html,setHtml]=useState('');
   const [status,setStatus]=useState('Memuat tampilan prototype...');
   const [bridge,setBridge]=useState<GridBridge|null>(null);
   const [modules,setModules]=useState<ModuleStateBridge|null>(null);
   const started=useRef(false);
-  const auth=useRef({user,login,logout});
+  const auth=useRef({user,login,verifyTwoFactor,logout});
   const signedIn=useRef(false);
-  auth.current={user,login,logout};
+  auth.current={user,login,verifyTwoFactor,logout};
   useEffect(()=>{
     if(loading||started.current)return;
     started.current=true;
@@ -59,6 +60,7 @@ export function ExactPrototype(){
     const transfers=new InventoryTransferNativeBridge(bridge,operational);
     const completion=new CompletionBridge(bridge);
     const external=new ExternalNativeBridge();
+    const crmWorkflow=new CrmWorkflowBridge(bridge);
     const docs=new DocumentVaultBridge();
     const audit=new SecurityAuditBridge();
     const approvals=new ApprovalWorkflowBridge(Boolean(auth.current.user && ['super_admin','admin','manager'].includes(auth.current.user.role)));
@@ -68,21 +70,48 @@ export function ExactPrototype(){
       else if((auth.current.user||signedIn.current)&&route==='/login'){location.hash='#/overview'}
     };
     window.addEventListener('hashchange',guard);
-    const onWorkspaceRoute=()=>{if(location.hash==='#/my-workspace'&&auth.current.user)void refreshNativeWorkspace().catch(console.error)};
+    const onWorkspaceRoute=()=>{if(location.hash==='#/my-workspace'&&auth.current.user)void refreshNativeWorkspace().catch(console.error);if(['#/overview','#/dashboard'].includes(location.hash)&&auth.current.user)void refreshNativeKpis().catch(console.error)};
     window.addEventListener('hashchange',onWorkspaceRoute);
     guard();
     // Intercept the simulated prototype login before the original demo handler runs.
     const onSubmit=(event:Event)=>{
-      const form=(event.target as HTMLElement).closest<HTMLFormElement>('[data-form="login"]');
+      const form=(event.target as HTMLElement).closest<HTMLFormElement>('[data-form="login"],[data-form="forgot"],[data-form="2fa"]');
       if(!form)return;
       event.preventDefault();event.stopImmediatePropagation();
       const button=form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if(form.dataset.form==='2fa'){
+        const code=[...form.querySelectorAll<HTMLInputElement>('[data-otp] input')].map(input=>input.value).join('');
+        const error=form.querySelector<HTMLElement>('[data-err="otp"]');if(error)error.textContent='';
+        if(!/^\d{6}$/.test(code)){if(error)error.textContent='Masukkan 6 digit kode';return}
+        if(button)button.disabled=true;setStatus('Memverifikasi authenticator...');
+        void auth.current.verifyTwoFactor(code).then(()=>{signedIn.current=true;location.hash='#/overview';window.location.reload()})
+          .catch(()=>{setStatus('');if(error)error.textContent='Kode authenticator tidak valid.'}).finally(()=>{if(button)button.disabled=false});return;
+      }
+      if(form.dataset.form==='forgot'){
+        const email=form.querySelector<HTMLInputElement>('#femail')?.value.trim()||'';
+        const error=form.querySelector<HTMLElement>('[data-err="femail"]');
+        if(error)error.textContent='';
+        if(!/^\S+@\S+\.\S+$/.test(email)){if(error)error.textContent='Masukkan email yang valid';return}
+        if(button)button.disabled=true;setStatus('Mengirim tautan reset...');
+        void csrf().then(()=>api.post('/api/forgot-password',{email})).then(()=>{
+          const root=form.closest<HTMLElement>('[data-page-id="login"]');
+          root?.querySelectorAll<HTMLElement>('[data-panel]').forEach(panel=>panel.hidden=panel.dataset.panel!=='done');
+          const tabs=root?.querySelector<HTMLElement>('[data-login-tabs]');if(tabs)tabs.style.display='none';
+          const title=root?.querySelector<HTMLElement>('[data-done-title]');if(title)title.textContent='Tautan reset dikirim';
+          const sub=root?.querySelector<HTMLElement>('[data-done-sub]');if(sub)sub.textContent=`Jika ${email} terdaftar, periksa inbox untuk tautan yang berlaku 30 menit.`;
+        }).catch(()=>{if(error)error.textContent='Tautan belum dapat dikirim. Periksa koneksi atau konfigurasi email.'})
+          .finally(()=>{setStatus('');if(button)button.disabled=false});
+        return;
+      }
       const email=form.querySelector<HTMLInputElement>('#email')?.value.trim()||'';
       const password=form.querySelector<HTMLInputElement>('#password')?.value||'';
       if(button)button.disabled=true;
       setStatus('Mengautentikasi akun...');
-      void auth.current.login(email,password).then(()=>{signedIn.current=true;location.hash='#/overview';window.location.reload()})
-        .catch((error:unknown)=>{setStatus('');const e=error as {response?:{status?:number,data?:{message?:string}},message?:string};const code=e.response?.status;const message=code===419?'Sesi CSRF kedaluwarsa, refresh halaman.':code===422?'Email atau password salah.':code===401?'Akun ditolak, cek email/password.':code===429?'Terlalu banyak percobaan login.':code===undefined?'Tidak dapat terhubung ke Laravel. Pastikan php artisan serve aktif.':`Login gagal (${code}). Periksa log Laravel.`;const el=form.querySelector<HTMLElement>('[data-err="password"]');if(el)el.textContent=message;console.error('Login HTTP status:',code||'network error')})
+      void auth.current.login(email,password).then(requiresTwoFactor=>{if(requiresTwoFactor){setStatus('');
+        const root=form.closest<HTMLElement>('[data-page-id="login"]');root?.querySelectorAll<HTMLElement>('[data-panel]').forEach(panel=>panel.hidden=panel.dataset.panel!=='2fa');
+        root?.querySelector<HTMLInputElement>('[data-panel="2fa"] input')?.focus();return}
+        signedIn.current=true;location.hash='#/overview';window.location.reload()})
+        .catch((error:unknown)=>{setStatus('');const e=error as {response?:{status?:number,data?:{message?:string}},message?:string};const code=e.response?.status;const message=code===419?'Sesi CSRF kedaluwarsa, refresh halaman.':code===422?'Email atau password salah.':code===423?'Akun terkunci sementara. Tunggu 15 menit atau reset password.':code===401?'Akun ditolak, cek email/password.':code===429?'Terlalu banyak percobaan login.':code===undefined?'Tidak dapat terhubung ke Laravel. Pastikan php artisan serve aktif.':`Login gagal (${code}). Periksa log Laravel.`;const el=form.querySelector<HTMLElement>('[data-err="password"]');if(el)el.textContent=message;console.error('Login HTTP status:',code||'network error')})
         .finally(()=>{if(button)button.disabled=false});
     };
     const onLogout=(event:MouseEvent)=>{
@@ -145,15 +174,19 @@ export function ExactPrototype(){
         void api.get('/api/v1/grid-snapshots').then(r=>bridge.loadSnapshots(r.data.data as Snapshot[])).catch(console.error);
       },0);
     };
-    const onDashboardTab=(event:MouseEvent)=>{
-      const btn=(event.target as HTMLElement).closest<HTMLElement>('[data-action="dash:tab"],[data-action="dash:refresh"]');
+    const onDashboardTab=(event:Event)=>{
+      const btn=(event.target as HTMLElement).closest<HTMLElement>('[data-action="dash:tab"],[data-action="dash:refresh"],[data-action="dash:reset"],[data-action="dash:filter"],[data-action="kravio-range:change"],[data-action="kravio:refresh"]');
       if(btn && auth.current.user)window.setTimeout(()=>void refreshNativeKpis().catch(console.error),40);
     };
+    const onWorkspaceAction=(event:Event)=>{void handleNativeWorkspaceAction(event).catch(error=>{console.error(error);window.alert('Perubahan workspace gagal disimpan ke server.')})};
     document.addEventListener('click',onDomainProtection,true);
     document.addEventListener('input',onDomainProtection,true);
     document.addEventListener('focusin',onDomainProtection,true);
     document.addEventListener('change',onDomainProtection,true);
     document.addEventListener('click',onDashboardTab,true);
+    document.addEventListener('change',onDashboardTab,true);
+    document.addEventListener('click',onWorkspaceAction,true);
+    document.addEventListener('change',onWorkspaceAction,true);
     document.addEventListener('submit',onSubmit,true);
     document.addEventListener('click',onLogout,true);
     document.addEventListener('click',onImport,true);
@@ -170,7 +203,7 @@ export function ExactPrototype(){
         for(const url of originals)await script(url);
         if(cancelled)return;
         if(auth.current.user){
-          transfers.install();external.install();
+          transfers.install();external.install();crmWorkflow.install();
           // Resolve real SQL-backed panels before allowing native fixture snapshots
           // to seed, otherwise a slow API can momentarily expose demo transactions.
           const preparations:Promise<unknown>[]=[quotation.install(),approvals.install(),docs.install(),
@@ -185,7 +218,7 @@ export function ExactPrototype(){
         setStatus('');
       }catch(e){setStatus('Gagal memuat fungsi prototype: '+String(e));console.error(e)}
     })();
-    return()=>{cancelled=true;document.removeEventListener('click',onDomainProtection,true);document.removeEventListener('input',onDomainProtection,true);document.removeEventListener('focusin',onDomainProtection,true);document.removeEventListener('change',onDomainProtection,true);transfers.uninstall();external.uninstall();completion.uninstall();quotation.uninstall();approvals.uninstall();docs.uninstall();audit.uninstall();window.removeEventListener('hashchange',guard);window.removeEventListener('hashchange',onWorkspaceRoute);document.removeEventListener('click',onDashboardTab,true);document.removeEventListener('submit',onSubmit,true);document.removeEventListener('click',onLogout,true);document.removeEventListener('click',onImport,true);document.removeEventListener('click',onExport,true);document.removeEventListener('click',onNativeAction,true);document.removeEventListener('change',onNativeAction,true);document.removeEventListener('drop',onNativeAction,true);document.removeEventListener('keyup',onNativeAction,true);document.removeEventListener('submit',onNativeAction,true);document.removeEventListener('click',onRefresh,true)};
+    return()=>{cancelled=true;document.removeEventListener('click',onDomainProtection,true);document.removeEventListener('input',onDomainProtection,true);document.removeEventListener('focusin',onDomainProtection,true);document.removeEventListener('change',onDomainProtection,true);transfers.uninstall();external.uninstall();crmWorkflow.uninstall();completion.uninstall();quotation.uninstall();approvals.uninstall();docs.uninstall();audit.uninstall();window.removeEventListener('hashchange',guard);window.removeEventListener('hashchange',onWorkspaceRoute);document.removeEventListener('click',onDashboardTab,true);document.removeEventListener('change',onDashboardTab,true);document.removeEventListener('click',onWorkspaceAction,true);document.removeEventListener('change',onWorkspaceAction,true);document.removeEventListener('submit',onSubmit,true);document.removeEventListener('click',onLogout,true);document.removeEventListener('click',onImport,true);document.removeEventListener('click',onExport,true);document.removeEventListener('click',onNativeAction,true);document.removeEventListener('change',onNativeAction,true);document.removeEventListener('drop',onNativeAction,true);document.removeEventListener('keyup',onNativeAction,true);document.removeEventListener('submit',onNativeAction,true);document.removeEventListener('click',onRefresh,true)};
   },[html,bridge,modules]);
 
   // Initial GridSnapshot data already loaded in the first Promise.all. Re-fetching

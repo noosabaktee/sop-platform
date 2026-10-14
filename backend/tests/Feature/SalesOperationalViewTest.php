@@ -17,7 +17,9 @@ class SalesOperationalViewTest extends TestCase {
   $id=(string)Str::ulid();
   DB::table('invoices')->insert(['id'=>$id,'company_id'=>$company->id,'customer_id'=>$customer->id,
    'number'=>'INV-QA-001','amount'=>'1000.00','paid_amount'=>'250.00','status'=>'partial',
-   'due_date'=>today()->subDays(3),'created_at'=>now(),'updated_at'=>now()]);
+   // Match PostgreSQL CURRENT_DATE used by the projection. This stays stable
+   // when PHP and PostgreSQL cross midnight in different time zones.
+   'due_date'=>DB::raw('CURRENT_DATE - 3'),'created_at'=>now(),'updated_at'=>now()]);
   DB::table('payments')->insert(['id'=>(string)Str::ulid(),'company_id'=>$company->id,
    'invoice_id'=>$id,'number'=>'PAY-QA-001','amount'=>'250.00','paid_at'=>today(),
    'created_at'=>now(),'updated_at'=>now()]);
