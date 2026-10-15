@@ -147,7 +147,7 @@ export function ExactPrototype(){
         const root=form.closest<HTMLElement>('[data-page-id="login"]');root?.querySelectorAll<HTMLElement>('[data-panel]').forEach(panel=>panel.hidden=panel.dataset.panel!=='2fa');
         root?.querySelector<HTMLInputElement>('[data-panel="2fa"] input')?.focus();return}
         signedIn.current=true;location.hash='#/overview';window.location.reload()})
-        .catch((error:unknown)=>{setStatus('');const e=error as {response?:{status?:number,data?:{message?:string}},message?:string};const code=e.response?.status;const message=code===419?'Sesi CSRF kedaluwarsa, refresh halaman.':code===422?'Email atau password salah.':code===423?'Akun terkunci sementara. Tunggu 15 menit atau reset password.':code===401?'Akun ditolak, cek email/password.':code===429?'Terlalu banyak percobaan login.':code===undefined?'Tidak dapat terhubung ke Laravel. Pastikan php artisan serve aktif.':`Login gagal (${code}). Periksa log Laravel.`;const el=form.querySelector<HTMLElement>('[data-err="password"]');if(el)el.textContent=message;console.error('Login HTTP status:',code||'network error')})
+        .catch((error:unknown)=>{setStatus('');const e=error as {response?:{status?:number,data?:{message?:string}},message?:string};const code=e.response?.status;const message=code===419?'Sesi telah kedaluwarsa, silakan muat ulang halaman.':code===422?'Email atau password salah.':code===423?'Akun terkunci sementara. Tunggu 15 menit atau reset password.':code===401?'Akses ditolak, cek email/password Anda.':code===429?'Terlalu banyak percobaan login. Silakan tunggu beberapa saat.':code===undefined?'Tidak dapat terhubung ke server. Pastikan layanan backend aktif.':`Login gagal (${code}). Silakan hubungi administrator.`;const el=form.querySelector<HTMLElement>('[data-err="password"]');if(el)el.textContent=message;console.error('Login HTTP status:',code||'network error')})
         .finally(()=>{if(button)button.disabled=false});
     };
     const onLogout=(event:MouseEvent)=>{
@@ -248,7 +248,7 @@ export function ExactPrototype(){
           const results=await Promise.allSettled(preparations);
           results.forEach(item=>{if(item.status==='rejected')console.error('Inisialisasi domain gagal:',item.reason)});
         }
-        setStatus('Menghubungkan data ke PostgreSQL...');
+        setStatus('Menghubungkan data ke server...');
         if(auth.current.user){await bridge.seedUninitialized();await modules.seedMissing();management.install();integrations.install();}
         if(auth.current.user){void refreshNativeKpis().catch(console.error);void refreshNativeWorkspace().catch(console.error);}
         setStatus('');

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -11,12 +12,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class ProjectCostController extends Controller {
-    private function company(Request $r): string {
+class ProjectCostController extends Controller
+{
+    private function company(Request $r): string
+    {
         return (string) $r->user()->company_id;
     }
 
-    public function index(Request $r) {
+    public function index(Request $r)
+    {
         $co = $this->company($r);
 
         $projects = DB::table('projects as p')
@@ -76,7 +80,8 @@ class ProjectCostController extends Controller {
         ]);
     }
 
-    public function store(Request $r) {
+    public function store(Request $r)
+    {
         abort_unless(in_array($r->user()->role, ['super_admin', 'admin', 'manager', 'finance'], true), 403);
         $co = $this->company($r);
 
@@ -112,6 +117,7 @@ class ProjectCostController extends Controller {
                     409,
                     'Reference biaya sudah digunakan untuk transaksi berbeda.'
                 );
+
                 return response()->json(['data' => $existing, 'already_exists' => true]);
             }
 
@@ -124,7 +130,7 @@ class ProjectCostController extends Controller {
 
             if ($postToLedger) {
                 $creditAccount = $paymentMethod === 'payable' ? '2100' : '1100';
-                $memo = 'Biaya proyek ' . $project->code . ' (' . $d['category'] . '): ' . $d['description'];
+                $memo = 'Biaya proyek '.$project->code.' ('.$d['category'].'): '.$d['description'];
 
                 $journalId = app(JournalPostingService::class)->post(
                     $co,
@@ -171,7 +177,8 @@ class ProjectCostController extends Controller {
         });
     }
 
-    public function budgetLedger(Request $r, string $projectId) {
+    public function budgetLedger(Request $r, string $projectId)
+    {
         $co = $this->company($r);
         $project = DB::table('projects')
             ->where('company_id', $co)

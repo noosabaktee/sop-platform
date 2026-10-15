@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\Company;
@@ -6,12 +7,15 @@ use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class BusinessDevelopmentWorkflowTest extends TestCase {
+class BusinessDevelopmentWorkflowTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function setupScenario(): array {
+    private function setupScenario(): array
+    {
         $this->seed(DatabaseSeeder::class);
         $co = Company::where('code', 'SOP-DEMO')->firstOrFail();
         $user = User::where('email', 'rina@sop.local')->firstOrFail();
@@ -20,7 +24,8 @@ class BusinessDevelopmentWorkflowTest extends TestCase {
         return compact('co', 'user', 'manager');
     }
 
-    public function test_user_can_list_and_seed_tenders_scoped_to_company(): void {
+    public function test_user_can_list_and_seed_tenders_scoped_to_company(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -37,7 +42,8 @@ class BusinessDevelopmentWorkflowTest extends TestCase {
         $this->assertEquals('Pemprov Jabar', $tnd49['client']);
     }
 
-    public function test_user_can_create_and_update_tender_with_audit(): void {
+    public function test_user_can_create_and_update_tender_with_audit(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -72,7 +78,8 @@ class BusinessDevelopmentWorkflowTest extends TestCase {
         $this->assertNotNull($audit);
     }
 
-    public function test_tender_marked_won_can_be_converted_to_project(): void {
+    public function test_tender_marked_won_can_be_converted_to_project(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -101,7 +108,8 @@ class BusinessDevelopmentWorkflowTest extends TestCase {
         $this->assertTrue($dupRes['already_exists']);
     }
 
-    public function test_user_can_list_create_and_update_proposals_with_audit(): void {
+    public function test_user_can_list_create_and_update_proposals_with_audit(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -136,13 +144,14 @@ class BusinessDevelopmentWorkflowTest extends TestCase {
         $this->assertNotNull($audit);
     }
 
-    public function test_accepted_proposal_advances_linked_opportunity_to_won(): void {
+    public function test_accepted_proposal_advances_linked_opportunity_to_won(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
         // Create an opportunity
         $cust = DB::table('customers')->where('company_id', $data['co']->id)->first();
-        $oppId = (string) \Illuminate\Support\Str::ulid();
+        $oppId = (string) Str::ulid();
         DB::table('opportunities')->insert([
             'id' => $oppId,
             'company_id' => $data['co']->id,
@@ -176,4 +185,3 @@ class BusinessDevelopmentWorkflowTest extends TestCase {
         $this->assertEquals('won', $opp->stage);
     }
 }
-

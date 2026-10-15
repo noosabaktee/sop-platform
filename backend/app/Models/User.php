@@ -1,17 +1,38 @@
 <?php
+
 namespace App\Models;
+
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-class User extends Authenticatable {
- use HasApiTokens,Notifiable,HasUlids,HasFactory;
- public $incrementing=false;protected $keyType='string';
- protected $fillable=['company_id','name','email','password','role','is_active'];
- protected $hidden=['password','remember_token','two_factor_secret','two_factor_recovery_codes'];
- protected function casts():array{return ['email_verified_at'=>'datetime','password'=>'hashed','is_active'=>'boolean',
-  'two_factor_secret'=>'encrypted','two_factor_recovery_codes'=>'encrypted:array','two_factor_confirmed_at'=>'datetime'];}
- public function company(){return $this->belongsTo(Company::class);}
- public function canManageRecords():bool{return in_array($this->role,['super_admin','admin','manager'],true);}
+
+class User extends Authenticatable
+{
+    use HasApiTokens,HasFactory,HasUlids,Notifiable;
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
+    protected $fillable = ['company_id', 'name', 'email', 'password', 'role', 'is_active'];
+
+    protected $hidden = ['password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes'];
+
+    protected function casts(): array
+    {
+        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'is_active' => 'boolean',
+            'two_factor_secret' => 'encrypted', 'two_factor_recovery_codes' => 'encrypted:array', 'two_factor_confirmed_at' => 'datetime'];
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function canManageRecords(): bool
+    {
+        return in_array($this->role, ['super_admin', 'admin', 'manager'], true);
+    }
 }

@@ -88,7 +88,7 @@ export class InventoryTransferNativeBridge {
     }
    }
    await this.operational.inventory();
-   this.alert(action==='save'?'Transfer tersimpan di PostgreSQL.':'Transfer draft dibatalkan di PostgreSQL.');
+   this.alert(action==='save'?'Data transfer gudang berhasil disimpan.':'Draft transfer berhasil dibatalkan.');
   }catch(error){
    const e=error as {response?:{data?:{message?:string;errors?:Record<string,string[]>}}};
    const field=Object.values(e.response?.data?.errors||{})[0]?.[0];

@@ -1,22 +1,27 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class BusinessDevelopmentController extends Controller {
-    private function company(Request $r): string {
+class BusinessDevelopmentController extends Controller
+{
+    private function company(Request $r): string
+    {
         return (string) $r->user()->company_id;
     }
 
-    private function ensureCompanyTenders(string $co, string $userId): void {
+    private function ensureCompanyTenders(string $co, string $userId): void
+    {
         $count = DB::table('crm_tenders')->where('company_id', $co)->count();
-        if ($count > 0) return;
+        if ($count > 0) {
+            return;
+        }
 
         $now = now();
         $defaults = [
@@ -43,9 +48,12 @@ class BusinessDevelopmentController extends Controller {
         }
     }
 
-    private function ensureCompanyProposals(string $co, string $userId): void {
+    private function ensureCompanyProposals(string $co, string $userId): void
+    {
         $count = DB::table('crm_proposals')->where('company_id', $co)->count();
-        if ($count > 0) return;
+        if ($count > 0) {
+            return;
+        }
 
         $now = now();
         $defaults = [
@@ -72,7 +80,8 @@ class BusinessDevelopmentController extends Controller {
         }
     }
 
-    public function tenders(Request $r) {
+    public function tenders(Request $r)
+    {
         $co = $this->company($r);
         $this->ensureCompanyTenders($co, (string) $r->user()->id);
 
@@ -92,7 +101,8 @@ class BusinessDevelopmentController extends Controller {
         return response()->json(['data' => $items]);
     }
 
-    public function saveTender(Request $r) {
+    public function saveTender(Request $r)
+    {
         $data = $r->validate([
             'id' => ['nullable', 'ulid'],
             'name' => ['required', 'string', 'max:255'],
@@ -128,7 +138,7 @@ class BusinessDevelopmentController extends Controller {
             } else {
                 $id = (string) Str::ulid();
                 $seq = DB::table('crm_tenders')->where('company_id', $co)->count() + 1;
-                $code = 'TND-' . str_pad((string) $seq, 2, '0', STR_PAD_LEFT);
+                $code = 'TND-'.str_pad((string) $seq, 2, '0', STR_PAD_LEFT);
 
                 DB::table('crm_tenders')->insert([
                     'id' => $id,
@@ -159,12 +169,14 @@ class BusinessDevelopmentController extends Controller {
         });
     }
 
-    public function updateTenderStatus(Request $r, string $id) {
+    public function updateTenderStatus(Request $r, string $id)
+    {
         $data = $r->validate([
             'status' => ['required', Rule::in(['Open', 'Submitted', 'Won', 'Lost', 'Cancelled'])],
         ]);
 
         $co = $this->company($r);
+
         return DB::transaction(function () use ($r, $co, $id, $data) {
             $t = DB::table('crm_tenders')->where('company_id', $co)->where('id', $id)->first();
             abort_unless($t, 404, 'Tender tidak ditemukan.');
@@ -180,7 +192,8 @@ class BusinessDevelopmentController extends Controller {
         });
     }
 
-    public function convertTenderToProject(Request $r, string $id) {
+    public function convertTenderToProject(Request $r, string $id)
+    {
         $co = $this->company($r);
 
         return DB::transaction(function () use ($r, $co, $id) {
@@ -195,15 +208,15 @@ class BusinessDevelopmentController extends Controller {
 
             // Find or associate customer
             $customer = DB::table('customers')->where('company_id', $co)->where('name', 'like', "%{$tender->client}%")->first();
-            if (!$customer) {
+            if (! $customer) {
                 $customerId = (string) Str::ulid();
-                $custCode = 'CUST-TND-' . strtoupper(substr(str_replace('-', '', $id), -4));
+                $custCode = 'CUST-TND-'.strtoupper(substr(str_replace('-', '', $id), -4));
                 DB::table('customers')->insert([
                     'id' => $customerId,
                     'company_id' => $co,
                     'code' => $custCode,
                     'name' => $tender->client,
-                    'email' => strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $tender->client)) . '@client.local',
+                    'email' => strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $tender->client)).'@client.local',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -214,7 +227,7 @@ class BusinessDevelopmentController extends Controller {
             $manager = $tender->owner_id ?: $r->user()->id;
             $now = now();
             $projectId = (string) Str::ulid();
-            $projectCode = 'PRJ-TND-' . strtoupper(substr(str_replace('-', '', $id), -8));
+            $projectCode = 'PRJ-TND-'.strtoupper(substr(str_replace('-', '', $id), -8));
 
             DB::table('projects')->insert([
                 'id' => $projectId,
@@ -249,7 +262,8 @@ class BusinessDevelopmentController extends Controller {
         });
     }
 
-    public function proposals(Request $r) {
+    public function proposals(Request $r)
+    {
         $co = $this->company($r);
         $this->ensureCompanyProposals($co, (string) $r->user()->id);
 
@@ -269,7 +283,8 @@ class BusinessDevelopmentController extends Controller {
         return response()->json(['data' => $items]);
     }
 
-    public function saveProposal(Request $r) {
+    public function saveProposal(Request $r)
+    {
         $data = $r->validate([
             'id' => ['nullable', 'ulid'],
             'name' => ['required', 'string', 'max:255'],
@@ -309,7 +324,7 @@ class BusinessDevelopmentController extends Controller {
             } else {
                 $id = (string) Str::ulid();
                 $seq = DB::table('crm_proposals')->where('company_id', $co)->count() + 1;
-                $code = 'PROP-' . str_pad((string) $seq, 3, '0', STR_PAD_LEFT);
+                $code = 'PROP-'.str_pad((string) $seq, 3, '0', STR_PAD_LEFT);
 
                 DB::table('crm_proposals')->insert([
                     'id' => $id,
@@ -342,12 +357,14 @@ class BusinessDevelopmentController extends Controller {
         });
     }
 
-    public function updateProposalStatus(Request $r, string $id) {
+    public function updateProposalStatus(Request $r, string $id)
+    {
         $data = $r->validate([
             'status' => ['required', Rule::in(['Draft', 'Sent', 'Accepted', 'Rejected', 'Expired'])],
         ]);
 
         $co = $this->company($r);
+
         return DB::transaction(function () use ($r, $co, $id, $data) {
             $p = DB::table('crm_proposals')->where('company_id', $co)->where('id', $id)->first();
             abort_unless($p, 404, 'Proposal tidak ditemukan.');
@@ -371,4 +388,3 @@ class BusinessDevelopmentController extends Controller {
         });
     }
 }
-

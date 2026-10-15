@@ -1,12 +1,16 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class ApprovalDelegationService {
-    public static function isAuthorizedApprover(User $user, string $subjectType, string $companyId, ?string &$delegatedFromId = null): bool {
+class ApprovalDelegationService
+{
+    public static function isAuthorizedApprover(User $user, string $subjectType, string $companyId, ?string &$delegatedFromId = null): bool
+    {
         if ($user->canManageRecords()) {
             return true;
         }
@@ -30,6 +34,7 @@ class ApprovalDelegationService {
 
             if ($delegator && in_array($delegator->role, ['super_admin', 'admin', 'manager'], true)) {
                 $delegatedFromId = $delegation->delegator_id;
+
                 return true;
             }
         }
@@ -37,7 +42,8 @@ class ApprovalDelegationService {
         return false;
     }
 
-    public static function syncExpiredDelegations(string $companyId): void {
+    public static function syncExpiredDelegations(string $companyId): void
+    {
         DB::table('approval_delegations')
             ->where('company_id', $companyId)
             ->where('status', 'active')
@@ -48,7 +54,8 @@ class ApprovalDelegationService {
             ]);
     }
 
-    public static function seedDefaultMatrixIfMissing(string $companyId): void {
+    public static function seedDefaultMatrixIfMissing(string $companyId): void
+    {
         $exists = DB::table('approval_matrices')->where('company_id', $companyId)->exists();
         if ($exists) {
             return;
@@ -113,7 +120,8 @@ class ApprovalDelegationService {
         DB::table('approval_matrices')->insert($defaults);
     }
 
-    public static function evaluateMatrix(string $companyId, string $subjectType, float $amount): array {
+    public static function evaluateMatrix(string $companyId, string $subjectType, float $amount): array
+    {
         self::seedDefaultMatrixIfMissing($companyId);
 
         $rule = DB::table('approval_matrices')
@@ -143,7 +151,8 @@ class ApprovalDelegationService {
         ];
     }
 
-    public static function calculateSlaSummary(string $companyId): array {
+    public static function calculateSlaSummary(string $companyId): array
+    {
         $now = now();
         $approvals = DB::table('transaction_approvals')
             ->where('company_id', $companyId)
@@ -157,7 +166,7 @@ class ApprovalDelegationService {
 
         foreach ($pending as $p) {
             if ($p->due_at) {
-                $due = \Carbon\Carbon::parse($p->due_at);
+                $due = Carbon::parse($p->due_at);
                 if ($now->greaterThan($due)) {
                     $breachedSla++;
                 } elseif ($now->diffInHours($due, false) <= 4) {
@@ -169,15 +178,16 @@ class ApprovalDelegationService {
         $decidedRecently = $approvals->filter(function ($p) use ($now) {
             return in_array($p->status, ['approved', 'rejected'], true) &&
                 $p->decided_at &&
-                \Carbon\Carbon::parse($p->decided_at)->greaterThanOrEqualTo($now->copy()->subDays(30));
+                Carbon::parse($p->decided_at)->greaterThanOrEqualTo($now->copy()->subDays(30));
         });
 
         $totalDecided = $decidedRecently->count();
         $onTimeDecided = $decidedRecently->filter(function ($p) {
-            if (!$p->due_at || !$p->decided_at) {
+            if (! $p->due_at || ! $p->decided_at) {
                 return true;
             }
-            return \Carbon\Carbon::parse($p->decided_at)->lessThanOrEqualTo(\Carbon\Carbon::parse($p->due_at));
+
+            return Carbon::parse($p->decided_at)->lessThanOrEqualTo(Carbon::parse($p->due_at));
         })->count();
 
         $complianceRate = $totalDecided > 0
@@ -187,7 +197,7 @@ class ApprovalDelegationService {
         $approvedThisWeek = $approvals->filter(function ($p) use ($now) {
             return $p->status === 'approved' &&
                 $p->decided_at &&
-                \Carbon\Carbon::parse($p->decided_at)->greaterThanOrEqualTo($now->copy()->subDays(7));
+                Carbon::parse($p->decided_at)->greaterThanOrEqualTo($now->copy()->subDays(7));
         })->count();
 
         return [
@@ -199,4 +209,3 @@ class ApprovalDelegationService {
         ];
     }
 }
-

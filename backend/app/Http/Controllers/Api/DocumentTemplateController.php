@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -8,12 +9,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class DocumentTemplateController extends Controller {
-    private function company(Request $r): string {
+class DocumentTemplateController extends Controller
+{
+    private function company(Request $r): string
+    {
         return (string) $r->user()->company_id;
     }
 
-    private function defaultTemplates(): array {
+    private function defaultTemplates(): array
+    {
         return [
             [
                 'code' => 'quotation',
@@ -202,7 +206,8 @@ class DocumentTemplateController extends Controller {
         ];
     }
 
-    private function ensureCompanyTemplates(string $co): void {
+    private function ensureCompanyTemplates(string $co): void
+    {
         $count = DB::table('document_templates')->where('company_id', $co)->count();
         if ($count > 0) {
             return;
@@ -226,7 +231,8 @@ class DocumentTemplateController extends Controller {
         }
     }
 
-    public function index(Request $r) {
+    public function index(Request $r)
+    {
         $co = $this->company($r);
         $this->ensureCompanyTemplates($co);
 
@@ -252,7 +258,8 @@ class DocumentTemplateController extends Controller {
         return response()->json(['data' => $data]);
     }
 
-    public function save(Request $r) {
+    public function save(Request $r)
+    {
         $data = $r->validate([
             'code' => ['required', 'string', 'max:50'],
             'name' => ['nullable', 'string', 'max:150'],
@@ -284,7 +291,7 @@ class DocumentTemplateController extends Controller {
                 'id' => $id,
                 'company_id' => $co,
                 'code' => $data['code'],
-                'name' => $data['name'] ?? ucfirst($data['code']) . ' Template',
+                'name' => $data['name'] ?? ucfirst($data['code']).' Template',
                 'category' => 'general',
                 'variables' => json_encode($data['variables']),
                 'version' => 1,
@@ -318,7 +325,8 @@ class DocumentTemplateController extends Controller {
         ]);
     }
 
-    public function reset(Request $r, string $code) {
+    public function reset(Request $r, string $code)
+    {
         $co = $this->company($r);
         $this->ensureCompanyTemplates($co);
 
@@ -369,7 +377,8 @@ class DocumentTemplateController extends Controller {
         ]);
     }
 
-    public function render(Request $r, string $code) {
+    public function render(Request $r, string $code)
+    {
         $co = $this->company($r);
         $this->ensureCompanyTemplates($co);
 
@@ -394,63 +403,63 @@ class DocumentTemplateController extends Controller {
         ]);
 
         $locale = $vars['locale'] ?? 'id';
-        $fmt = fn($n) => 'Rp ' . number_format((float) $n, 0, ',', '.');
+        $fmt = fn ($n) => 'Rp '.number_format((float) $n, 0, ',', '.');
 
         $subtotal = 0;
         $rowsHtml = '';
         foreach ($items as $it) {
             $lineTotal = (float) ($it['qty'] ?? 1) * (float) ($it['price'] ?? 0);
             $subtotal += $lineTotal;
-            $rowsHtml .= "<tr><td>" . e($it['desc'] ?? '') . "</td><td style='text-align:right'>" . e($it['qty'] ?? 1) . "</td><td style='text-align:right'>" . $fmt($it['price'] ?? 0) . "</td><td style='text-align:right'>" . $fmt($lineTotal) . "</td></tr>";
+            $rowsHtml .= '<tr><td>'.e($it['desc'] ?? '')."</td><td style='text-align:right'>".e($it['qty'] ?? 1)."</td><td style='text-align:right'>".$fmt($it['price'] ?? 0)."</td><td style='text-align:right'>".$fmt($lineTotal).'</td></tr>';
         }
 
-        $hasDiscount = !empty($vars['discount']);
-        $hasTax = !empty($vars['tax']);
+        $hasDiscount = ! empty($vars['discount']);
+        $hasTax = ! empty($vars['tax']);
         $discVal = $hasDiscount ? round($subtotal * 0.05) : 0;
         $taxVal = $hasTax ? round(($subtotal - $discVal) * 0.11) : 0;
         $total = $subtotal - $discVal + $taxVal;
 
-        $number = $vars['number'] ?? ($tpl->code . '-' . date('Ymd-His'));
+        $number = $vars['number'] ?? ($tpl->code.'-'.date('Ymd-His'));
         $title = "{$tpl->name} - {$number}";
 
-        $html = "<!DOCTYPE html><html><head><meta charset='utf-8'><title>" . e($title) . "</title>"
-            . "<style>body{font-family:Inter,sans-serif;margin:40px;color:#1e293b;line-height:1.6}.head{display:flex;justify-content:space-between;border-bottom:2px solid #e2e8f0;padding-bottom:20px;margin-bottom:24px}.brand{font-size:18px;font-weight:700}.parties{display:flex;justify-content:space-between;margin-bottom:24px}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #cbd5e1;padding:8px 12px}th{background:#f8fafc;text-align:left}.totals{margin-top:20px;float:right;width:300px}.totals .row{display:flex;justify-content:space-between;padding:4px 0}.totals .grand{font-weight:bold;border-top:2px solid #334155}.terms{margin-top:60px;font-size:13px;color:#64748b;clear:both}.sig{margin-top:40px;display:flex;justify-content:space-between}.sig div{text-align:center;width:200px}.sig .line{border-top:1px solid #000;margin-top:60px}</style>"
-            . "</head><body>"
-            . "<div class='head'>"
-            . "  <div class='brand'><div>" . e($vars['company'] ?? 'PT SOP') . "</div><small style='font-weight:normal;color:#64748b'>" . e($vars['companyAddress'] ?? '') . " · " . e($vars['companyTax'] ?? '') . "</small></div>"
-            . "  <div style='text-align:right'><h2>" . strtoupper(e($tpl->code)) . "</h2><div><b>No: " . e($number) . "</b></div><div>Tanggal: " . e($vars['date'] ?? date('d M Y')) . "</div><div>Berlaku: " . e($vars['validUntil'] ?? '') . "</div></div>"
-            . "</div>"
-            . "<div class='parties'>"
-            . "  <div><small>Kepada / Bill To:</small><br><strong>" . e($vars['customer'] ?? '') . "</strong><br>" . e($vars['customerAddress'] ?? '') . "</div>"
-            . "</div>";
+        $html = "<!DOCTYPE html><html><head><meta charset='utf-8'><title>".e($title).'</title>'
+            .'<style>body{font-family:Inter,sans-serif;margin:40px;color:#1e293b;line-height:1.6}.head{display:flex;justify-content:space-between;border-bottom:2px solid #e2e8f0;padding-bottom:20px;margin-bottom:24px}.brand{font-size:18px;font-weight:700}.parties{display:flex;justify-content:space-between;margin-bottom:24px}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #cbd5e1;padding:8px 12px}th{background:#f8fafc;text-align:left}.totals{margin-top:20px;float:right;width:300px}.totals .row{display:flex;justify-content:space-between;padding:4px 0}.totals .grand{font-weight:bold;border-top:2px solid #334155}.terms{margin-top:60px;font-size:13px;color:#64748b;clear:both}.sig{margin-top:40px;display:flex;justify-content:space-between}.sig div{text-align:center;width:200px}.sig .line{border-top:1px solid #000;margin-top:60px}</style>'
+            .'</head><body>'
+            ."<div class='head'>"
+            ."  <div class='brand'><div>".e($vars['company'] ?? 'PT SOP')."</div><small style='font-weight:normal;color:#64748b'>".e($vars['companyAddress'] ?? '').' · '.e($vars['companyTax'] ?? '').'</small></div>'
+            ."  <div style='text-align:right'><h2>".strtoupper(e($tpl->code)).'</h2><div><b>No: '.e($number).'</b></div><div>Tanggal: '.e($vars['date'] ?? date('d M Y')).'</div><div>Berlaku: '.e($vars['validUntil'] ?? '').'</div></div>'
+            .'</div>'
+            ."<div class='parties'>"
+            .'  <div><small>Kepada / Bill To:</small><br><strong>'.e($vars['customer'] ?? '').'</strong><br>'.e($vars['customerAddress'] ?? '').'</div>'
+            .'</div>';
 
         if (in_array($tpl->code, ['quotation', 'invoice', 'po', 'so'])) {
             $html .= "<table><thead><tr><th>Deskripsi</th><th style='text-align:right'>Qty</th><th style='text-align:right'>Harga Satuan</th><th style='text-align:right'>Jumlah</th></tr></thead><tbody>"
-                . $rowsHtml
-                . "</tbody></table>"
-                . "<div class='totals'>"
-                . "  <div class='row'><span>Subtotal:</span><span>" . $fmt($subtotal) . "</span></div>"
-                . ($hasDiscount ? "  <div class='row'><span>Diskon (5%):</span><span>- " . $fmt($discVal) . "</span></div>" : '')
-                . ($hasTax ? "  <div class='row'><span>PPN (11%):</span><span>" . $fmt($taxVal) . "</span></div>" : '')
-                . "  <div class='row grand'><span>Total:</span><span>" . $fmt($total) . "</span></div>"
-                . "</div>";
+                .$rowsHtml
+                .'</tbody></table>'
+                ."<div class='totals'>"
+                ."  <div class='row'><span>Subtotal:</span><span>".$fmt($subtotal).'</span></div>'
+                .($hasDiscount ? "  <div class='row'><span>Diskon (5%):</span><span>- ".$fmt($discVal).'</span></div>' : '')
+                .($hasTax ? "  <div class='row'><span>PPN (11%):</span><span>".$fmt($taxVal).'</span></div>' : '')
+                ."  <div class='row grand'><span>Total:</span><span>".$fmt($total).'</span></div>'
+                .'</div>';
         } else {
-            $html .= "<p style='font-size:14px;color:#334155;line-height:1.8'>" . e($tpl->name) . " ini diterbitkan secara sah dan mengikat para pihak berdasarkan ketentuan yang berlaku. Seluruh lampiran dan ruang lingkup pekerjaan merupakan bagian yang tidak terpisahkan.</p>"
-                . "<p style='font-size:14px;color:#334155'><b>Total Nilai Terkait:</b> " . $fmt($total) . "</p>";
+            $html .= "<p style='font-size:14px;color:#334155;line-height:1.8'>".e($tpl->name).' ini diterbitkan secara sah dan mengikat para pihak berdasarkan ketentuan yang berlaku. Seluruh lampiran dan ruang lingkup pekerjaan merupakan bagian yang tidak terpisahkan.</p>'
+                ."<p style='font-size:14px;color:#334155'><b>Total Nilai Terkait:</b> ".$fmt($total).'</p>';
         }
 
-        if (!empty($vars['terms'])) {
-            $html .= "<div class='terms'><b>Syarat & Ketentuan:</b><br>" . nl2br(e($vars['termsText'] ?? '')) . "</div>";
+        if (! empty($vars['terms'])) {
+            $html .= "<div class='terms'><b>Syarat & Ketentuan:</b><br>".nl2br(e($vars['termsText'] ?? '')).'</div>';
         }
 
-        if (!empty($vars['signature'])) {
+        if (! empty($vars['signature'])) {
             $html .= "<div class='sig'>"
-                . "  <div><div>Pihak Pertama</div><div class='line'>" . e($vars['company'] ?? 'PT SOP') . "</div></div>"
-                . "  <div><div>Pihak Kedua</div><div class='line'>" . e($vars['customer'] ?? 'Pelanggan') . "</div></div>"
-                . "</div>";
+                ."  <div><div>Pihak Pertama</div><div class='line'>".e($vars['company'] ?? 'PT SOP').'</div></div>'
+                ."  <div><div>Pihak Kedua</div><div class='line'>".e($vars['customer'] ?? 'Pelanggan').'</div></div>'
+                .'</div>';
         }
 
-        $html .= "</body></html>";
+        $html .= '</body></html>';
 
         // Store rendered file directly into Document Vault
         $docId = (string) Str::ulid();

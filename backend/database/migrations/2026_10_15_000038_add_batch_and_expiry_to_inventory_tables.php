@@ -1,10 +1,13 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up(): void {
+return new class extends Migration
+{
+    public function up(): void
+    {
         Schema::table('inventory_movements', function (Blueprint $t) {
             $t->string('batch_number', 100)->nullable()->index();
             $t->string('serial_number', 100)->nullable()->index();
@@ -21,7 +24,8 @@ return new class extends Migration {
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
         Schema::table('sales_delivery_lines', function (Blueprint $t) {
             $t->dropIndex(['batch_number']);
             $t->dropColumn('batch_number');
@@ -40,4 +44,3 @@ return new class extends Migration {
         });
     }
 };
-

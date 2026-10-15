@@ -1,7 +1,7 @@
 <?php
+
 namespace Tests\Feature;
 
-use App\Models\Company;
 use App\Models\User;
 use App\Services\AuditService;
 use Database\Seeders\DatabaseSeeder;
@@ -10,24 +10,28 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class SecurityAuditWorkflowTest extends TestCase {
+class SecurityAuditWorkflowTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function prepare(): array {
+    private function prepare(): array
+    {
         $this->seed(DatabaseSeeder::class);
         $admin = User::where('email', 'admin@sop.local')->firstOrFail();
         $staff = User::where('email', 'rina@sop.local')->firstOrFail();
+
         return [$admin, $staff];
     }
 
-    public function test_audit_log_filters_by_action_and_tenant(): void {
+    public function test_audit_log_filters_by_action_and_tenant(): void
+    {
         [$admin, $staff] = $this->prepare();
 
         $this->actingAs($staff);
         $this->getJson('/api/v1/security/audit-events')->assertForbidden();
 
         AuditService::record($admin, 'user.security_check', 'user', $admin->id);
-        AuditService::record($admin, 'invoice.reviewed', 'invoice', (string)Str::ulid());
+        AuditService::record($admin, 'invoice.reviewed', 'invoice', (string) Str::ulid());
 
         $this->actingAs($admin);
         $resp = $this->getJson('/api/v1/security/audit-events')->assertOk()->json('data');
@@ -40,7 +44,8 @@ class SecurityAuditWorkflowTest extends TestCase {
         $this->assertSame('user.security_check', $filtered[0]['action']);
     }
 
-    public function test_login_history_is_recorded_and_scoped(): void {
+    public function test_login_history_is_recorded_and_scoped(): void
+    {
         [$admin, $staff] = $this->prepare();
 
         // 1. Successful login
@@ -63,7 +68,8 @@ class SecurityAuditWorkflowTest extends TestCase {
         $this->assertTrue(collect($history)->contains('successful', false));
     }
 
-    public function test_session_management_and_revocation(): void {
+    public function test_session_management_and_revocation(): void
+    {
         [$admin] = $this->prepare();
         $this->actingAs($admin);
 
@@ -84,7 +90,7 @@ class SecurityAuditWorkflowTest extends TestCase {
         $this->assertSame($otherSessionId, $sessions[0]['id']);
 
         // Revoke the session
-        $this->deleteJson('/api/v1/security/sessions/' . $otherSessionId)->assertNoContent();
+        $this->deleteJson('/api/v1/security/sessions/'.$otherSessionId)->assertNoContent();
         $this->assertDatabaseMissing('sessions', ['id' => $otherSessionId]);
 
         // Audit event recorded
@@ -94,4 +100,3 @@ class SecurityAuditWorkflowTest extends TestCase {
         ]);
     }
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -10,18 +11,21 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 /** User-scoped operational workspace sourced exclusively from normalized records. */
-class WorkspaceController extends Controller {
-    private function company(Request $r): string {
+class WorkspaceController extends Controller
+{
+    private function company(Request $r): string
+    {
         return (string) $r->user()->company_id;
     }
 
-    public function index(Request $r) {
+    public function index(Request $r)
+    {
         $user = $r->user();
         $company = $this->company($r);
         ApprovalDelegationService::syncExpiredDelegations($company);
 
         $delegationScopes = [];
-        if (!$user->canManageRecords()) {
+        if (! $user->canManageRecords()) {
             $delegationScopes = DB::table('approval_delegations')
                 ->where('company_id', $company)
                 ->where('delegatee_id', $user->id)
@@ -54,7 +58,7 @@ class WorkspaceController extends Controller {
                 'p.due_at',
                 'p.budget',
                 'c.name as customer',
-                DB::raw("COALESCE((SELECT ROUND(AVG(progress)) FROM project_tasks WHERE project_id=p.id),0) as progress"),
+                DB::raw('COALESCE((SELECT ROUND(AVG(progress)) FROM project_tasks WHERE project_id=p.id),0) as progress'),
             ]);
 
         $approvals = DB::table('transaction_approvals as a')
@@ -68,10 +72,11 @@ class WorkspaceController extends Controller {
             ->leftJoin('users as u_del', 'u_del.id', '=', 'a.delegated_from_id')
             ->where('a.company_id', $company)
             ->where('a.status', 'pending')
-            ->when(!$user->canManageRecords(), function ($query) use ($user, $delegationScopes) {
+            ->when(! $user->canManageRecords(), function ($query) use ($user, $delegationScopes) {
                 if (empty($delegationScopes)) {
                     return $query->where('a.requester_id', $user->id);
                 }
+
                 return $query->where(function ($sub) use ($user, $delegationScopes) {
                     $sub->where('a.requester_id', $user->id);
                     if (in_array('all', $delegationScopes, true)) {
@@ -106,7 +111,7 @@ class WorkspaceController extends Controller {
             ->orderByDesc('created_at')
             ->limit(50)
             ->get(['id', 'type', 'data', 'read_at', 'created_at'])
-            ->map(fn($n) => [
+            ->map(fn ($n) => [
                 'id' => $n->id,
                 'type' => $n->type,
                 'data' => json_decode($n->data, true) ?: [],
@@ -181,7 +186,8 @@ class WorkspaceController extends Controller {
         ]);
     }
 
-    public function createTask(Request $r) {
+    public function createTask(Request $r)
+    {
         $co = $this->company($r);
         $data = $r->validate([
             'title' => ['required', 'string', 'min:2', 'max:255'],
@@ -190,7 +196,7 @@ class WorkspaceController extends Controller {
         ]);
 
         $projectId = $data['project_id'] ?? null;
-        if (!$projectId) {
+        if (! $projectId) {
             $projectId = DB::table('projects')->where('company_id', $co)->orderByDesc('created_at')->value('id');
         }
 
@@ -217,7 +223,8 @@ class WorkspaceController extends Controller {
         });
     }
 
-    public function toggleTask(Request $r, string $id) {
+    public function toggleTask(Request $r, string $id)
+    {
         $task = DB::table('project_tasks as t')
             ->join('projects as p', 'p.id', '=', 't.project_id')
             ->where('p.company_id', $this->company($r))
@@ -246,7 +253,8 @@ class WorkspaceController extends Controller {
         return response()->json(['data' => DB::table('project_tasks')->find($id)]);
     }
 
-    public function createCalendarEvent(Request $r) {
+    public function createCalendarEvent(Request $r)
+    {
         $co = $this->company($r);
         $data = $r->validate([
             'title' => ['required', 'string', 'min:2', 'max:255'],
@@ -276,7 +284,8 @@ class WorkspaceController extends Controller {
         });
     }
 
-    public function markRead(Request $r, string $id) {
+    public function markRead(Request $r, string $id)
+    {
         $count = DB::table('notifications')
             ->where('id', $id)
             ->where('notifiable_type', 'App\\Models\\User')
@@ -284,7 +293,7 @@ class WorkspaceController extends Controller {
             ->whereNull('read_at')
             ->update(['read_at' => now(), 'updated_at' => now()]);
 
-        if (!$count) {
+        if (! $count) {
             abort_unless(
                 DB::table('notifications')
                     ->where('id', $id)

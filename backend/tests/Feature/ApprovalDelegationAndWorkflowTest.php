@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\Company;
@@ -8,10 +9,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class ApprovalDelegationAndWorkflowTest extends TestCase {
+class ApprovalDelegationAndWorkflowTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function setupScenario(): array {
+    private function setupScenario(): array
+    {
         $this->seed(DatabaseSeeder::class);
         $co = Company::where('code', 'SOP-DEMO')->firstOrFail();
         $manager = User::where('email', 'bagus@sop.local')->firstOrFail();
@@ -24,7 +27,8 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
         return compact('co', 'manager', 'salesRina', 'financeSari', 'admin', 'product', 'customer');
     }
 
-    public function test_manager_can_create_delegation_to_staff(): void {
+    public function test_manager_can_create_delegation_to_staff(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['manager']);
 
@@ -53,7 +57,8 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
         $this->assertEquals($data['salesRina']->name, $list[0]['delegatee_name']);
     }
 
-    public function test_non_approver_cannot_create_delegation(): void {
+    public function test_non_approver_cannot_create_delegation(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['salesRina']);
 
@@ -65,7 +70,8 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
         ])->assertForbidden();
     }
 
-    public function test_delegated_staff_can_approve_quotation_and_records_delegation_trace(): void {
+    public function test_delegated_staff_can_approve_quotation_and_records_delegation_trace(): void
+    {
         $data = $this->setupScenario();
 
         // Admin submits quotation
@@ -78,18 +84,18 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
             'tax_percent' => 11,
             'discount_percent' => 0,
             'items' => [
-                ['description' => 'Product License', 'product_id' => $data['product']->id, 'quantity' => 10, 'unit_price' => '150000.00']
-            ]
+                ['description' => 'Product License', 'product_id' => $data['product']->id, 'quantity' => 10, 'unit_price' => '150000.00'],
+            ],
         ])->assertCreated()->json('data');
 
-        $submitRes = $this->postJson('/api/v1/workflows/quotations/' . $q['id'] . '/submit')->assertOk()->json('data');
+        $submitRes = $this->postJson('/api/v1/workflows/quotations/'.$q['id'].'/submit')->assertOk()->json('data');
         $this->assertArrayHasKey('tier', $submitRes);
         $this->assertArrayHasKey('due_at', $submitRes);
 
         // Before delegation: salesRina cannot approve (403)
         $this->actingAs($data['salesRina']);
-        $this->postJson('/api/v1/workflows/quotations/' . $q['id'] . '/decision', [
-            'decision' => 'approved'
+        $this->postJson('/api/v1/workflows/quotations/'.$q['id'].'/decision', [
+            'decision' => 'approved',
         ])->assertForbidden();
 
         // Manager delegates quotation approval to salesRina
@@ -108,8 +114,8 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
         $this->assertTrue(collect($approvalsList)->contains('subject_id', $q['id']));
 
         // salesRina approves successfully!
-        $decideRes = $this->postJson('/api/v1/workflows/quotations/' . $q['id'] . '/decision', [
-            'decision' => 'approved'
+        $decideRes = $this->postJson('/api/v1/workflows/quotations/'.$q['id'].'/decision', [
+            'decision' => 'approved',
         ])->assertOk()->json('data');
 
         $this->assertEquals('approved', $decideRes['status']);
@@ -122,17 +128,18 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
         $this->assertEquals($data['manager']->id, $ap->delegated_from_id);
     }
 
-    public function test_delegated_staff_can_approve_purchase_request(): void {
+    public function test_delegated_staff_can_approve_purchase_request(): void
+    {
         $data = $this->setupScenario();
 
         // Admin submits PR
         $this->actingAs($data['admin']);
         $pr = $this->postJson('/api/v1/workflows/purchase-requests', [
             'lines' => [
-                ['product_id' => $data['product']->id, 'quantity' => '5.0000', 'unit_price' => '200000.00']
-            ]
+                ['product_id' => $data['product']->id, 'quantity' => '5.0000', 'unit_price' => '200000.00'],
+            ],
         ])->assertCreated()->json('data');
-        $this->postJson('/api/v1/workflows/purchase-requests/' . $pr['id'] . '/submit')->assertOk();
+        $this->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/submit')->assertOk();
 
         // Manager delegates PR approval to salesRina
         $this->actingAs($data['manager']);
@@ -145,8 +152,8 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
 
         // salesRina approves PR
         $this->actingAs($data['salesRina']);
-        $this->postJson('/api/v1/workflows/purchase-requests/' . $pr['id'] . '/decision', [
-            'decision' => 'approved'
+        $this->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/decision', [
+            'decision' => 'approved',
         ])->assertOk();
 
         $ap = DB::table('transaction_approvals')->where('subject_id', $pr['id'])->first();
@@ -155,7 +162,8 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
         $this->assertEquals($data['manager']->id, $ap->delegated_from_id);
     }
 
-    public function test_revoked_delegation_cannot_approve(): void {
+    public function test_revoked_delegation_cannot_approve(): void
+    {
         $data = $this->setupScenario();
 
         // Manager delegates to salesRina
@@ -168,26 +176,27 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
         ])->assertCreated()->json('data');
 
         // Revoke delegation
-        $this->postJson('/api/v1/approvals/delegations/' . $del['id'] . '/revoke')->assertOk();
+        $this->postJson('/api/v1/approvals/delegations/'.$del['id'].'/revoke')->assertOk();
         $this->assertEquals('revoked', DB::table('approval_delegations')->where('id', $del['id'])->value('status'));
 
         // Admin submits PR
         $this->actingAs($data['admin']);
         $pr = $this->postJson('/api/v1/workflows/purchase-requests', [
             'lines' => [
-                ['product_id' => $data['product']->id, 'quantity' => '1.0000', 'unit_price' => '50000.00']
-            ]
+                ['product_id' => $data['product']->id, 'quantity' => '1.0000', 'unit_price' => '50000.00'],
+            ],
         ])->assertCreated()->json('data');
-        $this->postJson('/api/v1/workflows/purchase-requests/' . $pr['id'] . '/submit')->assertOk();
+        $this->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/submit')->assertOk();
 
         // salesRina attempts to approve with revoked delegation -> 403 Forbidden
         $this->actingAs($data['salesRina']);
-        $this->postJson('/api/v1/workflows/purchase-requests/' . $pr['id'] . '/decision', [
-            'decision' => 'approved'
+        $this->postJson('/api/v1/workflows/purchase-requests/'.$pr['id'].'/decision', [
+            'decision' => 'approved',
         ])->assertForbidden();
     }
 
-    public function test_matrix_and_sla_summary_endpoints(): void {
+    public function test_matrix_and_sla_summary_endpoints(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['manager']);
 
@@ -207,4 +216,3 @@ class ApprovalDelegationAndWorkflowTest extends TestCase {
         $this->assertIsArray($escRes);
     }
 }
-

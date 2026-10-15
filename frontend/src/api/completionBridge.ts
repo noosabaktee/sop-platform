@@ -28,7 +28,7 @@ export class CompletionBridge {
     const resolved=Object.entries(type).find(([key])=>panel.toLowerCase().includes(key))?.[1];
     if(!resolved){
       ev.preventDefault();ev.stopImmediatePropagation();
-      window.alert('Laporan ini belum memiliki sumber data SQL tervalidasi. Tidak membuat file dari data contoh.');return;
+      window.alert('Laporan ini belum memiliki data transaksi aktif untuk diekspor.');return;
     }
     ev.preventDefault();ev.stopImmediatePropagation();
     void this.download(resolved);
@@ -43,7 +43,7 @@ export class CompletionBridge {
       const url=URL.createObjectURL(response.data as Blob);
       const a=document.createElement('a');a.href=url;a.download=`sop-${type}-${new Date().toISOString().slice(0,10)}.csv`;
       document.body.append(a);a.click();a.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000);
-    }catch(error){console.error(error);window.alert('Ekspor PostgreSQL gagal, data tidak diekspor.');}
+    }catch(error){console.error(error);window.alert('Ekspor data laporan tidak dapat diproses. Silakan coba lagi.');}
     finally{document.body.classList.remove('sop-api-busy')}
   }
   async refresh(){

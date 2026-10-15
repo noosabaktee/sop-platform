@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -11,20 +12,25 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 /** Private local storage with cryptographic verification, versioning, and approval workflow. */
-class DocumentVaultController extends Controller {
-    private function company(Request $r): string {
+class DocumentVaultController extends Controller
+{
+    private function company(Request $r): string
+    {
         return (string) $r->user()->company_id;
     }
 
-    private function item(Request $r, string $id, bool $lock = false): object {
+    private function item(Request $r, string $id, bool $lock = false): object
+    {
         $q = DB::table('documents')->where('company_id', $this->company($r))->where('id', $id);
         $item = ($lock ? $q->lockForUpdate() : $q)->first();
         abort_unless($item, 404, 'Dokumen tidak ditemukan.');
         abort_unless($item->owner_id === $r->user()->id || $r->user()->canManageRecords(), 403, 'Akses dokumen ditolak.');
+
         return $item;
     }
 
-    public function index(Request $r) {
+    public function index(Request $r)
+    {
         $co = $this->company($r);
         $category = $r->input('category');
         $status = $r->input('status');
@@ -33,10 +39,10 @@ class DocumentVaultController extends Controller {
             ->leftJoin('users as u_owner', 'u_owner.id', '=', 'd.owner_id')
             ->leftJoin('users as u_appr', 'u_appr.id', '=', 'd.approved_by')
             ->where('d.company_id', $co)
-            ->when(!$r->user()->canManageRecords(), fn($q) => $q->where('d.owner_id', $r->user()->id))
+            ->when(! $r->user()->canManageRecords(), fn ($q) => $q->where('d.owner_id', $r->user()->id))
             ->where('d.status', '!=', 'archived')
-            ->when($category && $category !== 'all', fn($q) => $q->where('d.category', $category))
-            ->when($status, fn($q) => $q->where('d.status', $status))
+            ->when($category && $category !== 'all', fn ($q) => $q->where('d.category', $category))
+            ->when($status, fn ($q) => $q->where('d.status', $status))
             ->orderByDesc('d.updated_at')
             ->select([
                 'd.*',
@@ -48,7 +54,8 @@ class DocumentVaultController extends Controller {
         return response()->json($items);
     }
 
-    public function upload(Request $r) {
+    public function upload(Request $r)
+    {
         abort_unless(
             in_array($r->user()->role, ['super_admin', 'admin', 'manager', 'sales', 'finance', 'project_manager', 'procurement', 'corporate_secretary'], true),
             403
@@ -67,7 +74,7 @@ class DocumentVaultController extends Controller {
         $co = $this->company($r);
         $id = $data['document_id'] ?? (string) Str::ulid();
         $versionId = (string) Str::ulid();
-        $path = 'sop-private/' . $co . '/' . $id . '/' . $versionId;
+        $path = 'sop-private/'.$co.'/'.$id.'/'.$versionId;
 
         $stream = fopen($file->getRealPath(), 'rb');
         try {
@@ -84,7 +91,7 @@ class DocumentVaultController extends Controller {
                 $previous = null;
                 $sha256 = hash_file('sha256', $file->getRealPath());
 
-                if (!empty($data['document_id'])) {
+                if (! empty($data['document_id'])) {
                     $previous = $this->item($r, $id, true);
                     abort_if($previous->status === 'archived', 409, 'Dokumen arsip tidak dapat diubah.');
                     abort_unless($previous->owner_id === $r->user()->id || $r->user()->canManageRecords(), 403);
@@ -150,7 +157,8 @@ class DocumentVaultController extends Controller {
         }
     }
 
-    public function submitForApproval(Request $r, string $id) {
+    public function submitForApproval(Request $r, string $id)
+    {
         return DB::transaction(function () use ($r, $id) {
             $doc = $this->item($r, $id, true);
             abort_unless(in_array($doc->status, ['draft', 'rejected'], true), 409, 'Hanya dokumen draft/rejected yang dapat diajukan approval.');
@@ -173,7 +181,8 @@ class DocumentVaultController extends Controller {
         });
     }
 
-    public function decide(Request $r, string $id) {
+    public function decide(Request $r, string $id)
+    {
         abort_unless($r->user()->canManageRecords(), 403, 'Hanya approver yang berhak memutuskan persetujuan dokumen.');
         $data = $r->validate([
             'decision' => ['required', Rule::in(['approved', 'rejected'])],
@@ -198,11 +207,11 @@ class DocumentVaultController extends Controller {
 
             app(OperationalNotification::class)->toUser(
                 (string) $doc->owner_id,
-                'document.' . $data['decision'],
+                'document.'.$data['decision'],
                 ['document_id' => $id, 'title' => $doc->title]
             );
 
-            AuditService::record($r->user(), 'document.' . $data['decision'], 'document', $id, ['status' => $doc->status], [
+            AuditService::record($r->user(), 'document.'.$data['decision'], 'document', $id, ['status' => $doc->status], [
                 'status' => $data['decision'],
                 'approved_by' => $r->user()->id,
             ]);
@@ -211,7 +220,8 @@ class DocumentVaultController extends Controller {
         });
     }
 
-    public function verifyChecksum(Request $r, string $id, int $version) {
+    public function verifyChecksum(Request $r, string $id, int $version)
+    {
         $doc = $this->item($r, $id);
         $v = DB::table('document_versions')->where('document_id', $id)->where('version', $version)->first();
         abort_unless($v, 404, 'Versi dokumen tidak ditemukan.');
@@ -247,8 +257,10 @@ class DocumentVaultController extends Controller {
         ]);
     }
 
-    public function versions(Request $r, string $id) {
+    public function versions(Request $r, string $id)
+    {
         $this->item($r, $id);
+
         return response()->json([
             'data' => DB::table('document_versions')
                 ->where('document_id', $id)
@@ -257,22 +269,26 @@ class DocumentVaultController extends Controller {
         ]);
     }
 
-    public function download(Request $r, string $id, int $version) {
+    public function download(Request $r, string $id, int $version)
+    {
         $doc = $this->item($r, $id);
         abort_if($doc->status === 'archived', 404);
         $v = DB::table('document_versions')->where('document_id', $id)->where('version', $version)->first();
         abort_unless($v, 404);
         abort_unless(Storage::disk('local')->exists($v->storage_path), 404, 'File tidak ditemukan di storage.');
         AuditService::record($r->user(), 'document.downloaded', 'document', $id, null, ['version' => $version]);
+
         return Storage::disk('local')->download($v->storage_path, $v->original_name, ['X-Content-Type-Options' => 'nosniff']);
     }
 
-    public function archive(Request $r, string $id) {
+    public function archive(Request $r, string $id)
+    {
         return DB::transaction(function () use ($r, $id) {
             $doc = $this->item($r, $id, true);
             abort_unless($doc->owner_id === $r->user()->id || $r->user()->canManageRecords(), 403);
             DB::table('documents')->where('id', $id)->update(['status' => 'archived', 'updated_at' => now()]);
             AuditService::record($r->user(), 'document.archived', 'document', $id, ['status' => $doc->status], ['status' => 'archived']);
+
             return response()->noContent();
         });
     }

@@ -1,4 +1,5 @@
 import {api} from './client';
+import {showConfirmModal} from './modalHelper';
 
 type TemplateRecord = {
   id: string;
@@ -202,7 +203,13 @@ export class DocumentTemplateBridge {
 
   private async resetActiveTemplate() {
     const code = this.getActiveTab();
-    if (!window.confirm(`Reset template variables untuk ${code} ke nilai bawaan?`)) return;
+    const confirmed = await showConfirmModal({
+      title: 'Reset Template Variables',
+      message: `Apakah Anda yakin ingin mereset variabel template "${code}" ke nilai standar bawaan sistem?`,
+      confirmText: 'Ya, Reset Template',
+      isDanger: true,
+    });
+    if (!confirmed) return;
 
     document.body.classList.add('sop-api-busy');
     try {

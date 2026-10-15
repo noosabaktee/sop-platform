@@ -17,7 +17,7 @@ export class CrmWorkflowBridge{
         .then(response=>{
           this.grid.applyWorkflowSnapshots(response.data.data.snapshots as WorkflowSnapshot[]);
           window.dispatchEvent(new Event('sop:domain-updated'));
-          window.alert('Lead berhasil dikonversi menjadi prospect dan tersimpan di PostgreSQL.');
+          window.alert('Lead berhasil dikonversi menjadi prospect.');
         })
         .catch(error=>window.alert(error?.response?.data?.message||'Konversi lead gagal.'))
         .finally(()=>leadBtn.removeAttribute('disabled'));
@@ -41,7 +41,7 @@ export class CrmWorkflowBridge{
       const data=response.data.data as {opportunity:{name:string};snapshots:WorkflowSnapshot[]};
       if(data.snapshots?.length)this.grid.applyWorkflowSnapshots(data.snapshots);
       window.dispatchEvent(new Event('sop:domain-updated'));
-      window.alert(`Prospect berhasil dikonversi menjadi Opportunity "${data.opportunity?.name || ''}" di PostgreSQL.`);
+      window.alert(`Prospect berhasil dikonversi menjadi Opportunity "${data.opportunity?.name || ''}".`);
     } catch(error:unknown){
       const e=error as {response?:{data?:{message?:string}}};
       window.alert(e.response?.data?.message||'Konversi prospect gagal.');

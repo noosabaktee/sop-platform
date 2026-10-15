@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\Company;
@@ -6,12 +7,15 @@ use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class ProjectCostAccountingTest extends TestCase {
+class ProjectCostAccountingTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function setupScenario(): array {
+    private function setupScenario(): array
+    {
         $this->seed(DatabaseSeeder::class);
         $co = Company::where('code', 'SOP-DEMO')->firstOrFail();
         $manager = User::where('email', 'admin@sop.local')->firstOrFail();
@@ -20,7 +24,8 @@ class ProjectCostAccountingTest extends TestCase {
         return compact('co', 'manager', 'project');
     }
 
-    public function test_project_cost_creation_posts_balanced_double_entry_journal_to_ledger(): void {
+    public function test_project_cost_creation_posts_balanced_double_entry_journal_to_ledger(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['manager']);
 
@@ -63,7 +68,8 @@ class ProjectCostAccountingTest extends TestCase {
         $this->assertEquals('7500000.00', (string) $creditLine->credit);
     }
 
-    public function test_project_cost_with_payable_posts_to_accounts_payable(): void {
+    public function test_project_cost_with_payable_posts_to_accounts_payable(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['manager']);
 
@@ -88,7 +94,8 @@ class ProjectCostAccountingTest extends TestCase {
         $this->assertEquals('12000000.00', (string) $creditLine->credit);
     }
 
-    public function test_budget_ledger_endpoint_returns_burn_rate_and_variance(): void {
+    public function test_budget_ledger_endpoint_returns_burn_rate_and_variance(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['manager']);
 
@@ -102,7 +109,7 @@ class ProjectCostAccountingTest extends TestCase {
             'amount' => '5000000.00',
         ])->assertCreated();
 
-        $budgetRes = $this->getJson('/api/v1/operational/projects/' . $data['project']->id . '/budget-ledger')
+        $budgetRes = $this->getJson('/api/v1/operational/projects/'.$data['project']->id.'/budget-ledger')
             ->assertOk()
             ->json('data');
 
@@ -114,13 +121,14 @@ class ProjectCostAccountingTest extends TestCase {
         $this->assertGreaterThanOrEqual(5000000, $budgetRes['actual_cost']);
     }
 
-    public function test_project_cost_is_blocked_in_closed_accounting_period(): void {
+    public function test_project_cost_is_blocked_in_closed_accounting_period(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['manager']);
 
         $closedDate = '2025-01-15';
         DB::table('accounting_periods')->insert([
-            'id' => (string) \Illuminate\Support\Str::ulid(),
+            'id' => (string) Str::ulid(),
             'company_id' => $data['co']->id,
             'starts_on' => '2025-01-01',
             'ends_on' => '2025-01-31',

@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\Company;
@@ -10,10 +11,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class DocumentVaultWorkflowTest extends TestCase {
+class DocumentVaultWorkflowTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function setupScenario(): array {
+    private function setupScenario(): array
+    {
         Storage::fake('local');
         $this->seed(DatabaseSeeder::class);
         $co = Company::where('code', 'SOP-DEMO')->firstOrFail();
@@ -23,7 +26,8 @@ class DocumentVaultWorkflowTest extends TestCase {
         return compact('co', 'user', 'manager');
     }
 
-    public function test_user_can_upload_private_file_with_cryptographic_hash(): void {
+    public function test_user_can_upload_private_file_with_cryptographic_hash(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -48,7 +52,8 @@ class DocumentVaultWorkflowTest extends TestCase {
         $this->assertTrue((bool) $version->is_verified);
     }
 
-    public function test_document_approval_lifecycle_draft_pending_approved(): void {
+    public function test_document_approval_lifecycle_draft_pending_approved(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -60,19 +65,19 @@ class DocumentVaultWorkflowTest extends TestCase {
         ])->assertCreated()->json('data');
 
         // Submit for approval
-        $submitted = $this->postJson('/api/v1/documents/files/' . $doc['id'] . '/submit-approval')
+        $submitted = $this->postJson('/api/v1/documents/files/'.$doc['id'].'/submit-approval')
             ->assertOk()
             ->json('data');
         $this->assertEquals('pending_approval', $submitted['status']);
 
         // User cannot self-decide if not manager
-        $this->postJson('/api/v1/documents/files/' . $doc['id'] . '/decision', [
+        $this->postJson('/api/v1/documents/files/'.$doc['id'].'/decision', [
             'decision' => 'approved',
         ])->assertForbidden();
 
         // Manager approves document
         $this->actingAs($data['manager']);
-        $approved = $this->postJson('/api/v1/documents/files/' . $doc['id'] . '/decision', [
+        $approved = $this->postJson('/api/v1/documents/files/'.$doc['id'].'/decision', [
             'decision' => 'approved',
         ])->assertOk()->json('data');
 
@@ -81,7 +86,8 @@ class DocumentVaultWorkflowTest extends TestCase {
         $this->assertNotNull($approved['approved_at']);
     }
 
-    public function test_document_rejection_requires_reason(): void {
+    public function test_document_rejection_requires_reason(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -92,17 +98,17 @@ class DocumentVaultWorkflowTest extends TestCase {
             'category' => 'purchase',
         ])->assertCreated()->json('data');
 
-        $this->postJson('/api/v1/documents/files/' . $doc['id'] . '/submit-approval')->assertOk();
+        $this->postJson('/api/v1/documents/files/'.$doc['id'].'/submit-approval')->assertOk();
 
         // Manager rejects without reason -> 422
         $this->actingAs($data['manager']);
-        $this->postJson('/api/v1/documents/files/' . $doc['id'] . '/decision', [
+        $this->postJson('/api/v1/documents/files/'.$doc['id'].'/decision', [
             'decision' => 'rejected',
             'reason' => '',
         ])->assertStatus(422);
 
         // Manager rejects with reason -> OK
-        $rejected = $this->postJson('/api/v1/documents/files/' . $doc['id'] . '/decision', [
+        $rejected = $this->postJson('/api/v1/documents/files/'.$doc['id'].'/decision', [
             'decision' => 'rejected',
             'reason' => 'Perlu lampiran pasal kerahasiaan data (NDA).',
         ])->assertOk()->json('data');
@@ -111,7 +117,8 @@ class DocumentVaultWorkflowTest extends TestCase {
         $this->assertEquals('Perlu lampiran pasal kerahasiaan data (NDA).', $rejected['rejection_reason']);
     }
 
-    public function test_document_cryptographic_checksum_verification(): void {
+    public function test_document_cryptographic_checksum_verification(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -123,7 +130,7 @@ class DocumentVaultWorkflowTest extends TestCase {
         ])->assertCreated()->json('data');
 
         // Check checksum verification endpoint
-        $verifyRes = $this->getJson('/api/v1/documents/files/' . $doc['id'] . '/versions/1/verify')
+        $verifyRes = $this->getJson('/api/v1/documents/files/'.$doc['id'].'/versions/1/verify')
             ->assertOk()
             ->json('data');
 
@@ -132,4 +139,3 @@ class DocumentVaultWorkflowTest extends TestCase {
         $this->assertArrayHasKey('verified_at', $verifyRes);
     }
 }
-

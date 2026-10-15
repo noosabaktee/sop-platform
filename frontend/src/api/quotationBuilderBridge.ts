@@ -1,5 +1,6 @@
 import {api} from './client';
 import type {GridBridge} from './gridBridge';
+import {showSelectModal} from './modalHelper';
 
 type Option={id:string;name:string;code?:string};
 type Options={customers:Option[];owners:Option[];products:Option[]};
@@ -80,7 +81,7 @@ export class QuotationBuilderBridge {
    const quoteId=id.replace('q-domain-','');
    if(target.closest('[data-qt-act="delrow"]')){
     event.preventDefault();event.stopImmediatePropagation();
-    this.inform('Quotation resmi tersimpan di PostgreSQL dan tidak dapat dihapus sembarangan.');
+    this.inform('Dokumen penawaran resmi telah terbit dan terkunci demi kepatuhan audit.');
     return;
    }
    event.preventDefault();event.stopImmediatePropagation();
@@ -94,18 +95,49 @@ export class QuotationBuilderBridge {
    const res=await api.get(`/api/v1/quotation-builder/${quoteId}`);
    const data=res.data.data as {quotation:{number:string;status:string;customer_name:string;total:string};items:Array<{description:string;quantity:string;line_total:string}>};
    const q=data.quotation;
-   const menuPrompt=[
-    `Quotation ${q.number} (${q.customer_name})`,
-    `Status: ${titles[q.status]||q.status} · Total: Rp ${new Intl.NumberFormat('id-ID').format(Number(q.total))}`,
-    '',
-    'Pilih aksi:',
-    '1. Buka / Cetak Dokumen PDF Resmi',
-    '2. Buat Draft Revisi',
-    q.status==='approved'?'3. Konversi menjadi Sales Order':'',
-    ['draft','revision_requested'].includes(q.status)?'3. Kirim untuk Approval':''
-   ].filter(Boolean).join('\n');
+   const formattedTotal = new Intl.NumberFormat('id-ID').format(Number(q.total));
+   const statusTitle = titles[q.status] || q.status;
 
-   const choice=window.prompt(menuPrompt,'1');
+   const actionOptions = [
+     {
+       value: '1',
+       label: 'Buka / Cetak Dokumen PDF Resmi',
+       description: 'Buka tampilan cetak PDF quotation dengan kop surat dan tanda tangan.',
+       badge: 'PDF',
+     },
+     {
+       value: '2',
+       label: 'Buat Draft Revisi Baru',
+       description: 'Duplikasi dan buat nomor versi revisi baru dari penawaran ini.',
+       badge: 'Revisi',
+     },
+   ];
+
+   if (q.status === 'approved') {
+     actionOptions.push({
+       value: '3',
+       label: 'Konversi Menjadi Sales Order',
+       description: 'Proses quotation yang telah disetujui menjadi pesanan penjualan resmi.',
+       badge: 'Sales Order',
+     });
+   } else if (['draft', 'revision_requested'].includes(q.status)) {
+     actionOptions.push({
+       value: '3',
+       label: 'Kirim Dokumen untuk Approval',
+       description: 'Kirimkan draf penawaran harga ini ke atasan untuk disetujui.',
+       badge: 'Approval',
+     });
+   }
+
+   const choice = await showSelectModal({
+     title: `Aksi Penawaran: ${q.number}`,
+     icon: 'lucide:file-text',
+     subtitle: `Pelanggan: ${q.customer_name} · Total: Rp ${formattedTotal} · Status: ${statusTitle}`,
+     options: actionOptions,
+     submitText: 'Jalankan Aksi',
+     defaultValue: '1',
+   });
+
    if(choice===null)return;
    if(choice.trim()==='1'){
     window.open(`/api/v1/quotation-builder/${quoteId}/document`,'_blank');
@@ -175,7 +207,7 @@ export class QuotationBuilderBridge {
    this.currentId=saved.id;
    if(submit){await api.post(`/api/v1/workflows/quotations/${saved.id}/submit`,{});this.currentId=null;}
    await this.refreshList();
-   this.inform(`${saved.number} ${submit?'dikirim untuk persetujuan':'disimpan sebagai draft'} di PostgreSQL.`);
+   this.inform(`${saved.number} berhasil ${submit?'dikirim untuk persetujuan':'disimpan sebagai draft'}.`);
   }catch(error){
    const response=error as {response?:{data?:{message?:string;errors?:Record<string,string[]>}}};
    const first=Object.values(response.response?.data?.errors||{})[0]?.[0];

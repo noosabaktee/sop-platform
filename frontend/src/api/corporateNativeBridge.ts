@@ -1,4 +1,5 @@
 import {api} from './client';
+import {showFormModal, showSelectModal, showConfirmModal} from './modalHelper';
 
 type Meeting={id:string;kind:'general'|'rups_annual'|'rups_extraordinary'|'board';title:string;starts_at:string;location:string|null;status:'draft'|'scheduled'|'held'|'closed';total_shares:number;present_shares:number;minutes:string|null};
 type Resolution={id:string;meeting_id:string;title:string;description:string|null;for_votes:number;against_votes:number;abstain_votes:number;status:'approved'|'rejected'};
@@ -50,22 +51,223 @@ export class CorporateNativeBridge {
  };
  private async download(id:string){const record=this.documents.find(item=>item.id===id);if(!record)return;try{const response=await api.get(`/api/v1/documents/files/${id}/versions/${record.version}/download`,{responseType:'blob'});const url=URL.createObjectURL(new Blob([response.data]));const anchor=document.createElement('a');anchor.href=url;anchor.download=record.title;document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}catch(error){this.toast('Dokumen tidak dapat diunduh: '+this.message(error))}}
  private async create(){
-  const title=window.prompt('Judul agenda/rapat:');if(!title?.trim())return;
-  const kindInput=window.prompt('Jenis: general, board, rups_annual, atau rups_extraordinary','general');const kind=['general','board','rups_annual','rups_extraordinary'].includes(kindInput||'')?kindInput:'general';
-  const startsAt=window.prompt('Waktu mulai (YYYY-MM-DD HH:MM)',new Date(Date.now()+86400000).toISOString().slice(0,16).replace('T',' '));if(!startsAt)return;
-  const location=window.prompt('Lokasi (opsional):')||undefined;const total=kind?.startsWith('rups')?Number(window.prompt('Total saham','0')||0):0;const present=kind?.startsWith('rups')?Number(window.prompt('Saham hadir','0')||0):0;
-  document.body.classList.add('sop-api-busy');try{await api.post('/api/v1/corporate/meetings',{title:title.trim(),kind,starts_at:startsAt,location,total_shares:total,present_shares:present});await this.refresh();this.toast('Agenda tersimpan di PostgreSQL. Klik agenda untuk menjadwalkan atau melanjutkan rapat.')}catch(error){this.toast('Agenda gagal disimpan: '+this.message(error))}finally{document.body.classList.remove('sop-api-busy')}
+  const defaultTime = new Date(Date.now()+86400000).toISOString().slice(0,16).replace('T',' ');
+  const formValues = await showFormModal<{
+    title: string;
+    kind: 'general'|'board'|'rups_annual'|'rups_extraordinary';
+    starts_at: string;
+    location?: string;
+    total_shares?: number;
+    present_shares?: number;
+  }>({
+    title: 'Tambah Agenda / Rapat Korporat',
+    icon: 'lucide:calendar-plus',
+    submitText: 'Simpan Agenda Rapat',
+    fields: [
+      {
+        name: 'title',
+        label: 'Judul Agenda / Rapat',
+        type: 'text',
+        required: true,
+        placeholder: 'Contoh: Rapat Dewan Direksi Kuartal IV 2026',
+      },
+      {
+        name: 'kind',
+        label: 'Jenis Agenda / Rapat',
+        type: 'select',
+        required: true,
+        options: [
+          {value: 'general', label: 'Rapat Manajemen Umum (General)'},
+          {value: 'board', label: 'Rapat Dewan Direksi / Komisaris (Board)'},
+          {value: 'rups_annual', label: 'RUPS Tahunan (Annual General Meeting)'},
+          {value: 'rups_extraordinary', label: 'RUPS Luar Biasa (Extraordinary AGM)'},
+        ],
+        halfWidth: true,
+      },
+      {
+        name: 'starts_at',
+        label: 'Waktu Mulai (YYYY-MM-DD HH:MM)',
+        type: 'text',
+        required: true,
+        value: defaultTime,
+        halfWidth: true,
+      },
+      {
+        name: 'location',
+        label: 'Lokasi / Tautan Rapat (Opsional)',
+        type: 'text',
+        placeholder: 'Contoh: Ruang Direksi Lantai 10 / Zoom',
+      },
+      {
+        name: 'total_shares',
+        label: 'Total Saham Beredar (Khusus RUPS)',
+        type: 'number',
+        min: 0,
+        value: 0,
+        halfWidth: true,
+      },
+      {
+        name: 'present_shares',
+        label: 'Saham yang Hadir (Khusus RUPS)',
+        type: 'number',
+        min: 0,
+        value: 0,
+        halfWidth: true,
+      },
+    ],
+  });
+  if(!formValues) return;
+
+  document.body.classList.add('sop-api-busy');
+  try{
+    await api.post('/api/v1/corporate/meetings',{
+      title: formValues.title.trim(),
+      kind: formValues.kind,
+      starts_at: formValues.starts_at.trim(),
+      location: formValues.location?.trim() || undefined,
+      total_shares: Number(formValues.total_shares || 0),
+      present_shares: Number(formValues.present_shares || 0),
+    });
+    await this.refresh();
+    this.toast('Agenda rapat berhasil disimpan. Klik agenda untuk menjadwalkan atau melanjutkan rapat.');
+  }catch(error){this.toast('Agenda gagal disimpan: '+this.message(error))}
+  finally{document.body.classList.remove('sop-api-busy')}
  }
  private async manage(id:string){
   const meeting=this.meetings.find(item=>item.id===id);if(!meeting)return;
-  const action=window.prompt(`Aksi ${meeting.title}: status, minutes, resolution, close`,'status')?.trim().toLowerCase();if(!action)return;
-  document.body.classList.add('sop-api-busy');try{
-   if(action==='status'){const next=window.prompt('Status berikutnya: scheduled atau held',meeting.status==='draft'?'scheduled':'held');if(!next)return;await api.patch(`/api/v1/corporate/meetings/${id}`,{status:next});}
-   else if(action==='minutes'){const minutes=window.prompt('Minutes of Meeting:',meeting.minutes||'');if(minutes===null)return;await api.patch(`/api/v1/corporate/meetings/${id}`,{minutes});}
-   else if(action==='resolution'){const title=window.prompt('Judul resolusi:');if(!title)return;const yes=Number(window.prompt('Suara setuju:','0')||0),no=Number(window.prompt('Suara tidak setuju:','0')||0),abstain=Number(window.prompt('Abstain:','0')||0);await api.post(`/api/v1/corporate/meetings/${id}/resolutions`,{title,for_votes:yes,against_votes:no,abstain_votes:abstain});}
-   else if(action==='close')await api.post(`/api/v1/corporate/meetings/${id}/close`);else{this.toast('Aksi tidak dikenal. Gunakan status, minutes, resolution, atau close.');return}
-   await this.refresh();this.toast('Workflow rapat telah tersimpan di PostgreSQL.');
-  }catch(error){this.toast('Workflow rapat gagal: '+this.message(error))}finally{document.body.classList.remove('sop-api-busy')}
+
+  const action = await showSelectModal({
+    title: `Kelola Rapat: ${meeting.title}`,
+    icon: 'lucide:calendar-clock',
+    subtitle: `Status saat ini: ${label(meeting.status)} · ${date(meeting.starts_at)}`,
+    options: [
+      {
+        value: 'status',
+        label: 'Perbarui Status Rapat',
+        description: 'Ubah status pelaksanaan rapat (Scheduled / Held).',
+        badge: 'Status',
+      },
+      {
+        value: 'minutes',
+        label: 'Input Notulen / Risalah Rapat (Minutes)',
+        description: 'Tuliskan catatan hasil diskusi dan pembahasan rapat.',
+        badge: 'Notulen',
+      },
+      {
+        value: 'resolution',
+        label: 'Tambah Resolusi & Hasil Voting',
+        description: 'Catat keputusan formal dan rekapitulasi suara rapat.',
+        badge: 'Resolusi',
+      },
+      {
+        value: 'close',
+        label: 'Tutup Rapat Resmi (Close Meeting)',
+        description: 'Selesaikan dan kunci notulen serta keputusan rapat ini.',
+        badge: 'Selesai',
+      },
+    ],
+    submitText: 'Pilih Aksi',
+  });
+  if(!action) return;
+
+  document.body.classList.add('sop-api-busy');
+  try{
+   if(action==='status'){
+     const nextStatus = await showSelectModal({
+       title: 'Pilih Status Rapat',
+       icon: 'lucide:clock',
+       subtitle: 'Tentukan status pelaksanaan rapat:',
+       defaultValue: meeting.status==='draft'?'scheduled':'held',
+       options: [
+         {value: 'scheduled', label: 'Scheduled (Dijadwalkan Resmi)', description: 'Rapat telah dikonfirmasi dan menunggu jadwal pelaksanaan.'},
+         {value: 'held', label: 'Held (Sedang / Telah Berlangsung)', description: 'Rapat sedang berjalan atau telah diselenggarakan.'},
+       ],
+       submitText: 'Perbarui Status',
+     });
+     if(!nextStatus) return;
+     await api.patch(`/api/v1/corporate/meetings/${id}`,{status:nextStatus});
+   }
+   else if(action==='minutes'){
+     const form = await showFormModal<{minutes: string}>({
+       title: 'Risalah / Notulen Rapat (Minutes of Meeting)',
+       icon: 'lucide:file-text',
+       submitText: 'Simpan Notulen',
+       fields: [
+         {
+           name: 'minutes',
+           label: 'Notulen Rapat Lengkap',
+           type: 'textarea',
+           required: true,
+           value: meeting.minutes || '',
+           placeholder: 'Tuliskan ringkasan pembahasan, poin penting, dan tindak lanjut rapat...',
+         },
+       ],
+     });
+     if(!form) return;
+     await api.patch(`/api/v1/corporate/meetings/${id}`,{minutes: form.minutes.trim()});
+   }
+   else if(action==='resolution'){
+     const form = await showFormModal<{title: string; yes: number; no: number; abstain: number}>({
+       title: 'Tambah Resolusi / Keputusan Rapat',
+       icon: 'lucide:file-check',
+       submitText: 'Simpan Resolusi',
+       fields: [
+         {
+           name: 'title',
+           label: 'Judul Resolusi / Pokok Keputusan',
+           type: 'text',
+           required: true,
+           placeholder: 'Contoh: Persetujuan Pengadaan Sistem Baru',
+         },
+         {
+           name: 'yes',
+           label: 'Suara Setuju (For)',
+           type: 'number',
+           required: true,
+           min: 0,
+           value: 1,
+           halfWidth: true,
+         },
+         {
+           name: 'no',
+           label: 'Suara Tidak Setuju (Against)',
+           type: 'number',
+           required: true,
+           min: 0,
+           value: 0,
+           halfWidth: true,
+         },
+         {
+           name: 'abstain',
+           label: 'Suara Abstain',
+           type: 'number',
+           required: true,
+           min: 0,
+           value: 0,
+         },
+       ],
+     });
+     if(!form) return;
+     await api.post(`/api/v1/corporate/meetings/${id}/resolutions`,{
+       title: form.title.trim(),
+       for_votes: form.yes,
+       against_votes: form.no,
+       abstain_votes: form.abstain,
+     });
+   }
+   else if(action==='close'){
+     const confirmed = await showConfirmModal({
+       title: 'Tutup Rapat Resmi',
+       message: `Apakah Anda yakin ingin menutup rapat "${meeting.title}"? Status akan menjadi Closed dan agenda dianggap selesai.`,
+       confirmText: 'Ya, Tutup Rapat',
+     });
+     if(!confirmed) return;
+     await api.post(`/api/v1/corporate/meetings/${id}/close`);
+   }
+   await this.refresh();
+   this.toast('Perubahan agenda rapat berhasil disimpan.');
+  }catch(error){this.toast('Workflow rapat gagal: '+this.message(error))}
+  finally{document.body.classList.remove('sop-api-busy')}
  }
  private message(error:unknown){const response=(error as {response?:{data?:{message?:string;errors?:Record<string,string[]>}}}).response;return Object.values(response?.data?.errors||{})[0]?.[0]||response?.data?.message||'periksa data dan izin Anda';}
 }

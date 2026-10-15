@@ -1,4 +1,5 @@
 import {api} from './client';
+import {showFormModal} from './modalHelper';
 
 /** Only intercept original controls that otherwise show fictional success. CSS/HTML unchanged. */
 export class ExternalNativeBridge {
@@ -60,12 +61,30 @@ export class ExternalNativeBridge {
   if(this.pending)return;
   const chat=button.closest<HTMLElement>('.chat');const input=chat?.querySelector<HTMLInputElement>('[data-wa-reply]');const content=input?.value.trim()||'';
   if(!content){this.note('Tulis pesan WhatsApp terlebih dahulu.');return;}
-  const recipient=window.prompt('Nomor WhatsApp tujuan (format internasional, misalnya +628123456789):');if(recipient===null)return;
-  if(!/^\+[1-9][0-9]{7,14}$/.test(recipient.trim())){this.note('Nomor WhatsApp harus format internasional, misalnya +628123456789.');return;}
-  if(!window.confirm(`Kirim WhatsApp ke ${recipient.trim()}? Pastikan penerima telah opt-in.`))return;
+
+  const form = await showFormModal<{recipient: string}>({
+    title: 'Kirim Pesan WhatsApp',
+    icon: 'lucide:message-circle',
+    iconColor: '#25d366',
+    submitText: 'Kirim WhatsApp',
+    fields: [
+      {
+        name: 'recipient',
+        label: 'Nomor WhatsApp Penerima',
+        type: 'text',
+        required: true,
+        placeholder: '+628123456789',
+        helpText: 'Format internasional diawali tanda +, contoh: +628123456789. Pastikan penerima telah opt-in.',
+      },
+    ],
+  });
+  if(!form) return;
+
+  const recipient = form.recipient.trim();
+  if(!/^\+[1-9][0-9]{7,14}$/.test(recipient)){this.note('Nomor WhatsApp harus format internasional, misalnya +628123456789.');return;}
   this.pending=true;button.setAttribute('aria-busy','true');document.body.classList.add('sop-api-busy');
   try{
-   const response=await api.post('/api/v1/communications/send',{channel:'whatsapp',recipient:recipient.trim(),content,idempotency_key:crypto.randomUUID()});
+   const response=await api.post('/api/v1/communications/send',{channel:'whatsapp',recipient,content,idempotency_key:crypto.randomUUID()});
    if(input)input.value='';this.note(response.data.data.status==='sent'?'WhatsApp diterima WhatsApp Cloud API. Delivery akhir mengikuti provider.':'Status WhatsApp: '+response.data.data.status);
   }catch(err){this.note('WhatsApp tidak terkirim: '+this.errorMessage(err))}
   finally{this.pending=false;button.removeAttribute('aria-busy');document.body.classList.remove('sop-api-busy')}

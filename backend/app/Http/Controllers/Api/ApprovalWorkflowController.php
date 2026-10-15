@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -10,12 +11,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class ApprovalWorkflowController extends Controller {
-    private function company(Request $r): string {
+class ApprovalWorkflowController extends Controller
+{
+    private function company(Request $r): string
+    {
         return (string) $r->user()->company_id;
     }
 
-    public function indexDelegations(Request $r) {
+    public function indexDelegations(Request $r)
+    {
         $co = $this->company($r);
         ApprovalDelegationService::syncExpiredDelegations($co);
 
@@ -46,7 +50,8 @@ class ApprovalWorkflowController extends Controller {
         return response()->json(['data' => $delegations]);
     }
 
-    public function storeDelegation(Request $r) {
+    public function storeDelegation(Request $r)
+    {
         $co = $this->company($r);
         abort_unless($r->user()->canManageRecords(), 403, 'Hanya approver yang dapat mendelegasikan wewenang.');
 
@@ -95,7 +100,8 @@ class ApprovalWorkflowController extends Controller {
         return response()->json(['data' => DB::table('approval_delegations')->find($id)], 201);
     }
 
-    public function revokeDelegation(Request $r, string $id) {
+    public function revokeDelegation(Request $r, string $id)
+    {
         $co = $this->company($r);
         $delegation = DB::table('approval_delegations')
             ->where('company_id', $co)
@@ -121,7 +127,8 @@ class ApprovalWorkflowController extends Controller {
         return response()->json(['data' => DB::table('approval_delegations')->find($id)]);
     }
 
-    public function listEligibleUsers(Request $r) {
+    public function listEligibleUsers(Request $r)
+    {
         $co = $this->company($r);
         $users = DB::table('users')
             ->where('company_id', $co)
@@ -134,7 +141,8 @@ class ApprovalWorkflowController extends Controller {
         return response()->json(['data' => $users]);
     }
 
-    public function matrix(Request $r) {
+    public function matrix(Request $r)
+    {
         $co = $this->company($r);
         ApprovalDelegationService::seedDefaultMatrixIfMissing($co);
 
@@ -147,7 +155,8 @@ class ApprovalWorkflowController extends Controller {
         return response()->json(['data' => $rules]);
     }
 
-    public function escalations(Request $r) {
+    public function escalations(Request $r)
+    {
         $co = $this->company($r);
         $now = now();
 
@@ -185,11 +194,11 @@ class ApprovalWorkflowController extends Controller {
         return response()->json(['data' => $escalated]);
     }
 
-    public function slaSummary(Request $r) {
+    public function slaSummary(Request $r)
+    {
         $co = $this->company($r);
         $summary = ApprovalDelegationService::calculateSlaSummary($co);
 
         return response()->json(['data' => $summary]);
     }
 }
-

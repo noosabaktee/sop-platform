@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\User;
@@ -7,17 +8,21 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class InventoryBatchTrackingTest extends TestCase {
+class InventoryBatchTrackingTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function prepare(): User {
+    private function prepare(): User
+    {
         $this->seed(DatabaseSeeder::class);
         $user = User::where('email', 'admin@sop.local')->firstOrFail();
         $this->actingAs($user);
+
         return $user;
     }
 
-    public function test_goods_receipt_records_batch_and_expiry_and_updates_stock(): void {
+    public function test_goods_receipt_records_batch_and_expiry_and_updates_stock(): void
+    {
         $u = $this->prepare();
         $wh = DB::table('warehouses')->where('company_id', $u->company_id)->first();
         $v = DB::table('vendors')->where('company_id', $u->company_id)->first();
@@ -31,13 +36,13 @@ class InventoryBatchTrackingTest extends TestCase {
         ])->assertCreated()->json('data.id');
 
         // 2. Submit & Approve PR
-        $this->postJson('/api/v1/workflows/purchase-requests/' . $prId . '/submit')->assertOk();
-        $this->postJson('/api/v1/workflows/purchase-requests/' . $prId . '/decision', [
+        $this->postJson('/api/v1/workflows/purchase-requests/'.$prId.'/submit')->assertOk();
+        $this->postJson('/api/v1/workflows/purchase-requests/'.$prId.'/decision', [
             'decision' => 'approved',
         ])->assertOk();
 
         // 3. Convert to PO
-        $poId = $this->postJson('/api/v1/workflows/purchase-requests/' . $prId . '/order', [
+        $poId = $this->postJson('/api/v1/workflows/purchase-requests/'.$prId.'/order', [
             'vendor_id' => $v->id,
         ])->assertCreated()->json('data.id');
 
@@ -46,7 +51,7 @@ class InventoryBatchTrackingTest extends TestCase {
         // 4. Receive Goods with Batch & Expiry
         $batch = 'BATCH-2026-X1';
         $exp = '2027-12-31';
-        $gr = $this->postJson('/api/v1/workflows/purchase-orders/' . $poId . '/receive', [
+        $gr = $this->postJson('/api/v1/workflows/purchase-orders/'.$poId.'/receive', [
             'warehouse_id' => $wh->id,
             'received_at' => '2026-10-15',
             'reference' => 'GR-BATCH-001',
@@ -70,16 +75,17 @@ class InventoryBatchTrackingTest extends TestCase {
         $this->assertSame($exp, $mov->expiry_date);
 
         // 5. Check batches endpoint
-        $batches = $this->getJson('/api/v1/operational/inventory/batches?product_id=' . $p->id)
+        $batches = $this->getJson('/api/v1/operational/inventory/batches?product_id='.$p->id)
             ->assertOk()
             ->json('data');
         $this->assertNotEmpty($batches);
         $batchItem = collect($batches)->firstWhere('batch_number', $batch);
         $this->assertNotNull($batchItem);
-        $this->assertEquals(50.0, (float)$batchItem['quantity']);
+        $this->assertEquals(50.0, (float) $batchItem['quantity']);
     }
 
-    public function test_sales_delivery_allocates_from_batch_and_guards_batch_balance(): void {
+    public function test_sales_delivery_allocates_from_batch_and_guards_batch_balance(): void
+    {
         $u = $this->prepare();
         $wh = DB::table('warehouses')->where('company_id', $u->company_id)->first();
         $cust = DB::table('customers')->where('company_id', $u->company_id)->first();
@@ -117,15 +123,15 @@ class InventoryBatchTrackingTest extends TestCase {
             ],
         ])->assertCreated()->json('data.id');
 
-        $this->postJson('/api/v1/workflows/quotations/' . $quoteId . '/submit')->assertOk();
-        $this->postJson('/api/v1/workflows/quotations/' . $quoteId . '/decision', [
+        $this->postJson('/api/v1/workflows/quotations/'.$quoteId.'/submit')->assertOk();
+        $this->postJson('/api/v1/workflows/quotations/'.$quoteId.'/decision', [
             'decision' => 'approved',
         ])->assertOk();
 
-        $soId = $this->postJson('/api/v1/workflows/quotations/' . $quoteId . '/convert')->assertCreated()->json('data.id');
+        $soId = $this->postJson('/api/v1/workflows/quotations/'.$quoteId.'/convert')->assertCreated()->json('data.id');
 
         // Deliver more than batch balance should fail
-        $this->postJson('/api/v1/workflows/sales-orders/' . $soId . '/deliver', [
+        $this->postJson('/api/v1/workflows/sales-orders/'.$soId.'/deliver', [
             'warehouse_id' => $wh->id,
             'idempotency_key' => 'deliv-fail-batch',
             'lines' => [
@@ -138,7 +144,7 @@ class InventoryBatchTrackingTest extends TestCase {
         ])->assertStatus(422);
 
         // Deliver with correct batch
-        $this->postJson('/api/v1/workflows/sales-orders/' . $soId . '/deliver', [
+        $this->postJson('/api/v1/workflows/sales-orders/'.$soId.'/deliver', [
             'warehouse_id' => $wh->id,
             'idempotency_key' => 'deliv-success-batch-15',
             'lines' => [
@@ -151,12 +157,13 @@ class InventoryBatchTrackingTest extends TestCase {
         ])->assertCreated();
 
         // Check remaining batch balance = 20 - 15 = 5
-        $batches = $this->getJson('/api/v1/operational/inventory/batches?product_id=' . $p->id)->json('data');
+        $batches = $this->getJson('/api/v1/operational/inventory/batches?product_id='.$p->id)->json('data');
         $batchItem = collect($batches)->firstWhere('batch_number', $batch);
-        $this->assertEquals(5.0, (float)$batchItem['quantity']);
+        $this->assertEquals(5.0, (float) $batchItem['quantity']);
     }
 
-    public function test_purchase_return_verifies_and_tracks_batch(): void {
+    public function test_purchase_return_verifies_and_tracks_batch(): void
+    {
         $u = $this->prepare();
         $wh = DB::table('warehouses')->where('company_id', $u->company_id)->first();
         $v = DB::table('vendors')->where('company_id', $u->company_id)->first();
@@ -168,13 +175,13 @@ class InventoryBatchTrackingTest extends TestCase {
                 ['product_id' => $p->id, 'quantity' => '10.0000', 'unit_price' => '25000.00'],
             ],
         ])->assertCreated()->json('data.id');
-        $this->postJson('/api/v1/workflows/purchase-requests/' . $prId . '/submit')->assertOk();
-        $this->postJson('/api/v1/workflows/purchase-requests/' . $prId . '/decision', ['decision' => 'approved'])->assertOk();
-        $poId = $this->postJson('/api/v1/workflows/purchase-requests/' . $prId . '/order', ['vendor_id' => $v->id])->assertCreated()->json('data.id');
+        $this->postJson('/api/v1/workflows/purchase-requests/'.$prId.'/submit')->assertOk();
+        $this->postJson('/api/v1/workflows/purchase-requests/'.$prId.'/decision', ['decision' => 'approved'])->assertOk();
+        $poId = $this->postJson('/api/v1/workflows/purchase-requests/'.$prId.'/order', ['vendor_id' => $v->id])->assertCreated()->json('data.id');
         $poLine = DB::table('purchase_order_lines')->where('purchase_order_id', $poId)->first();
 
         $batch = 'RETURN-BATCH-01';
-        $gr = $this->postJson('/api/v1/workflows/purchase-orders/' . $poId . '/receive', [
+        $gr = $this->postJson('/api/v1/workflows/purchase-orders/'.$poId.'/receive', [
             'warehouse_id' => $wh->id,
             'received_at' => '2026-10-15',
             'reference' => 'GR-RET-BATCH-001',
@@ -186,7 +193,7 @@ class InventoryBatchTrackingTest extends TestCase {
         $grLine = DB::table('goods_receipt_lines')->where('goods_receipt_id', $gr['id'])->first();
 
         // 2. Return 4 items of this batch
-        $ret = $this->postJson('/api/v1/workflows/goods-receipts/' . $gr['id'] . '/return', [
+        $ret = $this->postJson('/api/v1/workflows/goods-receipts/'.$gr['id'].'/return', [
             'receipt_line_id' => $grLine->id,
             'quantity' => '4.0000',
             'reason' => 'Defective goods batch test',
@@ -196,12 +203,11 @@ class InventoryBatchTrackingTest extends TestCase {
         $retMov = DB::table('inventory_movements')->where('movement_type', 'purchase_return')->first();
         $this->assertNotNull($retMov);
         $this->assertSame($batch, $retMov->batch_number);
-        $this->assertEquals(-4.0, (float)$retMov->quantity);
+        $this->assertEquals(-4.0, (float) $retMov->quantity);
 
         // Check remaining batch balance = 10 - 4 = 6
-        $batches = $this->getJson('/api/v1/operational/inventory/batches?product_id=' . $p->id)->json('data');
+        $batches = $this->getJson('/api/v1/operational/inventory/batches?product_id='.$p->id)->json('data');
         $batchItem = collect($batches)->firstWhere('batch_number', $batch);
-        $this->assertEquals(6.0, (float)$batchItem['quantity']);
+        $this->assertEquals(6.0, (float) $batchItem['quantity']);
     }
 }
-

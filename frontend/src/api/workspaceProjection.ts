@@ -1,4 +1,5 @@
 import {api} from './client';
+import {showFormModal} from './modalHelper';
 
 type Row = {id: string; [key: string]: unknown};
 type Workspace = {
@@ -191,15 +192,34 @@ export async function handleNativeWorkspaceAction(event: Event): Promise<boolean
     if (panelId === 'my-workspace') {
       event.preventDefault();
       event.stopImmediatePropagation();
-      const title = window.prompt('Judul tugas / follow-up baru:');
-      if (!title?.trim()) return true;
-      const dueDays = window.prompt('Tenggat waktu (jumlah hari dari sekarang):', '3');
-      const days = parseInt(dueDays || '3', 10) || 3;
-      const dueDate = new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
+
+      const defaultDue = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
+      const formValues = await showFormModal<{title: string; due_date: string}>({
+        title: 'Tambah Tugas Personal (Workspace)',
+        icon: 'lucide:check-circle-2',
+        submitText: 'Simpan Tugas',
+        fields: [
+          {
+            name: 'title',
+            label: 'Judul Tugas / Follow-Up',
+            type: 'text',
+            required: true,
+            placeholder: 'Contoh: Follow up penawaran klien PT Cahaya Abadi',
+          },
+          {
+            name: 'due_date',
+            label: 'Tenggat Waktu (Due Date)',
+            type: 'date',
+            required: true,
+            value: defaultDue,
+          },
+        ],
+      });
+
+      if (!formValues) return true;
       try {
-        await api.post('/api/v1/workspace/tasks', {title: title.trim(), due_at: dueDate});
+        await api.post('/api/v1/workspace/tasks', {title: formValues.title.trim(), due_at: formValues.due_date});
         await refreshNativeWorkspace();
-        window.alert('Tugas personal berhasil disimpan di workspace.');
       } catch (err: unknown) {
         const e = err as {response?: {data?: {message?: string}}};
         window.alert('Gagal menambah tugas: ' + (e.response?.data?.message || String(err)));
@@ -210,19 +230,48 @@ export async function handleNativeWorkspaceAction(event: Event): Promise<boolean
     if (panelId === 'quotation') {
       event.preventDefault();
       event.stopImmediatePropagation();
-      const title = window.prompt('Judul meeting / agenda baru:');
-      if (!title?.trim()) return true;
-      const dateTime = window.prompt('Waktu agenda (YYYY-MM-DD HH:mm):', new Date().toISOString().slice(0, 16).replace('T', ' '));
-      if (!dateTime) return true;
-      const location = window.prompt('Lokasi / Tautan rapat:', 'Kantor / Virtual');
+
+      const defaultTime = new Date().toISOString().slice(0, 16).replace('T', ' ');
+      const formValues = await showFormModal<{title: string; starts_at: string; location: string}>({
+        title: 'Tambah Agenda / Pertemuan Baru',
+        icon: 'lucide:calendar-plus',
+        submitText: 'Simpan Agenda',
+        fields: [
+          {
+            name: 'title',
+            label: 'Judul Pertemuan / Agenda',
+            type: 'text',
+            required: true,
+            placeholder: 'Contoh: Rapat Koordinasi Progress Implementasi',
+          },
+          {
+            name: 'starts_at',
+            label: 'Waktu Pelaksanaan (YYYY-MM-DD HH:mm)',
+            type: 'text',
+            required: true,
+            value: defaultTime,
+            placeholder: '2026-10-20 14:00',
+            halfWidth: true,
+          },
+          {
+            name: 'location',
+            label: 'Lokasi / Tautan Rapat',
+            type: 'text',
+            value: 'Ruang Rapat Utama / Google Meet',
+            placeholder: 'Contoh: Ruang Rapat 2 / Zoom',
+            halfWidth: true,
+          },
+        ],
+      });
+
+      if (!formValues) return true;
       try {
         await api.post('/api/v1/workspace/calendar', {
-          title: title.trim(),
-          starts_at: dateTime,
-          location: location || null,
+          title: formValues.title.trim(),
+          starts_at: formValues.starts_at.trim(),
+          location: formValues.location.trim() || null,
         });
         await refreshNativeWorkspace();
-        window.alert('Agenda kalender berhasil disimpan.');
       } catch (err: unknown) {
         const e = err as {response?: {data?: {message?: string}}};
         window.alert('Gagal menambah agenda: ' + (e.response?.data?.message || String(err)));

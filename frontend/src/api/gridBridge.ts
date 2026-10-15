@@ -1,4 +1,5 @@
 import {api} from './client';
+import {showLockedTransactionModal} from './modalHelper';
 
 type Row={__id:string;__new?:boolean;[key:string]:unknown};
 type GridState={rows:Row[];staged?:Map<string,unknown>;selected?:Set<string>;seq?:number};
@@ -146,10 +147,10 @@ export class GridBridge {
             if(submitted)this.loaded.set(key(version.route,version.panel_id),{...version,rows:submitted.rows});
           }
         }
-        this.message('Perubahan telah disimpan ke PostgreSQL');
+        this.message('Perubahan data berhasil disimpan.');
       }catch(error){
         console.error('Persistence error',error);
-        this.message('Gagal menyimpan perubahan ke PostgreSQL. Perubahan belum dikonfirmasi; muat ulang data setelah koneksi tersedia.',true);
+        this.message('Gagal menyimpan perubahan. Silakan periksa koneksi dan muat ulang halaman.',true);
         throw error;
       }finally{this.busy(false)}
     };
@@ -164,7 +165,7 @@ export class GridBridge {
   }
   async importCSV(route:string,panel_id:string,content:string){
     const grid=this.mounted.get(key(route,panel_id));if(!grid)throw new Error('Tabel belum terdaftar');
-    if(this.authoritative.has(key(route,panel_id)))throw new Error('Transaksi hanya dapat diimpor melalui workflow terotorisasi, bukan langsung ke grid.');
+    if(this.authoritative.has(key(route,panel_id)))throw new Error('Data transaksi ini hanya dapat diimpor melalui alur terotorisasi, bukan langsung ke tabel.');
     const csv=parseCsv(content);if(csv.length<2)throw new Error('CSV membutuhkan header dan minimal satu baris data');
     const [headers,...records]=csv;
     const existing=grid.state.rows[0]||{};
@@ -181,7 +182,7 @@ export class GridBridge {
     if(!rows.length)throw new Error('Tidak ditemukan baris yang dapat diimpor');
     const before=[...grid.state.rows];
     grid.state.rows=[...rows,...before];
-    try{await this.persistDirty(route,panel_id);grid.render();this.message(`${rows.length} baris berhasil diimpor ke PostgreSQL`)}
+    try{await this.persistDirty(route,panel_id);grid.render();this.message(`${rows.length} baris data berhasil diimpor`)}
     catch(e){grid.state.rows=before;grid.render();throw e}
   }
   /** Domain-backed panels are READ-ONLY projections of PostgreSQL.
@@ -284,7 +285,10 @@ export class GridBridge {
     if(!nativeMutation)return false;
     event.preventDefault();event.stopImmediatePropagation();
     if(event.type==='change' || event.type==='input'){this.mounted.get(key(route,panel))?.render();}
-    if(event.type==='click')this.message('Data transaksi ini hanya dapat diubah melalui workflow Laravel yang terotorisasi.');
+    if(event.type==='click'){
+      this.message('Data transaksi ini terkunci otomatis demi kepatuhan pembukuan. Gunakan alur/tombol resmi transaksi terkait untuk memperbarui.');
+      void showLockedTransactionModal({ route, panel });
+    }
     return true;
   }
   get mountedCount(){return this.mounted.size}

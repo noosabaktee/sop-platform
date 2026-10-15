@@ -1,7 +1,14 @@
 import {api} from './client';
+import {showFormModal} from './modalHelper';
 
 type Project = {id: string; code: string; name: string};
-const categories = ['material', 'labor', 'expense', 'service', 'other'];
+const categories = [
+  {value: 'material', label: 'Material / Bahan Baku'},
+  {value: 'labor', label: 'Tenaga Kerja / Labor'},
+  {value: 'expense', label: 'Operasional / Expense'},
+  {value: 'service', label: 'Jasa Pihak Ketiga / Service'},
+  {value: 'other', label: 'Lainnya / Other'},
+];
 
 /** Posts authoritative project costs and atomic double-entry ledger entries from the Project Cost toolbar. */
 export class ProjectCostNativeBridge {
@@ -51,42 +58,106 @@ export class ProjectCostNativeBridge {
       const projects = (await api.get('/api/v1/operational/projects')).data.data.projects as Project[];
       if (!projects.length) throw new Error('Belum ada project untuk menerima biaya.');
 
-      const projectPrompt = projects.map((item, index) => `${index + 1}. ${item.code} - ${item.name}`).join('\n');
-      const projectIdx = (Number(window.prompt(`Pilih nomor proyek:\n${projectPrompt}`, '1')) || 1) - 1;
-      const project = projects[projectIdx];
-      if (!project) return;
+      button.disabled = false;
+      document.body.classList.remove('sop-api-busy');
 
-      const categoryPrompt = categories.map((item, index) => `${index + 1}. ${item}`).join('\n');
-      const categoryIdx = (Number(window.prompt(`Pilih kategori biaya:\n${categoryPrompt}`, '1')) || 1) - 1;
-      const category = categories[categoryIdx];
-      if (!category) return;
+      const defaultRef = `COST-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+      const today = new Date().toISOString().slice(0, 10);
 
-      const description = window.prompt('Deskripsi biaya:');
-      if (!description?.trim()) return;
+      const formValues = await showFormModal<{
+        project_id: string;
+        category: string;
+        amount: number;
+        cost_date: string;
+        payment_method: string;
+        reference: string;
+        description: string;
+      }>({
+        title: 'Catat Biaya Proyek (Project Cost)',
+        icon: 'lucide:receipt',
+        submitText: 'Simpan & Posting Biaya',
+        fields: [
+          {
+            name: 'project_id',
+            label: 'Pilih Proyek',
+            type: 'select',
+            required: true,
+            options: projects.map(p => ({value: p.id, label: `${p.code} — ${p.name}`})),
+            halfWidth: true,
+          },
+          {
+            name: 'category',
+            label: 'Kategori Biaya',
+            type: 'select',
+            required: true,
+            options: categories,
+            halfWidth: true,
+          },
+          {
+            name: 'amount',
+            label: 'Nilai Biaya (Rp)',
+            type: 'number',
+            required: true,
+            min: 1,
+            step: 0.01,
+            placeholder: 'Contoh: 15000000',
+            halfWidth: true,
+          },
+          {
+            name: 'cost_date',
+            label: 'Tanggal Biaya',
+            type: 'date',
+            required: true,
+            value: today,
+            halfWidth: true,
+          },
+          {
+            name: 'payment_method',
+            label: 'Metode Pembayaran / Akun Lawan',
+            type: 'select',
+            required: true,
+            options: [
+              {value: 'cash', label: 'Kas / Bank (1100)'},
+              {value: 'payable', label: 'Hutang Usaha / Operasional (2100)'},
+            ],
+            halfWidth: true,
+          },
+          {
+            name: 'reference',
+            label: 'Nomor Referensi',
+            type: 'text',
+            required: true,
+            value: defaultRef,
+            halfWidth: true,
+          },
+          {
+            name: 'description',
+            label: 'Deskripsi Biaya',
+            type: 'textarea',
+            required: true,
+            placeholder: 'Jelaskan rincian pengeluaran biaya proyek ini...',
+            helpText: 'Sistem akan otomatis mencatat biaya dan memposting jurnal ke General Ledger.',
+          },
+        ],
+      });
 
-      const amount = window.prompt('Nilai biaya (maksimal 2 desimal):');
-      if (!amount || !/^\d{1,14}(?:\.\d{1,2})?$/.test(amount.trim()) || Number(amount) <= 0) {
+      if (!formValues) return;
+
+      if (!formValues.amount || formValues.amount <= 0) {
         throw new Error('Nilai biaya tidak valid.');
       }
 
-      const payMethodChoice = window.prompt('Metode Pembayaran / Akun Lawan:\n1. Kas / Bank (1100)\n2. Hutang Usaha / Operasional (2100)', '1');
-      if (!payMethodChoice) return;
-      const paymentMethod = payMethodChoice.trim() === '2' ? 'payable' : 'cash';
-
-      const costDate = window.prompt('Tanggal biaya (YYYY-MM-DD):', new Date().toISOString().slice(0, 10));
-      if (!costDate) return;
-
-      const reference = window.prompt('Referensi biaya:', `COST-${crypto.randomUUID().slice(0, 8).toUpperCase()}`);
-      if (!reference?.trim()) return;
+      button.disabled = true;
+      document.body.classList.add('sop-api-busy');
 
       const res = await api.post('/api/v1/operational/projects/costs', {
-        project_id: project.id,
-        reference: reference.trim(),
-        cost_date: costDate,
-        category,
-        description: description.trim(),
-        amount: amount.trim(),
-        payment_method: paymentMethod,
+        project_id: formValues.project_id,
+        reference: formValues.reference.trim(),
+        cost_date: formValues.cost_date,
+        category: formValues.category,
+        description: formValues.description.trim(),
+        amount: String(formValues.amount),
+        payment_method: formValues.payment_method,
         post_to_ledger: true,
       });
 

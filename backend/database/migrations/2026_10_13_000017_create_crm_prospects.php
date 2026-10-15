@@ -1,10 +1,13 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up(): void {
+return new class extends Migration
+{
+    public function up(): void
+    {
         Schema::table('leads', function (Blueprint $table) {
             $table->string('company_name')->nullable()->after('name');
             $table->timestampTz('converted_at')->nullable()->after('status');
@@ -20,15 +23,16 @@ return new class extends Migration {
             $table->string('next_action')->nullable();
             $table->string('status')->default('Qualified');
             $table->timestampsTz();
-            $table->unique(['company_id','lead_id']);
-            $table->index(['company_id','status']);
+            $table->unique(['company_id', 'lead_id']);
+            $table->index(['company_id', 'status']);
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
         Schema::dropIfExists('prospects');
         Schema::table('leads', function (Blueprint $table) {
-            $table->dropColumn(['company_name','converted_at']);
+            $table->dropColumn(['company_name', 'converted_at']);
         });
     }
 };

@@ -1,4 +1,5 @@
 import {api} from './client';
+import {showFormModal, showConfirmModal} from './modalHelper';
 
 type Approval = {
   id: string;
@@ -154,15 +155,22 @@ export class ApprovalWorkflowBridge {
         this.message('Tidak ada approval transaksi yang menunggu.');
         return;
       }
-      if (window.confirm('Setujui semua transaksi yang memenuhi izin approval? Permintaan yang tidak valid akan dilaporkan.')) {
-        void this.bulkApprove();
-      }
+      void (async () => {
+        const confirmed = await showConfirmModal({
+          title: 'Setujui Semua Transaksi (Bulk Approve)',
+          message: 'Apakah Anda yakin ingin menyetujui sekaligus semua transaksi yang memenuhi wewenang approval Anda?',
+          confirmText: 'Ya, Setujui Semua',
+        });
+        if (confirmed) {
+          await this.bulkApprove();
+        }
+      })();
       return;
     }
 
     const parent = el.closest<HTMLElement>('[data-appr^="db-approval-"]');
     if (!parent) {
-      this.message('Approval sedang dimuat dari PostgreSQL.');
+      this.message('Data persetujuan sedang dimuat...');
       return;
     }
     const id = el.dataset.id;
@@ -175,28 +183,56 @@ export class ApprovalWorkflowBridge {
       return;
     }
     if (action === 'revise') {
-      const comment = window.prompt('Catatan revisi untuk pengaju:');
-      if (comment === null) return;
-      if (!comment.trim()) {
-        this.message('Catatan revisi wajib diisi.');
-        return;
-      }
       if (kind === 'purchase_request') {
-        this.message('Untuk PR, gunakan Setujui atau Tolak dengan alasan.');
+        this.message('Untuk Purchase Request, gunakan tombol Setujui atau Tolak dengan alasan.');
         return;
       }
-      void this.decide(id, 'revision_requested', el as HTMLButtonElement, comment.trim(), kind);
+      void (async () => {
+        const form = await showFormModal<{comment: string}>({
+          title: 'Permintaan Revisi Dokumen',
+          icon: 'lucide:file-edit',
+          iconColor: '#eab308',
+          submitText: 'Kirim Permintaan Revisi',
+          fields: [
+            {
+              name: 'comment',
+              label: 'Catatan / Instruksi Revisi untuk Pengaju',
+              type: 'textarea',
+              required: true,
+              placeholder: 'Jelaskan poin-poin yang perlu diperbaiki oleh pengaju...',
+            },
+          ],
+        });
+        if (!form) return;
+        await this.decide(id, 'revision_requested', el as HTMLButtonElement, form.comment.trim(), kind);
+      })();
       return;
     }
     if (action === 'approve' || action === 'reject') {
       const decision = action === 'approve' ? 'approved' : 'rejected';
-      const comment = decision === 'rejected' ? window.prompt('Alasan penolakan:') : '';
-      if (comment === null) return;
-      if (decision === 'rejected' && !comment?.trim()) {
-        this.message('Alasan penolakan wajib diisi.');
+      if (decision === 'rejected') {
+        void (async () => {
+          const form = await showFormModal<{comment: string}>({
+            title: 'Tolak Pengajuan Dokumen',
+            icon: 'lucide:x-circle',
+            iconColor: '#dc2626',
+            submitText: 'Tolak Dokumen',
+            fields: [
+              {
+                name: 'comment',
+                label: 'Alasan Penolakan',
+                type: 'textarea',
+                required: true,
+                placeholder: 'Tuliskan alasan penolakan agar diketahui pengaju...',
+              },
+            ],
+          });
+          if (!form) return;
+          await this.decide(id, 'rejected', el as HTMLButtonElement, form.comment.trim(), kind);
+        })();
         return;
       }
-      void this.decide(id, decision, el as HTMLButtonElement, comment || '', kind);
+      void this.decide(id, decision, el as HTMLButtonElement, '', kind);
     }
   };
 
@@ -211,43 +247,80 @@ export class ApprovalWorkflowBridge {
         return;
       }
 
-      const promptUserList = users.map((u, i) => `${i + 1}. ${u.name} (${u.role} - ${u.email})`).join('\n');
-      const userChoice = window.prompt(`Pilih nomor rekan kerja penerima delegasi:\n${promptUserList}`, '1');
-      if (!userChoice) return;
-      const userIndex = parseInt(userChoice, 10) - 1;
-      const targetUser = users[userIndex];
-      if (!targetUser) {
-        this.message('Pilihan user tidak valid.');
-        return;
-      }
+      this.busy = false;
+      document.body.classList.remove('sop-api-busy');
 
-      const scopeChoice = window.prompt(
-        'Pilih cakupan approval:\n1. Semua Transaksi (all)\n2. Quotation\n3. Purchase Request',
-        '1'
-      );
-      if (!scopeChoice) return;
-      const scopeMap: Record<string, string> = {'1': 'all', '2': 'quotation', '3': 'purchase_request'};
-      const scope = scopeMap[scopeChoice.trim()] || 'all';
+      const formValues = await showFormModal<{
+        delegatee_id: string;
+        scope: string;
+        days: number;
+        reason: string;
+      }>({
+        title: 'Buat Delegasi Wewenang Approval',
+        icon: 'lucide:user-plus',
+        submitText: 'Simpan Delegasi',
+        fields: [
+          {
+            name: 'delegatee_id',
+            label: 'Penerima Delegasi Wewenang',
+            type: 'select',
+            required: true,
+            options: users.map(u => ({
+              value: u.id,
+              label: `${u.name} (${u.role} — ${u.email})`,
+            })),
+          },
+          {
+            name: 'scope',
+            label: 'Cakupan Dokumen Approval',
+            type: 'select',
+            required: true,
+            options: [
+              {value: 'all', label: 'Semua Transaksi (Quotation & Purchase Request)'},
+              {value: 'quotation', label: 'Hanya Quotation Penjualan'},
+              {value: 'purchase_request', label: 'Hanya Purchase Request (Pengadaan)'},
+            ],
+            halfWidth: true,
+          },
+          {
+            name: 'days',
+            label: 'Durasi Delegasi (Hari)',
+            type: 'number',
+            required: true,
+            min: 1,
+            max: 365,
+            value: 7,
+            halfWidth: true,
+          },
+          {
+            name: 'reason',
+            label: 'Alasan Pendelegasian',
+            type: 'text',
+            value: 'Cuti tahunan',
+            placeholder: 'Contoh: Cuti tahunan / Perjalanan dinas luar kota',
+          },
+        ],
+      });
 
-      const daysChoice = window.prompt('Durasi delegasi (hari):', '7');
-      if (!daysChoice) return;
-      const days = parseInt(daysChoice, 10) || 7;
+      if (!formValues) return;
 
-      const reason = window.prompt('Alasan delegasi (misal: Cuti tahunan / Dinas luar):', 'Cuti tahunan');
-      if (reason === null) return;
-
+      const targetUser = users.find(u => u.id === formValues.delegatee_id);
+      const days = Number(formValues.days) || 7;
       const startDate = new Date();
       const endDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 
+      this.busy = true;
+      document.body.classList.add('sop-api-busy');
+
       await api.post('/api/v1/approvals/delegations', {
-        delegatee_id: targetUser.id,
-        scope,
+        delegatee_id: formValues.delegatee_id,
+        scope: formValues.scope,
         start_date: startDate.toISOString(),
         end_date: endDate.toISOString(),
-        reason: reason.trim() || null,
+        reason: formValues.reason.trim() || null,
       });
 
-      this.message(`Delegasi approval ke ${targetUser.name} (${scope}) berhasil dibuat di PostgreSQL.`);
+      this.message(`Delegasi wewenang approval kepada ${targetUser?.name || 'rekan kerja'} (${formValues.scope}) berhasil disimpan.`);
       await this.refresh();
       window.dispatchEvent(new Event('sop:workflow-updated'));
     } catch (error) {
@@ -260,12 +333,18 @@ export class ApprovalWorkflowBridge {
   }
 
   private async handleRevokeDelegation(delegationId: string) {
-    if (!window.confirm('Cabut wewenang delegasi approval ini sekarang?')) return;
+    const confirmed = await showConfirmModal({
+      title: 'Cabut Delegasi Approval',
+      message: 'Apakah Anda yakin ingin mencabut wewenang delegasi approval ini sekarang?',
+      confirmText: 'Ya, Cabut Delegasi',
+      isDanger: true,
+    });
+    if (!confirmed) return;
     this.busy = true;
     document.body.classList.add('sop-api-busy');
     try {
       await api.post(`/api/v1/approvals/delegations/${delegationId}/revoke`);
-      this.message('Delegasi approval berhasil dicabut di PostgreSQL.');
+      this.message('Delegasi wewenang berhasil dicabut.');
       await this.refresh();
       window.dispatchEvent(new Event('sop:workflow-updated'));
     } catch (error) {
@@ -293,7 +372,7 @@ export class ApprovalWorkflowBridge {
       await this.requestDecision(id, decision, comment, kind);
       await this.refresh();
       window.dispatchEvent(new Event('sop:workflow-updated'));
-      this.message('Keputusan ' + decision + ' tersimpan di PostgreSQL.');
+      this.message('Keputusan persetujuan (' + decision + ') berhasil diproses.');
     } catch (error) {
       const e = error as {response?: {data?: {message?: string}}};
       this.message('Approval gagal: ' + (e.response?.data?.message || String(error)));

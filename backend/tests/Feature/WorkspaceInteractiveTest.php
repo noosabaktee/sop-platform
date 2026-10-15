@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\Company;
@@ -6,12 +7,15 @@ use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class WorkspaceInteractiveTest extends TestCase {
+class WorkspaceInteractiveTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function setupScenario(): array {
+    private function setupScenario(): array
+    {
         $this->seed(DatabaseSeeder::class);
         $co = Company::where('code', 'SOP-DEMO')->firstOrFail();
         $user = User::where('email', 'rina@sop.local')->firstOrFail();
@@ -20,7 +24,8 @@ class WorkspaceInteractiveTest extends TestCase {
         return compact('co', 'user', 'manager');
     }
 
-    public function test_workspace_index_returns_all_nine_dimensions_and_summary_kpi(): void {
+    public function test_workspace_index_returns_all_nine_dimensions_and_summary_kpi(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -41,7 +46,8 @@ class WorkspaceInteractiveTest extends TestCase {
         $this->assertArrayHasKey('unread_notifications', $res['summary']);
     }
 
-    public function test_user_can_create_and_toggle_personal_task(): void {
+    public function test_user_can_create_and_toggle_personal_task(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -57,7 +63,7 @@ class WorkspaceInteractiveTest extends TestCase {
         $this->assertEquals(0, $task['progress']);
 
         // 2. Toggle to done
-        $toggled = $this->putJson('/api/v1/workspace/tasks/' . $task['id'] . '/toggle')
+        $toggled = $this->putJson('/api/v1/workspace/tasks/'.$task['id'].'/toggle')
             ->assertOk()
             ->json('data');
 
@@ -65,7 +71,7 @@ class WorkspaceInteractiveTest extends TestCase {
         $this->assertEquals(100, $toggled['progress']);
 
         // 3. Toggle back to todo
-        $untoggled = $this->putJson('/api/v1/workspace/tasks/' . $task['id'] . '/toggle')
+        $untoggled = $this->putJson('/api/v1/workspace/tasks/'.$task['id'].'/toggle')
             ->assertOk()
             ->json('data');
 
@@ -73,7 +79,8 @@ class WorkspaceInteractiveTest extends TestCase {
         $this->assertEquals(0, $untoggled['progress']);
     }
 
-    public function test_user_can_create_calendar_event(): void {
+    public function test_user_can_create_calendar_event(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -91,12 +98,13 @@ class WorkspaceInteractiveTest extends TestCase {
         $this->assertTrue(collect($ws['calendar'])->contains('title', 'Weekly Sales Coordination'));
     }
 
-    public function test_user_can_mark_notification_as_read(): void {
+    public function test_user_can_mark_notification_as_read(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
         // Create an unread notification
-        $notifId = (string) \Illuminate\Support\Str::uuid();
+        $notifId = (string) Str::uuid();
         DB::table('notifications')->insert([
             'id' => $notifId,
             'type' => 'App\\Notifications\\QuotationApproved',
@@ -108,7 +116,7 @@ class WorkspaceInteractiveTest extends TestCase {
             'updated_at' => now(),
         ]);
 
-        $this->postJson('/api/v1/workspace/notifications/' . $notifId . '/read')->assertNoContent();
+        $this->postJson('/api/v1/workspace/notifications/'.$notifId.'/read')->assertNoContent();
 
         $readAt = DB::table('notifications')->where('id', $notifId)->value('read_at');
         $this->assertNotNull($readAt);

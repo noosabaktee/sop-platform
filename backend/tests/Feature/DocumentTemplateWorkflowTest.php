@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\Company;
@@ -9,10 +10,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class DocumentTemplateWorkflowTest extends TestCase {
+class DocumentTemplateWorkflowTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function setupScenario(): array {
+    private function setupScenario(): array
+    {
         Storage::fake('local');
         $this->seed(DatabaseSeeder::class);
         $co = Company::where('code', 'SOP-DEMO')->firstOrFail();
@@ -22,7 +25,8 @@ class DocumentTemplateWorkflowTest extends TestCase {
         return compact('co', 'user', 'manager');
     }
 
-    public function test_user_can_list_and_seed_document_templates_scoped_to_company(): void {
+    public function test_user_can_list_and_seed_document_templates_scoped_to_company(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -45,7 +49,8 @@ class DocumentTemplateWorkflowTest extends TestCase {
         $this->assertArrayHasKey('customer', $quo['variables']);
     }
 
-    public function test_user_can_save_and_update_template_variables_with_version_increment(): void {
+    public function test_user_can_save_and_update_template_variables_with_version_increment(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -94,7 +99,8 @@ class DocumentTemplateWorkflowTest extends TestCase {
         $this->assertNotNull($audit);
     }
 
-    public function test_user_can_reset_template_variables_to_default(): void {
+    public function test_user_can_reset_template_variables_to_default(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -111,7 +117,8 @@ class DocumentTemplateWorkflowTest extends TestCase {
         $this->assertEquals('INV-2026-0321', $resetRes['variables']['number']);
     }
 
-    public function test_user_can_render_template_to_document_vault_with_sha256_verification(): void {
+    public function test_user_can_render_template_to_document_vault_with_sha256_verification(): void
+    {
         $data = $this->setupScenario();
         $this->actingAs($data['user']);
 
@@ -155,7 +162,7 @@ class DocumentTemplateWorkflowTest extends TestCase {
         $this->assertEquals(hash('sha256', $content), $renderRes['sha256']);
 
         // Verify downloading via DocumentVaultController
-        $downloadRes = $this->get('/api/v1/documents/files/' . $docId . '/versions/1/download');
+        $downloadRes = $this->get('/api/v1/documents/files/'.$docId.'/versions/1/download');
         $downloadRes->assertOk();
     }
 }

@@ -1,4 +1,5 @@
 import {api} from './client';
+import {showFormModal} from './modalHelper';
 
 type DocumentRow={
  id:string;
@@ -38,8 +39,26 @@ export class DocumentVaultBridge {
    }
    if(act==='reject'&&id){
     event.preventDefault();event.stopImmediatePropagation();
-    const reason=window.prompt('Masukkan alasan penolakan dokumen:');
-    if(reason!==null){void this.decide(id,'rejected',reason.trim());}
+    void (async () => {
+      const form = await showFormModal<{reason: string}>({
+        title: 'Tolak Dokumen',
+        icon: 'lucide:x-circle',
+        iconColor: '#dc2626',
+        submitText: 'Tolak Dokumen',
+        fields: [
+          {
+            name: 'reason',
+            label: 'Alasan Penolakan Dokumen',
+            type: 'textarea',
+            required: true,
+            placeholder: 'Tuliskan alasan spesifik mengapa dokumen ini ditolak...',
+          },
+        ],
+      });
+      if (form) {
+        await this.decide(id, 'rejected', form.reason.trim());
+      }
+    })();
     return;
    }
    if(act==='verify-hash'&&id){
@@ -79,7 +98,7 @@ export class DocumentVaultBridge {
    const folder=panel?.querySelector<HTMLElement>('.fm-folder[aria-selected="true"]')?.dataset.folder;
    if(folder)form.append('folder',folder);
    await api.post('/api/v1/documents/files',form);
-   await this.refresh();window.dispatchEvent(new Event('sop:documents-updated'));this.toast('Dokumen tersimpan di storage privat PostgreSQL-metadata.');
+   await this.refresh();window.dispatchEvent(new Event('sop:documents-updated'));this.toast('Dokumen berhasil diunggah ke arsip aman.');
   }catch(error){console.error(error);this.toast('Upload gagal: file belum tersimpan. Periksa izin dan batas 10 MB.');}
   finally{this.processing=false;document.body.classList.remove('sop-api-busy')}
  }

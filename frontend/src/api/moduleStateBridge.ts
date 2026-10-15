@@ -106,7 +106,7 @@ export class ModuleStateBridge{
     }
    }catch(error){
     console.error('Gagal menyimpan module state:',error);
-    window.alert('Gagal menyimpan data halaman ke PostgreSQL. Perubahan belum tersimpan; periksa koneksi dan refresh halaman.');
+    window.alert('Gagal menyimpan data halaman. Perubahan belum tersimpan; periksa koneksi dan refresh halaman.');
     throw error;
    }finally{document.body.classList.remove('sop-api-busy')}
    if([...this.mounted.values()].some(s=>encode(s.read())!==encode(this.cache.get(id(s.route,s.section))?.payload)))this.scheduleSync(100);
