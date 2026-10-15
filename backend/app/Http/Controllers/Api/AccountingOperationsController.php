@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\AuditService;
 use App\Services\ExactDecimal as Dec;
+use App\Services\AccountingPeriodService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -11,6 +12,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AccountingOperationsController extends Controller {
+ public function options(Request $r){return response()->json(['data'=>['accounts'=>DB::table('chart_of_accounts')
+  ->where('company_id',$r->user()->company_id)->orderBy('code')->get(['id','code','name','type'])]]);}
  public function index(Request $r){
   $co=$r->user()->company_id;$from=$r->input('from');$to=$r->input('to');
   $r->validate(['from'=>['nullable','date'],'to'=>['nullable','date','after_or_equal:from']]);
@@ -52,6 +55,7 @@ class AccountingOperationsController extends Controller {
    $existing=DB::table('journal_entries')->where('company_id',$co)->where('source_type','manual')
     ->where('source_id',$data['source_id'])->lockForUpdate()->first();
    if($existing)return response()->json(['data'=>$existing,'already_exists'=>true]);
+   app(AccountingPeriodService::class)->assertOpen($co,$data['date']);
    $debit=0;$credit=0;
    foreach($data['lines'] as $l){
     $d=Dec::parse((string)$l['debit']);$c=Dec::parse((string)$l['credit']);

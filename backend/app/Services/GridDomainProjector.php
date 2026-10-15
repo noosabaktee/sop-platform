@@ -27,7 +27,7 @@ class GridDomainProjector {
   foreach($rows as $row){
    $gridRow=GridRow::where('company_id',$company)->where('grid_snapshot_id',$grid->id)->where('row_key',$row['__id'])->firstOrFail();
    $incoming[$gridRow->id]=true;
-   $fields=$this->mapped($kind,$row);
+   $fields=$this->mapped($kind,$row,$company);
    if($fields===null)continue;
    $link=DB::table('grid_domain_links')->where('grid_row_id',$gridRow->id)->lockForUpdate()->first();
    $q=DB::table($table)->where('company_id',$company);
@@ -61,7 +61,7 @@ class GridDomainProjector {
    DB::table('grid_domain_links')->where('grid_row_id',$link->grid_row_id)->update(['archived'=>true,'updated_at'=>now()]);
   }
  }
- private function mapped(string $kind,array $r):?array{
+ private function mapped(string $kind,array $r,string $company):?array{
   $s=static fn($k)=>trim((string)($r[$k]??''));
   switch($kind){
    case '/master-data|customers':return $this->requireCode(['code'=>$s('c0'),'name'=>$s('c1'),'status'=>strtolower($s('c5')?:'active')]);
@@ -74,11 +74,12 @@ class GridDomainProjector {
     $email=$s('email');if($email==='[REDACTED_EMAIL]')$email='';
     if($email!==''&&!filter_var($email,FILTER_VALIDATE_EMAIL))throw ValidationException::withMessages(['email'=>'Format email Lead tidak valid.']);
     return ['name'=>$name,'company_name'=>$s('company')?:null,'email'=>$email?:null,'source'=>$s('source')?:null,
-     'score'=>max(0,min(100,(int)$s('score'))),'status'=>strtolower($s('status')?:'new')];
+     'score'=>max(0,min(100,(int)$s('score'))),'status'=>strtolower($s('status')?:'new'),
+     'owner_id'=>$this->ownerId($s('owner'),$company)];
    case '/crm-sales|prospects':
     $name=$s('name');if($name==='')return null;
     return ['name'=>$name,'segment'=>$s('segment')?:'Mid','fit_score'=>max(0,min(100,(int)$s('fit'))),
-     'next_action'=>$s('next')?:null,'status'=>$s('status')?:'New'];
+     'next_action'=>$s('next')?:null,'status'=>$s('status')?:'New','owner_id'=>$this->ownerId($s('owner'),$company)];
   }
   return null;
  }
@@ -88,6 +89,10 @@ class GridDomainProjector {
    throw ValidationException::withMessages(['grid'=>'Kode dan nama diperlukan untuk penyimpanan master data.']);
   }
   return $fields;
+ }
+ private function ownerId(string $name,string $company):?string{
+  if($name==='')return null;
+  return DB::table('users')->where('company_id',$company)->where('name',$name)->where('is_active',true)->value('id');
  }
  private function rupiah(string $input):string{
   if($input==='')return '0.00';

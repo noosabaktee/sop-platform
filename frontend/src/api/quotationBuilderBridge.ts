@@ -74,10 +74,13 @@ export class QuotationBuilderBridge {
   if(!root||!this.options)throw new Error('Pilihan quotation belum dimuat dari database.');
   const field=(name:string)=>root.querySelector<HTMLInputElement|HTMLSelectElement>(`[data-qt-field="${name}"]`)?.value||'';
   const percent=(name:string)=>Number(root.querySelector<HTMLInputElement>(`[data-qt-sum="${name}"]`)?.value||0);
+  const normalize=(value:string)=>value.trim().toLocaleLowerCase('id-ID').replace(/\s+/g,' ');
+  const products=new Map<string,string>();for(const product of this.options.products){products.set(normalize(product.name),product.id);if(product.code?.trim())products.set(normalize(product.code),product.id);}
   const lines=[...root.querySelectorAll<HTMLTableRowElement>('[data-qt-lines] tbody tr')].map(tr=>{
    const qty=Number(tr.querySelector<HTMLInputElement>('[data-qt-key="qty"]')?.value);
    const priceMillions=Number(tr.querySelector<HTMLInputElement>('[data-qt-key="price"]')?.value);
-   return {description:tr.querySelector('td')?.textContent?.trim()||'',quantity:qty,
+   const description=tr.querySelector('td')?.textContent?.trim()||'';
+   return {description,product_id:products.get(normalize(description)),quantity:qty,
     unit_price:(Math.round(priceMillions*1000000)).toFixed(2)};
   });
   if(!lines.length)throw new Error('Quotation harus memiliki minimal satu item.');

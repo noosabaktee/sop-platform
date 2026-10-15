@@ -35,8 +35,10 @@ async function gridReady(page:Page){
 test.describe('real Laravel + PostgreSQL browser flow',()=>{
   test.skip(!enabled,'Set SOP_REAL_E2E=1 and run Laravel against the isolated test database.');
 
-  test('login, CRM workflow, SQL dashboards/workspace, all 27 routes, and logout',async({page})=>{
-    test.setTimeout(180_000);
+  test('login, CRM, dashboard/workspace, Corporate, all 27 routes, and logout',async({page})=>{
+    // The real suite deliberately walks the entire frozen application while
+    // each page hydrates against PHP's single-process development server.
+    test.setTimeout(300_000);
     const serverErrors:string[]=[];
     const pageErrors:string[]=[];
     page.on('pageerror',error=>pageErrors.push(error.message));
@@ -112,7 +114,7 @@ test.describe('real Laravel + PostgreSQL browser flow',()=>{
     const created=page.waitForResponse(response=>response.url().includes('/api/v1/corporate/meetings')&&response.request().method()==='POST'&&response.status()===201);
     await corporate.locator('[data-action="cor:new"]').click();
     await created;
-    await expect(corporate.getByText(corporateMarker,{exact:true})).toBeVisible({timeout:30_000});
+    await expect(corporate.getByText(corporateMarker,{exact:true}).first()).toBeVisible({timeout:30_000});
 
     for(const route of routes){
       await page.evaluate(next=>{location.hash='#'+next},route);

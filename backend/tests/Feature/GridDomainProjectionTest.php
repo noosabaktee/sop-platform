@@ -30,4 +30,14 @@ class GridDomainProjectionTest extends TestCase{
   $this->assertDatabaseHas('customers',['company_id'=>$company->id,'code'=>'CUS-778','name'=>'PT Valid']);
   $this->getJson('/api/v1/grid-snapshots')->assertJsonPath('data.0.version',1);
  }
+ public function test_crm_owner_assignment_resolves_only_the_current_company_user():void{
+  $company=Company::factory()->create();$user=User::factory()->create(['company_id'=>$company->id,'role'=>'admin']);
+  $owner=User::factory()->create(['company_id'=>$company->id,'name'=>'PIC CRM']);
+  User::factory()->create(['company_id'=>Company::factory()->create()->id,'name'=>'PIC CRM']);
+  $snapshot=['route'=>'/crm-sales','panel_id'=>'leads','rows'=>[[
+   '__id'=>'lead-assigned-1','name'=>'Lead Aktif','company'=>'PT Contoh','email'=>'lead@example.com',
+   'source'=>'Web','score'=>85,'owner'=>'PIC CRM','status'=>'Qualified']]];
+  $this->actingAs($user)->putJson('/api/v1/grid-snapshots',['snapshots'=>[$snapshot]])->assertOk();
+  $this->assertDatabaseHas('leads',['company_id'=>$company->id,'name'=>'Lead Aktif','owner_id'=>$owner->id]);
+ }
 }

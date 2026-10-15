@@ -50,6 +50,7 @@ class QuotationBuilderController extends Controller {
             'discount_percent'=>['required','integer','between:0,100'],
             'items'=>['required','array','min:1','max:200'],
             'items.*.description'=>['required','string','max:255'],
+            'items.*.product_id'=>['nullable','ulid',Rule::exists('products','id')->where('company_id',$request->user()->company_id)],
             'items.*.quantity'=>['required','integer','min:1','max:10000'],
             'items.*.unit_price'=>['required','numeric','min:0','max:10000000000','decimal:0,2'],
         ]);
@@ -62,7 +63,7 @@ class QuotationBuilderController extends Controller {
             if($lineTotal>9000000000000000 || $subtotal+$lineTotal>9000000000000000)
                 throw ValidationException::withMessages(['items'=>'Nilai quotation terlalu besar.']);
             $subtotal+=$lineTotal;
-            $items[]=['description'=>$line['description'],'quantity'=>$line['quantity'],
+            $items[]=['product_id'=>$line['product_id']??null,'description'=>$line['description'],'quantity'=>$line['quantity'],
                 'unit_price'=>$this->money($unit),'line_total'=>$this->money($lineTotal),'discount'=>'0.00'];
         }
         if($subtotal===0)throw ValidationException::withMessages(['items'=>'Total quotation harus lebih dari nol.']);

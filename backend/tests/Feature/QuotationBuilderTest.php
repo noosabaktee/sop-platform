@@ -3,6 +3,7 @@ namespace Tests\Feature;
 
 use App\Models\Company;
 use App\Models\Customer;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -57,6 +58,16 @@ class QuotationBuilderTest extends TestCase {
         $data=$this->draft($customer,$user);$data['customer_id']=$foreign->id;
         $this->postJson('/api/v1/quotation-builder/draft',$data)->assertUnprocessable();
         $this->assertDatabaseCount('quotations',0);
+    }
+    public function test_stock_product_line_is_tenant_scoped_and_persisted_for_sales_delivery():void {
+        [$user,$customer]=$this->actor();
+        $product=Product::create(['company_id'=>$user->company_id,'sku'=>'ERP-STOCK','name'=>'ERP Appliance','standard_cost'=>'100.00','standard_price'=>'250.00','is_active'=>true]);
+        $data=$this->draft($customer,$user);$data['items']=[['product_id'=>$product->id,'description'=>$product->name,'quantity'=>2,'unit_price'=>'250.00']];
+        $quote=$this->postJson('/api/v1/quotation-builder/draft',$data)->assertCreated()->json('data');
+        $this->assertDatabaseHas('quotation_items',['quotation_id'=>$quote['id'],'product_id'=>$product->id,'description'=>$product->name]);
+        $foreign=Product::create(['company_id'=>Company::factory()->create()->id,'sku'=>'FOREIGN','name'=>'Foreign','standard_cost'=>'1.00','standard_price'=>'1.00','is_active'=>true]);
+        $data['items'][0]['product_id']=$foreign->id;
+        $this->postJson('/api/v1/quotation-builder/draft',$data)->assertUnprocessable();
     }
     public function test_manager_requests_revision_and_sales_can_update_and_resubmit():void {
         [$sales,$customer]=$this->actor();

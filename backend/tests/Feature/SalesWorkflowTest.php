@@ -54,4 +54,68 @@ class SalesWorkflowTest extends TestCase {
   $this->actingAs(User::factory()->create(['company_id'=>$other->id]));
   $this->postJson("/api/v1/workflows/quotations/{$q->id}/submit")->assertNotFound();
  }
+ public function test_confirmed_order_delivery_moves_stock_posts_cogs_and_is_idempotent():void{
+  $this->seed(DatabaseSeeder::class);
+  $user=User::where('email','admin@sop.local')->firstOrFail();$this->actingAs($user);
+  $order=DB::table('sales_orders')->where('company_id',$user->company_id)->where('status','confirmed')->firstOrFail();
+  $warehouse=DB::table('warehouses')->where('company_id',$user->company_id)->firstOrFail();
+  $before=(string)DB::table('inventory_movements')->where('company_id',$user->company_id)->where('warehouse_id',$warehouse->id)->sum('quantity');
+  $delivery=$this->postJson('/api/v1/workflows/sales-orders/'.$order->id.'/deliver',['warehouse_id'=>$warehouse->id,'idempotency_key'=>'delivery-test-001'])
+   ->assertCreated()->json('data');
+  $this->postJson('/api/v1/workflows/sales-orders/'.$order->id.'/deliver',['warehouse_id'=>$warehouse->id,'idempotency_key'=>'delivery-test-001'])
+   ->assertOk()->assertJsonPath('already_exists',true);
+  $this->assertDatabaseHas('sales_deliveries',['id'=>$delivery['id'],'sales_order_id'=>$order->id,'status'=>'delivered']);
+  $this->assertDatabaseHas('sales_orders',['id'=>$order->id,'status'=>'delivered']);
+  $this->assertDatabaseHas('journal_entries',['company_id'=>$user->company_id,'source_type'=>'sales_delivery','source_id'=>$delivery['id']]);
+  $this->getJson('/api/v1/operational/sales')->assertOk()->assertJsonPath('data.deliveries.0.id',$delivery['id']);
+  $after=(string)DB::table('inventory_movements')->where('company_id',$user->company_id)->where('warehouse_id',$warehouse->id)->sum('quantity');
+  $this->assertLessThan((float)$before,(float)$after);
+  $deliveryLine=DB::table('sales_delivery_lines')->where('sales_delivery_id',$delivery['id'])->firstOrFail();
+  $return=$this->postJson('/api/v1/workflows/sales-deliveries/'.$delivery['id'].'/return',['reason'=>'Barang tidak sesuai pesanan','lines'=>[['delivery_line_id'=>$deliveryLine->id,'quantity'=>'0.5000']],'idempotency_key'=>'sales-return-test-001'])
+   ->assertCreated()->json('data');
+  $this->postJson('/api/v1/workflows/sales-deliveries/'.$delivery['id'].'/return',['reason'=>'Barang tidak sesuai pesanan','lines'=>[['delivery_line_id'=>$deliveryLine->id,'quantity'=>'0.5000']],'idempotency_key'=>'sales-return-test-001'])
+   ->assertOk()->assertJsonPath('already_exists',true);
+  $this->assertDatabaseHas('sales_returns',['id'=>$return['id'],'sales_delivery_id'=>$delivery['id'],'status'=>'received']);
+  $this->assertDatabaseHas('journal_entries',['company_id'=>$user->company_id,'source_type'=>'sales_return','source_id'=>$return['id']]);
+  $credit=$this->postJson('/api/v1/workflows/sales-returns/'.$return['id'].'/credit-note')->assertCreated()->json('data.credit_note');
+  $this->postJson('/api/v1/workflows/sales-returns/'.$return['id'].'/credit-note')->assertOk()->assertJsonPath('already_exists',true);
+  $this->assertDatabaseHas('credit_notes',['id'=>$credit['id'],'sales_return_id'=>$return['id'],'status'=>'posted']);
+  $this->assertDatabaseHas('journal_entries',['company_id'=>$user->company_id,'source_type'=>'sales_credit_note','source_id'=>$credit['id']]);
+  $this->getJson('/api/v1/operational/sales')->assertOk()->assertJsonPath('data.returns.0.id',$return['id']);
+  $this->assertEquals((float)$before-0.5,(float)DB::table('inventory_movements')->where('company_id',$user->company_id)->where('warehouse_id',$warehouse->id)->sum('quantity'));
+  $this->assertSame('partially_returned',DB::table('sales_deliveries')->where('id',$delivery['id'])->value('status'));
+  $secondReturn=$this->postJson('/api/v1/workflows/sales-deliveries/'.$delivery['id'].'/return',['reason'=>'Retur sisa barang yang diterima','lines'=>[['delivery_line_id'=>$deliveryLine->id,'quantity'=>'0.5000']],'idempotency_key'=>'sales-return-test-002'])->assertCreated()->json('data');
+  $this->assertSame((float)$before,(float)DB::table('inventory_movements')->where('company_id',$user->company_id)->where('warehouse_id',$warehouse->id)->sum('quantity'));
+  $this->assertSame('returned',DB::table('sales_deliveries')->where('id',$delivery['id'])->value('status'));
+  $invoice=DB::table('invoices')->where('sales_order_id',$order->id)->firstOrFail();DB::table('invoices')->where('id',$invoice->id)->update(['paid_amount'=>$invoice->amount,'status'=>'paid']);
+  $refunded=$this->postJson('/api/v1/workflows/sales-returns/'.$secondReturn['id'].'/credit-note')->assertCreated()->json('data');
+  $this->assertNotNull($refunded['refund']);$this->assertDatabaseHas('customer_refunds',['credit_note_id'=>$refunded['credit_note']['id'],'status'=>'posted']);
+  $this->assertDatabaseHas('journal_entries',['company_id'=>$user->company_id,'source_type'=>'customer_refund','source_id'=>$refunded['refund']['id']]);
+  $this->postJson('/api/v1/workflows/sales-deliveries/'.$delivery['id'].'/return',['reason'=>'Retur melebihi barang delivery','lines'=>[['delivery_line_id'=>$deliveryLine->id,'quantity'=>'0.1000']],'idempotency_key'=>'sales-return-test-003'])->assertStatus(409);
+ }
+ public function test_sales_user_and_foreign_warehouse_cannot_create_delivery():void{
+  $this->seed(DatabaseSeeder::class);
+  $admin=User::where('email','admin@sop.local')->firstOrFail();
+  $order=DB::table('sales_orders')->where('company_id',$admin->company_id)->where('status','confirmed')->firstOrFail();
+  $warehouse=DB::table('warehouses')->where('company_id',$admin->company_id)->firstOrFail();
+  $sales=User::where('email','rina@sop.local')->firstOrFail();
+  $this->actingAs($sales)->postJson('/api/v1/workflows/sales-orders/'.$order->id.'/deliver',['warehouse_id'=>$warehouse->id,'idempotency_key'=>'role-delivery-001'])->assertForbidden();
+  $other=Company::factory()->create();$foreign=(string)Str::ulid();
+  DB::table('warehouses')->insert(['id'=>$foreign,'company_id'=>$other->id,'code'=>'WH-X','name'=>'Foreign','created_at'=>now(),'updated_at'=>now()]);
+  $this->actingAs($admin)->postJson('/api/v1/workflows/sales-orders/'.$order->id.'/deliver',['warehouse_id'=>$foreign,'idempotency_key'=>'tenant-delivery-001'])->assertUnprocessable();
+ }
+ public function test_sales_order_can_be_delivered_in_multiple_partial_batches():void{
+  $this->seed(DatabaseSeeder::class);$user=User::where('email','admin@sop.local')->firstOrFail();$this->actingAs($user);
+  $order=DB::table('sales_orders')->where('company_id',$user->company_id)->where('status','confirmed')->firstOrFail();
+  $warehouse=DB::table('warehouses')->where('company_id',$user->company_id)->firstOrFail();
+  $product=DB::table('quotation_items')->where('quotation_id',$order->quotation_id)->whereNotNull('product_id')->firstOrFail();
+  $this->postJson('/api/v1/workflows/sales-orders/'.$order->id.'/deliver',['warehouse_id'=>$warehouse->id,'lines'=>[['product_id'=>$product->product_id,'quantity'=>'0.5000']],'idempotency_key'=>'partial-delivery-001'])
+   ->assertCreated();
+  $this->assertDatabaseHas('sales_orders',['id'=>$order->id,'status'=>'partial_delivered']);
+  $this->getJson('/api/v1/operational/sales/orders/'.$order->id.'/delivery')->assertOk()->assertJsonPath('data.lines.0.delivered_quantity','0.5000');
+  $this->postJson('/api/v1/workflows/sales-orders/'.$order->id.'/deliver',['warehouse_id'=>$warehouse->id,'lines'=>[['product_id'=>$product->product_id,'quantity'=>'0.5000']],'idempotency_key'=>'partial-delivery-002'])
+   ->assertCreated();
+  $this->assertDatabaseHas('sales_orders',['id'=>$order->id,'status'=>'delivered']);
+  $this->assertSame(2,DB::table('sales_deliveries')->where('sales_order_id',$order->id)->count());
+ }
 }

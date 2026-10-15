@@ -244,6 +244,28 @@ export class GridBridge {
       }
       if(newTransferRow || transferStatus)return false;
     }
+    if(route==='/inventory'&&panel==='opname'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/inventory'&&panel==='adjustment'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/finance'&&panel==='accounting'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/finance'&&panel==='cash'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/projects'&&panel==='cost'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/projects'&&panel==='list'){
+      const projectMutation=el.closest<HTMLElement>('[data-bd-act="add"],select[data-bd-key="status"]');
+      if(projectMutation)return false;
+    }
+    if(route==='/business-development'&&panel==='opportunities'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/business-development'&&panel==='opportunities'&&el.matches('select[data-bd-key="status"]'))return false;
+    // Project task writes are captured by ProjectTaskNativeBridge and mapped
+    // directly to the normalized task API. Do not let the generic fixture
+    // guard consume those specific events first.
+    if(route==='/projects'&&panel==='task'){
+      const taskMutation=el.closest<HTMLElement>('[data-bd-act="add"],[data-bd-act="delrow"],[data-bd-act="assign"],select[data-bd-key="status"]');
+      if(taskMutation)return false;
+    }
+    if(route==='/purchase'&&panel==='request'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/sales'&&panel==='order'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/sales'&&panel==='delivery'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/sales'&&panel==='return'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
 
     const nativeMutation=el.closest<HTMLElement>('.bd-cell,[data-bd-act="add"],[data-bd-act="commit"],[data-bd-act="delete"],[data-bd-act="delrow"],[data-bd-act="assign"],[data-bd-act="discard"],[data-bd-act="import"],[data-action$=":create"]');
     if(!nativeMutation)return false;

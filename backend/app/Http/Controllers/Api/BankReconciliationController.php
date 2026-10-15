@@ -47,6 +47,16 @@ class BankReconciliationController extends Controller {
    return response()->json(['data'=>DB::table('bank_statement_lines')->find($ulid)],201);
   });
  }
+ public function candidates(Request $r,string $id){$this->canEdit($r);$co=$r->user()->company_id;
+  $stmt=DB::table('bank_statement_lines')->where('company_id',$co)->where('id',$id)->first();abort_unless($stmt,404);
+  $bank=DB::table('bank_accounts')->where('company_id',$co)->where('id',$stmt->bank_account_id)->first();abort_unless($bank,404);
+  $amount=(string)$stmt->amount;
+  return response()->json(['data'=>DB::table('journal_lines as l')->join('journal_entries as e','e.id','=','l.journal_entry_id')
+   ->where('e.company_id',$co)->where('e.status','posted')->where('l.account_id',$bank->coa_id)
+   ->whereNotExists(function($q){$q->selectRaw('1')->from('bank_statement_lines as x')->whereColumn('x.journal_line_id','l.id');})
+   ->whereRaw('(l.debit - l.credit) = ?',[$amount])->orderByDesc('e.posting_date')->limit(50)
+   ->get(['l.id','l.debit','l.credit','e.number','e.posting_date','e.description'])]);
+ }
  public function match(Request $r,string $id){$this->canEdit($r);$co=$r->user()->company_id;
   $d=$r->validate(['journal_line_id'=>['required','ulid']]);
   return DB::transaction(function()use($r,$co,$id,$d){

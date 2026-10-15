@@ -35,6 +35,33 @@ class ProjectOperationsController extends Controller {
     ->where('p.company_id',$co)->orderBy('t.due_at')->limit(1000)
     ->get(['t.*','p.code as project_code','u.name as assignee','parent.title as parent_title'])]]);
  }
+ public function options(Request $r){$co=$r->user()->company_id;return response()->json(['data'=>[
+   'users'=>DB::table('users')->where('company_id',$co)->where('is_active',true)->orderBy('name')->get(['id','name','role']),
+   'customers'=>DB::table('customers')->where('company_id',$co)->where('status','active')->orderBy('name')->get(['id','name'])
+  ]]);}
+ public function createProject(Request $r){
+  abort_unless($r->user()->canManageRecords(),403);$co=$r->user()->company_id;
+  $data=$r->validate(['code'=>['required','string','min:2','max:60','regex:/^[A-Za-z0-9_-]+$/',Rule::unique('projects','code')->where('company_id',$co)],
+   'name'=>['required','string','min:2','max:255'],'customer_id'=>['required','ulid',Rule::exists('customers','id')->where('company_id',$co)],
+   'manager_id'=>['nullable','ulid',Rule::exists('users','id')->where('company_id',$co)],'started_at'=>['nullable','date'],
+   'due_at'=>['nullable','date','after_or_equal:started_at'],'contract_value'=>['nullable','numeric','min:0'],'budget'=>['nullable','numeric','min:0'],
+   'status'=>['nullable',Rule::in(['planning','active','at_risk','on_hold','done'])]]);
+  return DB::transaction(function()use($r,$co,$data){$id=(string)Str::ulid();$now=now();
+   DB::table('projects')->insert(['id'=>$id,'company_id'=>$co,'customer_id'=>$data['customer_id'],'manager_id'=>$data['manager_id']??$r->user()->id,
+    'code'=>strtoupper($data['code']),'name'=>$data['name'],'status'=>$data['status']??'planning','started_at'=>$data['started_at']??null,'due_at'=>$data['due_at']??null,
+    'contract_value'=>$data['contract_value']??0,'budget'=>$data['budget']??0,'created_at'=>$now,'updated_at'=>$now]);
+   AuditService::record($r->user(),'project.created','project',$id,null,['code'=>strtoupper($data['code']),'name'=>$data['name']]);
+   return response()->json(['data'=>DB::table('projects')->find($id)],201);
+  });
+ }
+ public function updateProject(Request $r,string $id){
+  $data=$r->validate(['status'=>['required',Rule::in(['planning','active','at_risk','on_hold','done'])]]);
+  return DB::transaction(function()use($r,$id,$data){$project=$this->project($r,$id,true);$this->canEdit($r,$project);
+   DB::table('projects')->where('id',$id)->update($data+['updated_at'=>now()]);
+   AuditService::record($r->user(),'project.updated','project',$id,['status'=>$project->status],$data);
+   return response()->json(['data'=>DB::table('projects')->find($id)]);
+  });
+ }
  public function createTask(Request $r,string $projectId){$p=$this->project($r,$projectId);$this->canEdit($r,$p);
   $co=$r->user()->company_id;
   $data=$r->validate(['title'=>['required','string','min:2','max:255'],'parent_id'=>['nullable','ulid'],

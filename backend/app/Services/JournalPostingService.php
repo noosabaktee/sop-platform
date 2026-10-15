@@ -31,6 +31,7 @@ class JournalPostingService {
   $old=DB::table('journal_entries')->where('company_id',$company)->where('source_type',$sourceType)
    ->where('source_id',$sourceId)->lockForUpdate()->first();
   if($old)return $old->id;
+  app(AccountingPeriodService::class)->assertOpen($company,$date);
   $debit=0;$credit=0;$codes=[];
   foreach($lines as $line){
    $dr=ExactDecimal::parse((string)$line['debit']);$cr=ExactDecimal::parse((string)$line['credit']);

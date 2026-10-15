@@ -57,6 +57,21 @@ class ProcurementWorkflowController extends Controller {
     ->where('ret.company_id',$co)->orderByDesc('ret.created_at')->limit(200)
     ->get(['ret.*','gr.number as goods_receipt_number','v.name as vendor','l.unit_cost'])]]);
  }
+ public function order(Request $r,string $id){
+  $order=DB::table('purchase_orders as po')->join('vendors as v','v.id','=','po.vendor_id')
+   ->where('po.company_id',$this->company($r))->where('po.id',$id)->first(['po.*','v.name as vendor']);abort_unless($order,404);
+  $lines=DB::table('purchase_order_lines as l')->join('products as p','p.id','=','l.product_id')
+   ->where('l.purchase_order_id',$id)->get(['l.*','p.sku','p.name as product']);
+  return response()->json(['data'=>['order'=>$order,'lines'=>$lines]]);
+ }
+ public function receipt(Request $r,string $id){
+  $receipt=DB::table('goods_receipts')->where('company_id',$this->company($r))->where('id',$id)->first();abort_unless($receipt,404);
+  $returns=DB::table('purchase_returns')->groupBy('goods_receipt_line_id')->select('goods_receipt_line_id',DB::raw('SUM(quantity) as returned_quantity'));
+  $billed=DB::table('vendor_bill_lines')->groupBy('goods_receipt_line_id')->select('goods_receipt_line_id',DB::raw('SUM(quantity) as billed_quantity'));
+  $lines=DB::table('goods_receipt_lines as l')->join('products as p','p.id','=','l.product_id')->leftJoinSub($returns,'returns','returns.goods_receipt_line_id','=','l.id')->leftJoinSub($billed,'billed','billed.goods_receipt_line_id','=','l.id')->where('l.goods_receipt_id',$id)
+   ->get(['l.*','p.sku','p.name as product',DB::raw('COALESCE(returns.returned_quantity,0) as returned_quantity'),DB::raw('COALESCE(billed.billed_quantity,0) as billed_quantity'),DB::raw('(l.quantity - COALESCE(returns.returned_quantity,0) - COALESCE(billed.billed_quantity,0)) as billable_quantity')]);
+  return response()->json(['data'=>['receipt'=>$receipt,'lines'=>$lines]]);
+ }
  public function createRequest(Request $r){
   $data=$r->validate(array_merge($this->productRules($r),[
    'project_id'=>['nullable','ulid',Rule::exists('projects','id')->where('company_id',$this->company($r))]]));
@@ -189,10 +204,25 @@ class ProcurementWorkflowController extends Controller {
     'quantity'=>Dec::format(-$qty,4),'unit_cost'=>$line->unit_cost,'movement_type'=>'purchase_return',
     'reference'=>$receipt->number,'source_type'=>'purchase_return','source_id'=>$id,
     'posted_at'=>$now,'created_at'=>$now,'updated_at'=>$now]);
-   $returnAmount=Dec::line(Dec::format($qty,4),(string)$line->unit_cost);
-   if($returnAmount>0)app(JournalPostingService::class)->post($this->company($r),'purchase_return',$id,
-    'Retur penerimaan '.$receipt->number,'2200','1300',Dec::format($returnAmount),now()->toDateString());
-   AuditService::record($r->user(),'goods_receipt.returned','purchase_return',$id,null,['goods_receipt_id'=>$receiptId,'quantity'=>Dec::format($qty,4)]);
+   $returnAmount=Dec::line(Dec::format($qty,4),(string)$line->unit_cost);$co=$this->company($r);
+   $bill=DB::table('vendor_bills')->where('company_id',$co)->where('goods_receipt_id',$receiptId)->lockForUpdate()->first();
+   $hasTrackedBillLines=DB::table('vendor_bill_lines as bl')->join('goods_receipt_lines as grl','grl.id','=','bl.goods_receipt_line_id')->where('grl.goods_receipt_id',$receiptId)->exists();
+   $billedQuantity=$hasTrackedBillLines?Dec::parse((string)(DB::table('vendor_bill_lines')->where('goods_receipt_line_id',$line->id)->sum('quantity')??0),4):($bill?Dec::parse((string)$line->quantity,4):0);
+   $alreadyBilledReturned=min(Dec::parse((string)$past,4),$billedQuantity);$billedReturnQty=max(0,min($qty,$billedQuantity-$alreadyBilledReturned));$unbilledReturnQty=$qty-$billedReturnQty;
+   $billedAmount=$billedReturnQty>0?Dec::line(Dec::format($billedReturnQty,4),(string)$line->unit_cost):0;$unbilledAmount=$unbilledReturnQty>0?Dec::line(Dec::format($unbilledReturnQty,4),(string)$line->unit_cost):0;$refund=0;
+   if($billedAmount>0){abort_unless($bill,409,'Tagihan vendor untuk retur tidak ditemukan.');
+    $amount=Dec::parse((string)$bill->amount);$paid=Dec::parse((string)$bill->paid_amount);abort_unless($billedAmount<=$amount,409,'Nilai retur melebihi nilai tagihan vendor.');
+    $newAmount=$amount-$billedAmount;$refund=max(0,$paid-$newAmount);$newPaid=$paid-$refund;
+    DB::table('vendor_bills')->where('id',$bill->id)->update(['amount'=>Dec::format($newAmount),'paid_amount'=>Dec::format($newPaid),'status'=>$newAmount===$newPaid?'paid':($newPaid>0?'partial':'posted'),'updated_at'=>$now]);
+    $creditId=(string)Str::ulid();DB::table('vendor_credit_notes')->insert(['id'=>$creditId,'company_id'=>$co,'purchase_return_id'=>$id,'vendor_bill_id'=>$bill->id,'posted_by'=>$r->user()->id,'number'=>$this->code('VCN'),'amount'=>Dec::format($billedAmount),'status'=>'posted','created_at'=>$now,'updated_at'=>$now]);
+    if($refund>0){$refundId=(string)Str::ulid();DB::table('vendor_refunds')->insert(['id'=>$refundId,'company_id'=>$co,'vendor_credit_note_id'=>$creditId,'vendor_bill_id'=>$bill->id,'received_by'=>$r->user()->id,'number'=>$this->code('VREF'),'amount'=>Dec::format($refund),'status'=>'posted','created_at'=>$now,'updated_at'=>$now]);app(JournalPostingService::class)->post($co,'vendor_refund',$refundId,'Refund vendor retur '.$receipt->number,'1100','2100',Dec::format($refund),$now->toDateString());}
+   }
+   if($returnAmount>0)app(JournalPostingService::class)->postLines($co,'purchase_return',$id,'Retur penerimaan '.$receipt->number,$now->toDateString(),array_values(array_filter([
+    $billedAmount>0?['code'=>'2100','debit'=>Dec::format($billedAmount),'credit'=>'0.00']:null,
+    $unbilledAmount>0?['code'=>'2200','debit'=>Dec::format($unbilledAmount),'credit'=>'0.00']:null,
+    ['code'=>'1300','debit'=>'0.00','credit'=>Dec::format($returnAmount)],
+   ])));
+   AuditService::record($r->user(),'goods_receipt.returned','purchase_return',$id,null,['goods_receipt_id'=>$receiptId,'quantity'=>Dec::format($qty,4),'vendor_credit_amount'=>Dec::format($billedAmount),'vendor_refund_amount'=>Dec::format($refund)]);
    return response()->json(['data'=>DB::table('purchase_returns')->find($id)],201);
   });
  }

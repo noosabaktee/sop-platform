@@ -38,6 +38,28 @@ function projectOverview(overview:HTMLElement,data:KPI){
  overview.querySelectorAll<HTMLButtonElement>('[data-action="focus:prev"],[data-action="focus:next"]').forEach(button=>button.disabled=true);
 }
 
+function projectManagement(data:KPI,optional:PromiseSettledResult<{data:{data:unknown}}>[]) {
+ const root=document.querySelector<HTMLElement>('[data-route="/management"]');if(!root)return;
+ const accounting=optional[0]?.status==='fulfilled'?(optional[0].value.data.data as {balanced?:boolean}):undefined;
+ const payables=optional[1]?.status==='fulfilled'?(optional[1].value.data.data as {bills?:Array<{amount:string;paid_amount:string}>}):undefined;
+ const banks=optional[2]?.status==='fulfilled'?(optional[2].value.data.data as {accounts?:Array<{ledger_balance:string}>}):undefined;
+ const totalAp=(payables?.bills||[]).reduce((sum,bill)=>sum+Math.max(0,Number(bill.amount)-Number(bill.paid_amount)),0);
+ const cash=(banks?.accounts||[]).reduce((sum,account)=>sum+Number(account.ledger_balance||0),0);
+ root.querySelectorAll<HTMLElement>('.kpi').forEach(card=>{
+  const label=(card.querySelector<HTMLElement>('.kpi__title')?.innerText||'').toLowerCase();let value:string|undefined;
+  if(/revenue/.test(label))value=idr(data.sales_revenue);
+  else if(/pipeline value|weighted forecast|commit/.test(label))value=idr(data.opportunity_value);
+  else if(/total ar/.test(label))value=idr(data.outstanding_ar);
+  else if(/total ap/.test(label)&&payables)value=idr(totalAp);
+  else if(/cash position|total kas|total kas & bank/.test(label)&&banks)value=idr(cash);
+  else if(/trial balance/.test(label)&&accounting)value=accounting.balanced?'Balanced':'Tidak balance';
+  else if(/project aktif/.test(label))value=String(data.projects);
+  else if(/sales order/.test(label))value=String(total(data.procurement.order_status,['draft','cancelled','closed']));
+  else if(/pipeline/.test(label))value=idr(data.opportunity_value);
+  if(value!==undefined){const node=card.querySelector<HTMLElement>('.kpi__value');if(node)node.textContent=value;card.dataset.value=value;}
+ });
+}
+
 /** Projects live SQL aggregates into the original Overview and Dashboard DOM. */
 export async function refreshNativeKpis(){
  const {data:result}=await api.get(`/api/v1/dashboard?period=${selectedPeriod()}`),data=result.data as KPI;
@@ -70,4 +92,8 @@ export async function refreshNativeKpis(){
   if(value!==undefined){const node=card.querySelector<HTMLElement>('.kpi__value');if(node)node.textContent=value;card.dataset.value=value}
  });
  const fresh=dashboard?.querySelector<HTMLElement>('[data-part="dash-fresh-time"]');if(fresh)fresh.textContent=new Date(data.last_refreshed_at).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+ const optional=await Promise.allSettled([
+  api.get('/api/v1/operational/accounting'),api.get('/api/v1/operational/payables'),api.get('/api/v1/operational/banks')
+ ]);
+ projectManagement(data,optional);
 }

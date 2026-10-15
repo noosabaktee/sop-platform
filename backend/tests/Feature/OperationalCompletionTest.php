@@ -41,6 +41,8 @@ class OperationalCompletionTest extends TestCase {
    'reference'=>'TX-001','amount'=>'111000000.00','value_date'=>'2026-10-13'])->assertCreated()->json('data.id');
   $line=DB::table('journal_lines')->where('account_id',$coa->id)->where('debit','111000000.00')->first();
   $this->assertNotNull($line);
+  $this->getJson('/api/v1/operational/bank-statements/'.$s.'/candidates')->assertOk()
+   ->assertJsonFragment(['id'=>$line->id]);
   $this->postJson('/api/v1/operational/bank-statements/'.$s.'/match',['journal_line_id'=>$line->id])->assertOk();
   $this->postJson('/api/v1/operational/bank-statements/'.$s.'/match',['journal_line_id'=>$line->id])->assertOk()->assertJsonPath('already_exists',true);
   $this->assertSame(1,DB::table('bank_statement_lines')->where('journal_line_id',$line->id)->count());
@@ -65,15 +67,34 @@ class OperationalCompletionTest extends TestCase {
   $this->getJson('/api/v1/reports/data?type=sales')->assertOk()->assertJsonCount(6,'data.rows');
   $response=$this->getJson('/api/v1/reports/export.csv?type=sales')->assertOk();
   $this->assertStringContainsString('text/csv',$response->headers->get('Content-Type'));
+  $this->getJson('/api/v1/integrations/status')->assertOk()->assertJsonPath('data.email',false)->assertJsonPath('data.whatsapp',false)->assertJsonPath('data.ai',false);
   $this->postJson('/api/v1/communications/send',[
    'channel'=>'email','recipient'=>'someone@example.com','content'=>'Test message should not be delivered',
    'idempotency_key'=>'provider-not-configured-001'])->assertStatus(503);
+  $this->postJson('/api/v1/communications/send',[
+   'channel'=>'whatsapp','recipient'=>'+628123456789','content'=>'Test WhatsApp should not be delivered',
+   'idempotency_key'=>'provider-not-configured-002'])->assertStatus(503);
   $this->assertSame(0,DB::table('outbound_messages')->where('status','sent')->count());
  }
  public function test_regular_sales_cannot_post_stocktake_or_bank_match():void {
-  $u=$this->prepare();$sales=User::where('email','rina@sop.local')->firstOrFail();$this->actingAs($sales);
+  $u=$this->prepare();
+  $coa=DB::table('chart_of_accounts')->where('company_id',$u->company_id)->where('code','1200')->firstOrFail();
+  $bank=$this->postJson('/api/v1/operational/banks',['name'=>'Restricted Bank','coa_id'=>$coa->id,'currency'=>'IDR'])->assertCreated()->json('data.id');
+  $statement=$this->postJson('/api/v1/operational/banks/'.$bank.'/statements',[
+   'reference'=>'RESTRICTED-001','amount'=>'100.00','value_date'=>'2026-10-13'])->assertCreated()->json('data.id');
+  $sales=User::where('email','rina@sop.local')->firstOrFail();$this->actingAs($sales);
   $w=DB::table('warehouses')->where('company_id',$u->company_id)->first();
   $this->postJson('/api/v1/operational/inventory/stocktakes',['warehouse_id'=>$w->id])->assertForbidden();
   $this->postJson('/api/v1/operational/banks',['name'=>'No Permission','coa_id'=>(string)Str::ulid()])->assertForbidden();
+  $this->getJson('/api/v1/operational/bank-statements/'.$statement.'/candidates')->assertForbidden();
+ }
+ public function test_purchase_order_detail_exposes_only_own_company_lines():void {
+  $u=$this->prepare();$order=DB::table('purchase_orders')->where('company_id',$u->company_id)->firstOrFail();
+  $product=DB::table('products')->where('company_id',$u->company_id)->firstOrFail();
+  DB::table('purchase_order_lines')->insert(['id'=>(string)Str::ulid(),'purchase_order_id'=>$order->id,
+   'product_id'=>$product->id,'quantity'=>'2.0000','received_quantity'=>'0.0000','unit_price'=>'100.00','created_at'=>now(),'updated_at'=>now()]);
+  $this->getJson('/api/v1/operational/procurement/orders/'.$order->id)->assertOk()
+   ->assertJsonPath('data.order.id',$order->id)->assertJsonStructure(['data'=>['order','lines'=>[['id','product_id','quantity','received_quantity']]]]);
+  $this->assertGreaterThan(0,DB::table('purchase_order_lines')->where('purchase_order_id',$order->id)->count());
  }
 }

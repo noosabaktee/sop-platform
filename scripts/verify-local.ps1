@@ -1,4 +1,8 @@
-param([switch]$SkipRealBrowser)
+param(
+  [switch]$SkipRealBrowser,
+  [ValidateRange(1,65535)][int]$BackendPort = 8000,
+  [ValidateRange(1,65535)][int]$FrontendPort = 5173
+)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 
@@ -26,7 +30,7 @@ if (-not $prodDb -or -not $testDb -or $prodDb -eq $testDb -or $testConnection -n
   throw 'Konfigurasi DB test tidak aman: wajib PostgreSQL, berbeda dari DB aplikasi, dan berakhiran _test/_testing.'
 }
 
-$keys = @('APP_ENV','APP_KEY','DB_CONNECTION','DB_HOST','DB_PORT','DB_DATABASE','DB_USERNAME','DB_PASSWORD','CACHE_STORE','SESSION_DRIVER','QUEUE_CONNECTION','MAIL_MAILER')
+$keys = @('APP_ENV','APP_KEY','DB_CONNECTION','DB_HOST','DB_PORT','DB_DATABASE','DB_USERNAME','DB_PASSWORD','CACHE_STORE','SESSION_DRIVER','QUEUE_CONNECTION','MAIL_MAILER','SANCTUM_STATEFUL_DOMAINS')
 $old = @{}
 foreach ($key in $keys) {
   $old[$key] = [Environment]::GetEnvironmentVariable($key,'Process')
@@ -60,22 +64,25 @@ try {
   } finally { Pop-Location }
 
   if (-not $SkipRealBrowser) {
-    $listener = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue
-    if ($listener) { throw 'Port 8000 sedang dipakai. Hentikan server tersebut agar E2E tidak berisiko memakai database yang salah.' }
+    $listener = Get-NetTCPConnection -LocalPort $BackendPort -State Listen -ErrorAction SilentlyContinue
+    if ($listener) { throw "Port $BackendPort sedang dipakai. Pilih port E2E lain atau hentikan server tersebut agar E2E tidak berisiko memakai database yang salah." }
     $stdout = Join-Path $root 'backend\storage\logs\e2e-server.out.log'
     $stderr = Join-Path $root 'backend\storage\logs\e2e-server.err.log'
     # The array driver is ideal for isolated PHP tests, but it intentionally
     # discards state after every HTTP request. The browser flow needs a
     # short-lived persistent session across CSRF, login, and /me requests.
     $env:SESSION_DRIVER='file'
-    $server = Start-Process -FilePath 'php' -ArgumentList @('artisan','serve','--host=127.0.0.1','--port=8000') -WorkingDirectory (Join-Path $root 'backend') -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
+    # Sanctum only starts Laravel's web session for an explicitly stateful
+    # origin. Match the Vite port selected for this isolated browser run.
+    $env:SANCTUM_STATEFUL_DOMAINS="localhost:$FrontendPort,127.0.0.1:$FrontendPort"
+    $server = Start-Process -FilePath 'php' -ArgumentList @('artisan','serve','--host=127.0.0.1',"--port=$BackendPort") -WorkingDirectory (Join-Path $root 'backend') -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
     $ready = $false
     for ($i=0; $i -lt 40; $i++) {
-      try { if ((Invoke-WebRequest -Uri 'http://127.0.0.1:8000/up' -UseBasicParsing -TimeoutSec 2).StatusCode -eq 200) { $ready=$true; break } } catch {}
+      try { if ((Invoke-WebRequest -Uri "http://127.0.0.1:$BackendPort/up" -UseBasicParsing -TimeoutSec 2).StatusCode -eq 200) { $ready=$true; break } } catch {}
       Start-Sleep -Milliseconds 250
     }
     if (-not $ready) { throw 'Laravel E2E server tidak siap. Periksa backend/storage/logs/e2e-server.err.log.' }
-    $e2eListener = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
+    $e2eListener = Get-NetTCPConnection -LocalPort $BackendPort -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($e2eListener) {
       $child = Get-CimInstance Win32_Process -Filter "ProcessId=$($e2eListener.OwningProcess)"
       if ($child.CommandLine -like "*$root*" -and $child.CommandLine -like '*server.php*') {
@@ -87,8 +94,15 @@ try {
     Push-Location (Join-Path $root 'frontend')
     try {
       $env:SOP_REAL_E2E='1'
+      $env:SOP_BACKEND_URL="http://127.0.0.1:$BackendPort"
+      $env:SOP_FRONTEND_PORT="$FrontendPort"
       Run-Step { npm.cmd run test:e2e:real } 'Playwright real Laravel/PostgreSQL gagal.'
-    } finally { Remove-Item Env:SOP_REAL_E2E -ErrorAction SilentlyContinue; Pop-Location }
+    } finally {
+      Remove-Item Env:SOP_REAL_E2E -ErrorAction SilentlyContinue
+      Remove-Item Env:SOP_BACKEND_URL -ErrorAction SilentlyContinue
+      Remove-Item Env:SOP_FRONTEND_PORT -ErrorAction SilentlyContinue
+      Pop-Location
+    }
   }
 } finally {
   if ($serverChildId -and (Get-Process -Id $serverChildId -ErrorAction SilentlyContinue)) { Stop-Process -Id $serverChildId -Force }

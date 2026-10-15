@@ -33,9 +33,7 @@ export class ExternalNativeBridge {
   if(el.matches('[data-action="mail:sync"], [data-action="wa:sync"]')){
    this.note('Sinkronisasi inbox provider belum aktif. Tidak ada pesan eksternal yang diambil.');return;
   }
-  if(el.matches('[data-wa-act="send"]')){
-   this.note('Tidak dikirim: nomor pada chat contoh bukan kontak WhatsApp API tervalidasi. Konfigurasi kontak opt-in dan provider terlebih dahulu.');return;
-  }
+  if(el.matches('[data-wa-act="send"]')){void this.sendWhatsApp(el);return;}
   if(el.matches('[data-mail-act="send"]')){void this.sendEmail(el);return}
   const input=el.closest<HTMLElement>('.chatbox')?.querySelector<HTMLInputElement>('[data-chat-input]')||
     page.querySelector<HTMLElement>('[data-tabpanel]:not([hidden])')?.querySelector<HTMLInputElement>('[data-chat-input]');
@@ -56,6 +54,20 @@ export class ExternalNativeBridge {
     channel:'email',recipient,subject,content,idempotency_key:crypto.randomUUID()});
    this.note(res.data.data.status==='sent'?'Email diterima transport SMTP. Delivery akhir bergantung pada provider.':'Status pengiriman: '+res.data.data.status);
   }catch(err){this.note('Email tidak terkirim: '+this.errorMessage(err))}
+  finally{this.pending=false;button.removeAttribute('aria-busy');document.body.classList.remove('sop-api-busy')}
+ }
+ private async sendWhatsApp(button:HTMLElement){
+  if(this.pending)return;
+  const chat=button.closest<HTMLElement>('.chat');const input=chat?.querySelector<HTMLInputElement>('[data-wa-reply]');const content=input?.value.trim()||'';
+  if(!content){this.note('Tulis pesan WhatsApp terlebih dahulu.');return;}
+  const recipient=window.prompt('Nomor WhatsApp tujuan (format internasional, misalnya +628123456789):');if(recipient===null)return;
+  if(!/^\+[1-9][0-9]{7,14}$/.test(recipient.trim())){this.note('Nomor WhatsApp harus format internasional, misalnya +628123456789.');return;}
+  if(!window.confirm(`Kirim WhatsApp ke ${recipient.trim()}? Pastikan penerima telah opt-in.`))return;
+  this.pending=true;button.setAttribute('aria-busy','true');document.body.classList.add('sop-api-busy');
+  try{
+   const response=await api.post('/api/v1/communications/send',{channel:'whatsapp',recipient:recipient.trim(),content,idempotency_key:crypto.randomUUID()});
+   if(input)input.value='';this.note(response.data.data.status==='sent'?'WhatsApp diterima WhatsApp Cloud API. Delivery akhir mengikuti provider.':'Status WhatsApp: '+response.data.data.status);
+  }catch(err){this.note('WhatsApp tidak terkirim: '+this.errorMessage(err))}
   finally{this.pending=false;button.removeAttribute('aria-busy');document.body.classList.remove('sop-api-busy')}
  }
  private append(body:HTMLElement,role:'user'|'ai',text:string){
