@@ -93,4 +93,103 @@ class CrmWorkflowController extends Controller
 
         return response()->json(['data'=>$result]);
     }
+
+    public function convertProspect(Request $request, string $rowKey)
+    {
+        abort_unless(in_array($request->user()->role, ['super_admin','admin','manager','sales'], true), 403);
+        $companyId = (string) $request->user()->company_id;
+
+        $result = DB::transaction(function () use ($request, $rowKey, $companyId) {
+            $source = GridSnapshot::where('company_id', $companyId)->where('route', '/crm-sales')
+                ->where('panel_id', 'prospects')->lockForUpdate()->first();
+            $gridRow = null;
+            $prospect = null;
+
+            if ($source) {
+                $gridRow = GridRow::where('company_id', $companyId)->where('grid_snapshot_id', $source->id)
+                    ->where('row_key', $rowKey)->lockForUpdate()->first();
+                if ($gridRow) {
+                    $link = DB::table('grid_domain_links')->where('grid_row_id', $gridRow->id)
+                        ->where('company_id', $companyId)->where('domain_table', 'prospects')->lockForUpdate()->first();
+                    if ($link) {
+                        $prospect = DB::table('prospects')->where('company_id', $companyId)
+                            ->where('id', $link->domain_id)->lockForUpdate()->first();
+                    }
+                }
+            }
+
+            if (!$prospect) {
+                $cleanId = preg_replace('/^(?:prospect-|db-)/', '', $rowKey);
+                $prospect = DB::table('prospects')->where('company_id', $companyId)->where('id', $cleanId)->lockForUpdate()->first();
+            }
+
+            abort_unless($prospect, 404, 'Prospect tidak ditemukan atau belum tersimpan.');
+
+            // Find or create customer
+            $customer = DB::table('customers')->where('company_id', $companyId)
+                ->whereRaw('LOWER(name) = ?', [strtolower(trim($prospect->name))])->first();
+            if (!$customer) {
+                $customerId = (string) Str::ulid();
+                $customerCode = 'CST-' . strtoupper(Str::random(6));
+                DB::table('customers')->insert([
+                    'id' => $customerId,
+                    'company_id' => $companyId,
+                    'code' => $customerCode,
+                    'name' => $prospect->name,
+                    'status' => 'active',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $customer = DB::table('customers')->where('id', $customerId)->first();
+            }
+
+            // Create opportunity
+            $oppId = (string) Str::ulid();
+            $now = now();
+            DB::table('opportunities')->insert([
+                'id' => $oppId,
+                'company_id' => $companyId,
+                'customer_id' => $customer->id,
+                'owner_id' => $prospect->owner_id ?: $request->user()->id,
+                'name' => $prospect->name . ' - New Opportunity',
+                'stage' => 'qualified',
+                'amount' => '0.00',
+                'probability' => (int) $prospect->fit_score,
+                'expected_close' => now()->addDays(30)->toDateString(),
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+            $opportunity = DB::table('opportunities')->where('id', $oppId)->first();
+
+            // Mark prospect status
+            DB::table('prospects')->where('id', $prospect->id)->update([
+                'status' => 'Converted',
+                'updated_at' => $now,
+            ]);
+
+            $sourceRows = [];
+            if ($source && $gridRow) {
+                DB::table('grid_domain_links')->where('grid_row_id', $gridRow->id)
+                    ->update(['archived' => true, 'updated_at' => $now]);
+                $gridRow->delete();
+                $sourceRows = collect($source->rows ?: [])->reject(fn ($row) => ($row['__id'] ?? null) === $rowKey)->values()->all();
+                $source->update(['rows' => $sourceRows, 'updated_by' => $request->user()->id, 'version' => $source->version + 1]);
+            }
+
+            AuditService::record($request->user(), 'prospect.converted', 'prospect', $prospect->id,
+                ['status' => $prospect->status],
+                ['status' => 'Converted', 'opportunity_id' => $oppId, 'customer_id' => $customer->id]);
+
+            return [
+                'prospect' => $prospect,
+                'opportunity' => $opportunity,
+                'customer' => $customer,
+                'snapshots' => $source ? [
+                    ['route' => '/crm-sales', 'panel_id' => 'prospects', 'rows' => $sourceRows, 'version' => $source->version]
+                ] : []
+            ];
+        });
+
+        return response()->json(['data' => $result]);
+    }
 }

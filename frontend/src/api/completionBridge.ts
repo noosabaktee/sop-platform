@@ -15,7 +15,16 @@ export class CompletionBridge {
     const page=el.closest<HTMLElement>('[data-prototype-page]');
     const active=page?.querySelector<HTMLElement>('[data-tabpanel]:not([hidden])')?.dataset.tabpanel||'';
     const panel=el.closest<HTMLElement>('[data-bd-panel]')?.dataset.bdPanel||active;
-    const type:Record<string,string>={sales:'sales',purchase:'purchase',project:'projects',inventory:'inventory',financial:'finance'};
+    const type:Record<string,string>={
+      sales:'sales',
+      purchase:'purchase',
+      project:'projects',
+      inventory:'inventory',
+      financial:'finance',
+      tax:'tax',
+      management:'management',
+      bd:'bd'
+    };
     const resolved=Object.entries(type).find(([key])=>panel.toLowerCase().includes(key))?.[1];
     if(!resolved){
       ev.preventDefault();ev.stopImmediatePropagation();
@@ -75,8 +84,17 @@ export class CompletionBridge {
     await this.refreshReportTables();
   }
   private async refreshReportTables(){
-    const kinds=['finance','sales','purchase','projects','inventory'] as const;
-    const mapping:Record<string,string>={finance:'financial',sales:'sales',purchase:'purchase',projects:'project',inventory:'inventory'};
+    const kinds=['finance','sales','purchase','projects','inventory','tax','management','bd'] as const;
+    const mapping:Record<string,string>={
+      finance:'financial',
+      sales:'sales',
+      purchase:'purchase',
+      projects:'project',
+      inventory:'inventory',
+      tax:'tax',
+      management:'management',
+      bd:'bd'
+    };
     await Promise.allSettled(kinds.map(async type=>{
       const {data:{data}}=await api.get('/api/v1/reports/data',{params:{type}});
       const rows=(data.rows||[]) as AnyRow[];
@@ -87,6 +105,9 @@ export class CompletionBridge {
           case 'purchase':return [row.number,row.vendor,money(row.total),'—',row.status];
           case 'projects':return [row.name,'—',money(row.budget),'—',row.status];
           case 'inventory':return [row.sku,row.movement_type,str(row.quantity),'—',row.posted_at];
+          case 'tax':return [row.nomor_faktur,date(row.tanggal),money(row.dpp),money(row.ppn_11_persen),row.status];
+          case 'management':return [row.nama_inisiatif,row.kode_proyek,money(row.nilai_kontrak),money(row.plafon_anggaran),row.status_eksekusi];
+          case 'bd':return [row.nama_tender,row.instansi,money(row.nilai_tender),str(row.status_bid),str(row.hasil_tender)];
         }
       };
       this.grid.mergeDomainRows('/reports',mapping[type],'db-',rows.map((row:AnyRow,i:number)=>{

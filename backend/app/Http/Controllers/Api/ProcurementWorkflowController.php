@@ -96,29 +96,36 @@ class ProcurementWorkflowController extends Controller {
    abort_unless($pr->status==='draft',409,'Hanya PR draft yang dapat disubmit.');
    abort_unless(DB::table('purchase_request_lines')->where('purchase_request_id',$id)->exists(),422,'PR harus memiliki item.');
    DB::table('purchase_requests')->where('id',$id)->update(['status'=>'pending_approval','updated_at'=>now()]);
-   $approval=(string)Str::ulid();DB::table('transaction_approvals')->insert([
+   $approval=(string)Str::ulid();
+   $matrix=\App\Services\ApprovalDelegationService::evaluateMatrix($this->company($r),'purchase_request',(float)$pr->estimated_total);
+   $tier=$matrix['level'];
+   $dueAt=now()->addHours($matrix['sla_hours']);
+   DB::table('transaction_approvals')->insert([
     'id'=>$approval,'company_id'=>$this->company($r),'subject_type'=>'purchase_request','subject_id'=>$id,
-    'requester_id'=>$r->user()->id,'status'=>'pending','created_at'=>now(),'updated_at'=>now()]);
+    'requester_id'=>$r->user()->id,'status'=>'pending','tier'=>$tier,'due_at'=>$dueAt,'created_at'=>now(),'updated_at'=>now()]);
    app(OperationalNotification::class)->toApprovers($this->company($r),(string)$r->user()->id,
     'purchase_request.approval_requested',['subject_id'=>$id,'number'=>$pr->number]);
-   AuditService::record($r->user(),'purchase_request.submitted','purchase_request',$id,['status'=>'draft'],['status'=>'pending_approval']);
-   return response()->json(['data'=>['id'=>$id,'status'=>'pending_approval','approval_id'=>$approval]]);
+   AuditService::record($r->user(),'purchase_request.submitted','purchase_request',$id,['status'=>'draft'],['status'=>'pending_approval','tier'=>$tier]);
+   return response()->json(['data'=>['id'=>$id,'status'=>'pending_approval','approval_id'=>$approval,'tier'=>$tier,'due_at'=>$dueAt->toIso8601String()]]);
   });
  }
- public function decide(Request $r,string $id){$this->assertRole($r,['super_admin','admin','manager']);
+ public function decide(Request $r,string $id){
+  $delegatedFromId=null;
+  $canApprove=\App\Services\ApprovalDelegationService::isAuthorizedApprover($r->user(),'purchase_request',$this->company($r),$delegatedFromId);
+  abort_unless($canApprove,403,'Hanya approver atau delegasi resmi yang diizinkan.');
   $input=$r->validate(['decision'=>['required',Rule::in(['approved','rejected'])], 'reason'=>['nullable','string','max:1000']]);
-  return DB::transaction(function()use($r,$id,$input){$pr=$this->record($r,'purchase_requests',$id);
+  return DB::transaction(function()use($r,$id,$input,$delegatedFromId){$pr=$this->record($r,'purchase_requests',$id);
    abort_unless($pr->status==='pending_approval',409,'PR tidak menunggu persetujuan.');
    abort_if($pr->requester_id===$r->user()->id && $r->user()->role!=='super_admin',403,'Self approval tidak diizinkan.');
    if($input['decision']==='rejected')abort_unless(trim($input['reason']??'')!=='',422,'Alasan penolakan wajib.');
    $a=DB::table('transaction_approvals')->where('company_id',$this->company($r))->where('subject_type','purchase_request')
     ->where('subject_id',$id)->where('status','pending')->lockForUpdate()->first();abort_unless($a,409);
    DB::table('transaction_approvals')->where('id',$a->id)->update(['status'=>$input['decision'],'comment'=>$input['reason']??null,
-    'approver_id'=>$r->user()->id,'decided_at'=>now(),'updated_at'=>now()]);
+    'approver_id'=>$r->user()->id,'delegated_from_id'=>$delegatedFromId,'decided_at'=>now(),'updated_at'=>now()]);
    DB::table('purchase_requests')->where('id',$id)->update(['status'=>$input['decision'],'updated_at'=>now()]);
    app(OperationalNotification::class)->toUser((string)$pr->requester_id,'purchase_request.'.$input['decision'],
     ['subject_id'=>$id,'number'=>$pr->number]);
-   AuditService::record($r->user(),'purchase_request.'.$input['decision'],'purchase_request',$id,['status'=>$pr->status],['status'=>$input['decision']]);
+   AuditService::record($r->user(),'purchase_request.'.$input['decision'],'purchase_request',$id,['status'=>$pr->status],['status'=>$input['decision']]+($delegatedFromId?['delegated_from_id'=>$delegatedFromId]:[]));
    return response()->json(['data'=>DB::table('purchase_requests')->find($id)]);
   });
  }
@@ -144,7 +151,9 @@ class ProcurementWorkflowController extends Controller {
   $data=$r->validate(['warehouse_id'=>['required','ulid',Rule::exists('warehouses','id')->where('company_id',$this->company($r))],
    'received_at'=>['required','date','before_or_equal:today'],'reference'=>['required','string','min:8','max:120'],
    'lines'=>['required','array','min:1','max:100'],'lines.*.order_line_id'=>['required','ulid'],
-   'lines.*.quantity'=>['required','numeric','gt:0','decimal:0,4']]);
+   'lines.*.quantity'=>['required','numeric','gt:0','decimal:0,4'],
+   'lines.*.batch_number'=>['nullable','string','max:100'],
+   'lines.*.expiry_date'=>['nullable','date']]);
   return DB::transaction(function()use($r,$id,$data){$po=$this->record($r,'purchase_orders',$id);
    $existing=DB::table('goods_receipts')->where('company_id',$this->company($r))->where('purchase_order_id',$id)->where('reference',$data['reference'])->first();
    if($existing)return response()->json(['data'=>$existing,'already_exists'=>true]);
@@ -163,12 +172,16 @@ class ProcurementWorkflowController extends Controller {
     'reference'=>$data['reference'],'received_at'=>$data['received_at'],'created_at'=>$now,'updated_at'=>$now]);
    foreach($data['lines'] as $line){$ol=$orderLines[$line['order_line_id']];$qty=Dec::parse((string)$line['quantity'],4);
     $glId=(string)Str::ulid();$formatted=Dec::format($qty,4);
+    $batchNum=$line['batch_number']??null;
+    $expDate=$line['expiry_date']??null;
     DB::table('goods_receipt_lines')->insert(['id'=>$glId,'goods_receipt_id'=>$grId,'purchase_order_line_id'=>$ol->id,
-     'product_id'=>$ol->product_id,'quantity'=>$formatted,'unit_cost'=>$ol->unit_price,'created_at'=>$now,'updated_at'=>$now]);
+     'product_id'=>$ol->product_id,'quantity'=>$formatted,'unit_cost'=>$ol->unit_price,
+     'batch_number'=>$batchNum,'expiry_date'=>$expDate,'created_at'=>$now,'updated_at'=>$now]);
     DB::table('inventory_movements')->insert(['id'=>(string)Str::ulid(),'company_id'=>$this->company($r),
      'product_id'=>$ol->product_id,'warehouse_id'=>$data['warehouse_id'],'actor_id'=>$r->user()->id,
      'quantity'=>$formatted,'unit_cost'=>$ol->unit_price,'movement_type'=>'goods_receipt',
-     'reference'=>$data['reference'],'source_type'=>'goods_receipt_line','source_id'=>$glId,
+     'reference'=>$data['reference'],'batch_number'=>$batchNum,'expiry_date'=>$expDate,
+     'source_type'=>'goods_receipt_line','source_id'=>$glId,
      'posted_at'=>$now,'created_at'=>$now,'updated_at'=>$now]);
     $lineAmount=Dec::line($formatted,(string)$ol->unit_price);
     if($lineAmount>0)app(JournalPostingService::class)->post($this->company($r),'goods_receipt_line',$glId,
@@ -193,8 +206,9 @@ class ProcurementWorkflowController extends Controller {
    $past=DB::table('purchase_returns')->where('company_id',$this->company($r))->where('goods_receipt_line_id',$line->id)->sum('quantity');
    $qty=Dec::parse((string)$data['quantity'],4);
    abort_unless($qty<=Dec::parse((string)$line->quantity,4)-Dec::parse((string)$past,4),422,'Return melebihi barang diterima.');
-   $balance=DB::table('inventory_movements')->where('company_id',$this->company($r))->where('product_id',$line->product_id)
-    ->where('warehouse_id',$receipt->warehouse_id)->sum('quantity');
+   $balQuery=DB::table('inventory_movements')->where('company_id',$this->company($r))->where('product_id',$line->product_id)->where('warehouse_id',$receipt->warehouse_id);
+   if($line->batch_number)$balQuery->where('batch_number',$line->batch_number);
+   $balance=$balQuery->sum('quantity');
    abort_unless(Dec::parse((string)$balance,4)>=$qty,422,'Stok aktual tidak cukup untuk return.');
    $id=(string)Str::ulid();$now=now();
    DB::table('purchase_returns')->insert(['id'=>$id,'company_id'=>$this->company($r),'goods_receipt_line_id'=>$line->id,
@@ -202,7 +216,8 @@ class ProcurementWorkflowController extends Controller {
    DB::table('inventory_movements')->insert(['id'=>(string)Str::ulid(),'company_id'=>$this->company($r),
     'product_id'=>$line->product_id,'warehouse_id'=>$receipt->warehouse_id,'actor_id'=>$r->user()->id,
     'quantity'=>Dec::format(-$qty,4),'unit_cost'=>$line->unit_cost,'movement_type'=>'purchase_return',
-    'reference'=>$receipt->number,'source_type'=>'purchase_return','source_id'=>$id,
+    'reference'=>$receipt->number,'batch_number'=>$line->batch_number,'expiry_date'=>$line->expiry_date,
+    'source_type'=>'purchase_return','source_id'=>$id,
     'posted_at'=>$now,'created_at'=>$now,'updated_at'=>$now]);
    $returnAmount=Dec::line(Dec::format($qty,4),(string)$line->unit_cost);$co=$this->company($r);
    $bill=DB::table('vendor_bills')->where('company_id',$co)->where('goods_receipt_id',$receiptId)->lockForUpdate()->first();

@@ -23,7 +23,17 @@ export class InventoryAdjustmentNativeBridge {
    const quantity=window.prompt('Kuantitas koreksi (+ masuk, - keluar):');
    if(!quantity||!(/^-?\d{1,12}(?:\.\d{1,4})?$/).test(quantity.trim())||Number(quantity)===0)throw new Error('Kuantitas koreksi tidak valid.');
    const reason=window.prompt('Alasan koreksi (minimal 6 karakter):');if(!reason?.trim()||reason.trim().length<6)throw new Error('Alasan koreksi minimal 6 karakter.');
-   await api.post('/api/v1/operational/inventory/adjust',{product_id:product.id,warehouse_id:warehouse.id,quantity:quantity.trim(),reason:reason.trim(),idempotency_key:`native-adjustment-${crypto.randomUUID()}`});
+   const batch=window.prompt('Nomor Batch / Lot (opsional):')?.trim()||undefined;
+   const expiry=batch?window.prompt('Tanggal Kadaluarsa (YYYY-MM-DD, opsional):')?.trim()||undefined:undefined;
+   await api.post('/api/v1/operational/inventory/adjust',{
+    product_id:product.id,
+    warehouse_id:warehouse.id,
+    quantity:quantity.trim(),
+    reason:reason.trim(),
+    batch_number:batch,
+    expiry_date:expiry,
+    idempotency_key:`native-adjustment-${crypto.randomUUID()}`
+   });
    await this.operational.inventory();window.dispatchEvent(new Event('sop:domain-updated'));
    this.notice('Koreksi stok diposting ke inventory ledger.');
   }finally{this.working=false;button.disabled=false;document.body.classList.remove('sop-api-busy')}

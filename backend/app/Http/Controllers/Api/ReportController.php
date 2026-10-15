@@ -6,12 +6,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 class ReportController extends Controller {
  private function data(Request $r):array {
-  $d=$r->validate(['type'=>['required',Rule::in(['sales','projects','inventory','purchase','finance'])],
+  $d=$r->validate(['type'=>['required',Rule::in(['sales','projects','inventory','purchase','finance','tax','management','bd'])],
    'from'=>['nullable','date'],'to'=>['nullable','date','after_or_equal:from']]);
   $allowed=['super_admin','admin','manager'];
   $domainRole=match($d['type']){
-   'finance'=>'finance','sales'=>'sales','projects'=>'project_manager',
-   'inventory'=>'warehouse','purchase'=>'procurement'
+   'finance','tax','management'=>'finance',
+   'sales','bd'=>'sales',
+   'projects'=>'project_manager',
+   'inventory'=>'warehouse',
+   'purchase'=>'procurement'
   };
   abort_unless(in_array($r->user()->role,[...$allowed,$domainRole],true),403);
   $co=$r->user()->company_id;$from=$d['from']??null;$to=$d['to']??null;
@@ -29,6 +32,13 @@ class ReportController extends Controller {
    'finance'=>DB::table('journal_entries as j')->where('j.company_id',$co)
     ->when($from,fn($q)=>$q->whereDate('j.posting_date','>=',$from))->when($to,fn($q)=>$q->whereDate('j.posting_date','<=',$to))
     ->select('j.number','j.posting_date','j.description','j.status'),
+   'tax'=>DB::table('invoices as i')->join('customers as c','c.id','=','i.customer_id')->where('i.company_id',$co)
+    ->when($from,fn($q)=>$q->whereDate('i.created_at','>=',$from))->when($to,fn($q)=>$q->whereDate('i.created_at','<=',$to))
+    ->select('i.number as nomor_faktur','c.name as pihak_terkait',DB::raw("'PPN Keluaran' as tipe_pajak"),DB::raw('ROUND(i.amount / 1.11, 2) as dpp'),DB::raw('ROUND(i.amount - (i.amount / 1.11), 2) as ppn_11_persen'),'i.status','i.created_at as tanggal'),
+   'management'=>DB::table('projects as p')->join('customers as c','c.id','=','p.customer_id')->where('p.company_id',$co)
+    ->select('p.code as kode_proyek','p.name as nama_inisiatif','c.name as klien','p.contract_value as nilai_kontrak','p.budget as plafon_anggaran','p.status as status_eksekusi'),
+   'bd'=>DB::table('crm_tenders as t')->where('t.company_id',$co)
+    ->select('t.code as kode_tender','t.name as nama_tender','t.client as instansi','t.value as nilai_tender','t.bid as status_bid','t.status as hasil_tender','t.deadline as batas_waktu'),
   };
   return ['type'=>$d['type'],'rows'=>$base->limit(2000)->get()->map(fn($row)=>(array)$row)->all(),'generated_at'=>now()->toIso8601String()];
  }

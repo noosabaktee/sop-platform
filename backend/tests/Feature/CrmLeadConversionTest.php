@@ -39,4 +39,35 @@ class CrmLeadConversionTest extends TestCase
         $user=User::factory()->create(['company_id'=>$company->id,'role'=>'auditor']);
         $this->actingAs($user)->postJson('/api/v1/workflows/crm/leads/missing/convert')->assertForbidden();
     }
+
+    public function test_prospect_can_be_converted_to_opportunity_atomically(): void
+    {
+        $company=Company::factory()->create();
+        $user=User::factory()->create(['company_id'=>$company->id,'role'=>'sales','name'=>'Sales Rep']);
+        $this->actingAs($user);
+        $prospect=['__id'=>'prospects-new-1','name'=>'PT Prospek Unggul','segment'=>'Enterprise',
+            'fit'=>85,'next'=>'Kirim proposal','owner'=>'Sales Rep','status'=>'Qualified'];
+        $this->putJson('/api/v1/grid-snapshots',['snapshots'=>[
+            ['route'=>'/crm-sales','panel_id'=>'prospects','rows'=>[$prospect]],
+        ]])->assertOk();
+
+        $response=$this->postJson('/api/v1/workflows/crm/prospects/prospects-new-1/convert')->assertOk();
+        $oppId=$response->json('data.opportunity.id');
+        $this->assertNotNull($oppId);
+        $this->assertDatabaseHas('opportunities',[
+            'id'=>$oppId,
+            'company_id'=>$company->id,
+            'stage'=>'qualified',
+            'probability'=>85
+        ]);
+        $this->assertDatabaseHas('customers',[
+            'company_id'=>$company->id,
+            'name'=>'PT Prospek Unggul'
+        ]);
+        $this->assertDatabaseHas('audit_events',[
+            'company_id'=>$company->id,
+            'action'=>'prospect.converted',
+            'entity_type'=>'prospect'
+        ]);
+    }
 }

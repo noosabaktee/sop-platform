@@ -31,6 +31,7 @@ import {InventoryAdjustmentNativeBridge} from '../api/inventoryAdjustmentNativeB
 import {CrmOpportunityNativeBridge} from '../api/crmOpportunityNativeBridge';
 import {CrmCustomerNativeBridge} from '../api/crmCustomerNativeBridge';
 import {ProjectNativeBridge} from '../api/projectNativeBridge';
+import {DocumentTemplateBridge} from '../api/documentTemplateBridge';
 
 type Snapshot={route:string;panel_id:string;rows:{__id:string;[key:string]:unknown}[];version:number};
 const originals=['/prototype-original.js','/prototype-extras.js'];
@@ -95,6 +96,7 @@ export function ExactPrototype(){
     const corporate=new CorporateNativeBridge();
     const docs=new DocumentVaultBridge();
     const audit=new SecurityAuditBridge();
+    const templates=new DocumentTemplateBridge();
     const approvals=new ApprovalWorkflowBridge(Boolean(auth.current.user && ['super_admin','admin','manager'].includes(auth.current.user.role)));
     const guard=()=>{
       const route=location.hash.slice(1);
@@ -240,7 +242,7 @@ export function ExactPrototype(){
           transfers.install();stocktakes.install();adjustments.install();accounting.install();banks.install();projectCosts.install();opportunities.install();crmCustomers.install();external.install();crmWorkflow.install();projects.install();projectTasks.install();purchaseRequests.install();receipts.install();returns.install();sales.install();
           // Resolve real SQL-backed panels before allowing native fixture snapshots
           // to seed, otherwise a slow API can momentarily expose demo transactions.
-          const preparations:Promise<unknown>[]=[quotation.install(),approvals.install(),docs.install(),
+          const preparations:Promise<unknown>[]=[quotation.install(),approvals.install(),docs.install(),templates.install(),
           refreshSalesOperationalGrids(bridge),operational.refresh(),completion.install(),corporate.install()];
           if(['super_admin','admin','manager','auditor'].includes(auth.current.user.role))preparations.push(audit.install());
           const results=await Promise.allSettled(preparations);
@@ -252,7 +254,7 @@ export function ExactPrototype(){
         setStatus('');
       }catch(e){setStatus('Gagal memuat fungsi prototype: '+String(e));console.error(e)}
     })();
-    return()=>{cancelled=true;integrations.uninstall();management.uninstall();document.removeEventListener('click',onDomainProtection,true);document.removeEventListener('input',onDomainProtection,true);document.removeEventListener('focusin',onDomainProtection,true);document.removeEventListener('change',onDomainProtection,true);transfers.uninstall();stocktakes.uninstall();adjustments.uninstall();accounting.uninstall();banks.uninstall();projectCosts.uninstall();opportunities.uninstall();external.uninstall();crmWorkflow.uninstall();projects.uninstall();projectTasks.uninstall();purchaseRequests.uninstall();receipts.uninstall();returns.uninstall();sales.uninstall();corporate.uninstall();completion.uninstall();quotation.uninstall();approvals.uninstall();docs.uninstall();audit.uninstall();window.removeEventListener('hashchange',guard);window.removeEventListener('hashchange',onWorkspaceRoute);window.removeEventListener('sop:domain-updated',onDomainUpdated);document.removeEventListener('click',onDashboardTab,true);document.removeEventListener('change',onDashboardTab,true);document.removeEventListener('click',onWorkspaceAction,true);document.removeEventListener('change',onWorkspaceAction,true);document.removeEventListener('submit',onSubmit,true);document.removeEventListener('click',onLogout,true);document.removeEventListener('click',onImport,true);document.removeEventListener('click',onExport,true);document.removeEventListener('click',onNativeAction,true);document.removeEventListener('change',onNativeAction,true);document.removeEventListener('drop',onNativeAction,true);document.removeEventListener('keyup',onNativeAction,true);document.removeEventListener('submit',onNativeAction,true);document.removeEventListener('click',onRefresh,true)};
+    return()=>{cancelled=true;templates.uninstall();integrations.uninstall();management.uninstall();document.removeEventListener('click',onDomainProtection,true);document.removeEventListener('input',onDomainProtection,true);document.removeEventListener('focusin',onDomainProtection,true);document.removeEventListener('change',onDomainProtection,true);transfers.uninstall();stocktakes.uninstall();adjustments.uninstall();accounting.uninstall();banks.uninstall();projectCosts.uninstall();opportunities.uninstall();external.uninstall();crmWorkflow.uninstall();projects.uninstall();projectTasks.uninstall();purchaseRequests.uninstall();receipts.uninstall();returns.uninstall();sales.uninstall();corporate.uninstall();completion.uninstall();quotation.uninstall();approvals.uninstall();docs.uninstall();audit.uninstall();window.removeEventListener('hashchange',guard);window.removeEventListener('hashchange',onWorkspaceRoute);window.removeEventListener('sop:domain-updated',onDomainUpdated);document.removeEventListener('click',onDashboardTab,true);document.removeEventListener('change',onDashboardTab,true);document.removeEventListener('click',onWorkspaceAction,true);document.removeEventListener('change',onWorkspaceAction,true);document.removeEventListener('submit',onSubmit,true);document.removeEventListener('click',onLogout,true);document.removeEventListener('click',onImport,true);document.removeEventListener('click',onExport,true);document.removeEventListener('click',onNativeAction,true);document.removeEventListener('change',onNativeAction,true);document.removeEventListener('drop',onNativeAction,true);document.removeEventListener('keyup',onNativeAction,true);document.removeEventListener('submit',onNativeAction,true);document.removeEventListener('click',onRefresh,true)};
   },[html,bridge,modules]);
 
   // Initial GridSnapshot data already loaded in the first Promise.all. Re-fetching

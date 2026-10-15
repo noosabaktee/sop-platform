@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 class CorporateMeetingController extends Controller {
@@ -49,8 +50,85 @@ class CorporateMeetingController extends Controller {
   return DB::transaction(function()use($r,$id){$m=$this->meeting($r,$id,true);
    if($m->status==='closed')return response()->json(['data'=>$m,'already_processed'=>true]);
    abort_unless($m->status==='held'&&trim((string)$m->minutes)!=='',409,'Minutes of Meeting harus diisi sebelum ditutup.');
-   DB::table('corporate_meetings')->where('id',$id)->update(['status'=>'closed','updated_at'=>now()]);
-   AuditService::record($r->user(),'corporate.meeting.closed','corporate_meeting',$id);
+   
+   $resolutions=DB::table('corporate_resolutions')->where('meeting_id',$id)->get();
+   $resText='';
+   foreach($resolutions as $idx=>$res){
+    $num=$idx+1;
+    $resText.="{$num}. {$res->title} [Status: {$res->status}]\n   Setuju: {$res->for_votes}, Tolak: {$res->against_votes}, Abstain: {$res->abstain_votes}\n";
+    if(!empty($res->description)){$resText.="   Keterangan: {$res->description}\n";}
+   }
+   if($resolutions->isEmpty()){$resText="Tidak ada resolusi tercatat.\n";}
+
+   $content="RISALAH DAN KEPUTUSAN RAPAT PERUSAHAAN (RUPS/BOD)\n"
+          ."==================================================\n"
+          ."Judul Rapat   : {$m->title}\n"
+          ."Jenis         : {$m->kind}\n"
+          ."Jadwal/Waktu  : {$m->starts_at}\n"
+          ."Lokasi        : ".($m->location??'-')."\n"
+          ."Total Saham   : {$m->total_shares}\n"
+          ."Saham Hadir   : {$m->present_shares}\n"
+          ."Status        : CLOSED (Telah Ditutup)\n\n"
+          ."NOTULEN RAPAT (MINUTES OF MEETING):\n"
+          ."------------------------------------\n"
+          ."{$m->minutes}\n\n"
+          ."DAFTAR KEPUTUSAN / RESOLUSI:\n"
+          ."----------------------------\n"
+          .$resText;
+
+   $path="documents/{$m->company_id}/rups_{$id}.txt";
+   Storage::disk('local')->put($path,$content);
+   $sha256=hash('sha256',$content);
+   $byteSize=strlen($content);
+   $now=now();
+   $docId=(string)Str::ulid();
+   $versionId=(string)Str::ulid();
+
+   DB::table('documents')->insert([
+    'id'=>$docId,
+    'company_id'=>$m->company_id,
+    'owner_id'=>$r->user()->id,
+    'title'=>"Risalah RUPS: {$m->title}",
+    'category'=>'corporate',
+    'folder'=>'RUPS & Resolusi',
+    'storage_path'=>$path,
+    'mime_type'=>'text/plain',
+    'version'=>1,
+    'status'=>'approved',
+    'approved_by'=>$r->user()->id,
+    'approved_at'=>$now,
+    'created_at'=>$now,
+    'updated_at'=>$now,
+   ]);
+
+   DB::table('document_versions')->insert([
+    'id'=>$versionId,
+    'document_id'=>$docId,
+    'version'=>1,
+    'uploaded_by'=>$r->user()->id,
+    'storage_path'=>$path,
+    'original_name'=>"Risalah_RUPS_{$id}.txt",
+    'mime_type'=>'text/plain',
+    'byte_size'=>$byteSize,
+    'sha256'=>$sha256,
+    'is_verified'=>true,
+    'verified_at'=>$now,
+    'created_at'=>$now,
+    'updated_at'=>$now,
+   ]);
+
+   DB::table('corporate_meetings')->where('id',$id)->update([
+    'status'=>'closed',
+    'document_id'=>$docId,
+    'updated_at'=>$now,
+   ]);
+
+   AuditService::record($r->user(),'corporate.meeting.closed','corporate_meeting',$id,['status'=>$m->status],[
+    'status'=>'closed',
+    'document_id'=>$docId,
+    'sha256'=>$sha256,
+   ]);
+
    return response()->json(['data'=>DB::table('corporate_meetings')->find($id)]);
   });
  }

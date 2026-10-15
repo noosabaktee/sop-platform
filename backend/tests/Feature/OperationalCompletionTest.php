@@ -61,12 +61,28 @@ class OperationalCompletionTest extends TestCase {
   $this->postJson('/api/v1/corporate/meetings/'.$id.'/close')->assertStatus(409);
   $this->patchJson('/api/v1/corporate/meetings/'.$id,['minutes'=>'Quorum confirmed; voting recorded.'])->assertOk();
   $this->postJson('/api/v1/corporate/meetings/'.$id.'/close')->assertOk()->assertJsonPath('data.status','closed');
+  $meeting=DB::table('corporate_meetings')->where('id',$id)->first();
+  $this->assertNotNull($meeting->document_id);
+  $doc=DB::table('documents')->where('id',$meeting->document_id)->first();
+  $this->assertNotNull($doc);
+  $this->assertSame('approved',$doc->status);
+  $this->assertSame('corporate',$doc->category);
+  $v=DB::table('document_versions')->where('document_id',$doc->id)->first();
+  $this->assertNotNull($v);
+  $this->assertTrue((bool)$v->is_verified);
+  $this->assertNotEmpty($v->sha256);
  }
  public function test_reports_are_tenant_scoped_and_provider_send_is_not_faked():void {
   $u=$this->prepare();
   $this->getJson('/api/v1/reports/data?type=sales')->assertOk()->assertJsonCount(6,'data.rows');
   $response=$this->getJson('/api/v1/reports/export.csv?type=sales')->assertOk();
   $this->assertStringContainsString('text/csv',$response->headers->get('Content-Type'));
+  $this->getJson('/api/v1/reports/data?type=tax')->assertOk();
+  $this->getJson('/api/v1/reports/export.csv?type=tax')->assertOk();
+  $this->getJson('/api/v1/reports/data?type=management')->assertOk();
+  $this->getJson('/api/v1/reports/export.csv?type=management')->assertOk();
+  $this->getJson('/api/v1/reports/data?type=bd')->assertOk();
+  $this->getJson('/api/v1/reports/export.csv?type=bd')->assertOk();
   $this->getJson('/api/v1/integrations/status')->assertOk()->assertJsonPath('data.email',false)->assertJsonPath('data.whatsapp',false)->assertJsonPath('data.ai',false);
   $this->postJson('/api/v1/communications/send',[
    'channel'=>'email','recipient'=>'someone@example.com','content'=>'Test message should not be delivered',

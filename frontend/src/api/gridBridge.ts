@@ -37,7 +37,13 @@ export class GridBridge {
   }
   attach(route:string,panel_id:string,state:GridState,render:()=>void){
     const saved=this.loaded.get(key(route,panel_id));
-    if(saved && !this.authoritative.has(key(route,panel_id)))state.rows=structuredClone(saved.rows);
+    if(saved && !this.authoritative.has(key(route,panel_id))){
+      const defaultMap=new Map(state.rows.map(r=>[String(r.__id),r]));
+      state.rows=saved.rows.map(row=>{
+        const def=defaultMap.get(String(row.__id));
+        return def ? {...def, ...row} : {...row};
+      });
+    }
     this.repairRedactedLeadFixture(route,panel_id,state);
     const largestNewId=state.rows.reduce((max,row)=>Math.max(max,Number(String(row.__id).match(/-new-(\d+)$/)?.[1]||0)),0);
     state.seq=Math.max(state.seq||0,state.rows.length,largestNewId);
@@ -57,7 +63,14 @@ export class GridBridge {
     this.loadToCache(snapshots);
     for(const snapshot of snapshots){
       const grid=this.mounted.get(key(snapshot.route,snapshot.panel_id));
-      if(grid && !this.authoritative.has(key(snapshot.route,snapshot.panel_id))){grid.state.rows=structuredClone(snapshot.rows);grid.state.staged?.clear();grid.state.selected?.clear();grid.state.seq=Math.max(grid.state.seq||0,grid.state.rows.length);grid.render()}
+      if(grid && !this.authoritative.has(key(snapshot.route,snapshot.panel_id))){
+        const defaultMap=new Map(grid.state.rows.map(r=>[String(r.__id),r]));
+        grid.state.rows=snapshot.rows.map(row=>{
+          const def=defaultMap.get(String(row.__id));
+          return def ? {...def, ...row} : {...row};
+        });
+        grid.state.staged?.clear();grid.state.selected?.clear();grid.state.seq=Math.max(grid.state.seq||0,grid.state.rows.length);grid.render();
+      }
     }
   }
   applyWorkflowSnapshots(snapshots:Snapshot[]){
@@ -253,8 +266,8 @@ export class GridBridge {
       const projectMutation=el.closest<HTMLElement>('[data-bd-act="add"],select[data-bd-key="status"]');
       if(projectMutation)return false;
     }
-    if(route==='/business-development'&&panel==='opportunities'&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
-    if(route==='/business-development'&&panel==='opportunities'&&el.matches('select[data-bd-key="status"]'))return false;
+    if(route==='/business-development'&&['opportunities','tender','proposal'].includes(panel)&&el.closest<HTMLElement>('[data-bd-act="add"]'))return false;
+    if(route==='/business-development'&&['opportunities','tender','proposal'].includes(panel)&&el.matches('select[data-bd-key="status"]'))return false;
     // Project task writes are captured by ProjectTaskNativeBridge and mapped
     // directly to the normalized task API. Do not let the generic fixture
     // guard consume those specific events first.

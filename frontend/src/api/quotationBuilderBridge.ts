@@ -60,14 +60,85 @@ export class QuotationBuilderBridge {
  private readonly onWorkflow=()=>{void this.refreshList().catch(console.error)};
  private readonly onClick=(event:MouseEvent)=>{
   if(!this.active)return;
-  const action=(event.target as HTMLElement).closest<HTMLElement>('[data-qt-act="savedraft"],[data-qt-act="submit"],[data-qt-act="resetbuilder"]');
-  if(!action||!action.closest('[data-page-id="quotation"]'))return;
-  if(action.dataset.qtAct==='resetbuilder'){this.currentId=null;return;}
-  event.preventDefault();event.stopImmediatePropagation();
-  if(this.saving)return;
-  const submit=action.dataset.qtAct==='submit';
-  void this.save(submit,action as HTMLButtonElement);
+  const target=event.target as HTMLElement;
+  const root=target.closest<HTMLElement>('[data-page-id="quotation"]');
+  if(!root)return;
+
+  const action=target.closest<HTMLElement>('[data-qt-act="savedraft"],[data-qt-act="submit"],[data-qt-act="resetbuilder"]');
+  if(action){
+   if(action.dataset.qtAct==='resetbuilder'){this.currentId=null;return;}
+   event.preventDefault();event.stopImmediatePropagation();
+   if(this.saving)return;
+   const submit=action.dataset.qtAct==='submit';
+   void this.save(submit,action as HTMLButtonElement);
+   return;
+  }
+
+  const rowEl=target.closest<HTMLElement>('[data-qt-id]');
+  const id=rowEl?.dataset.qtId||'';
+  if(id.startsWith('q-domain-')){
+   const quoteId=id.replace('q-domain-','');
+   if(target.closest('[data-qt-act="delrow"]')){
+    event.preventDefault();event.stopImmediatePropagation();
+    this.inform('Quotation resmi tersimpan di PostgreSQL dan tidak dapat dihapus sembarangan.');
+    return;
+   }
+   event.preventDefault();event.stopImmediatePropagation();
+   void this.handleRowAction(quoteId);
+   return;
+  }
  };
+
+ private async handleRowAction(quoteId:string){
+  try {
+   const res=await api.get(`/api/v1/quotation-builder/${quoteId}`);
+   const data=res.data.data as {quotation:{number:string;status:string;customer_name:string;total:string};items:Array<{description:string;quantity:string;line_total:string}>};
+   const q=data.quotation;
+   const menuPrompt=[
+    `Quotation ${q.number} (${q.customer_name})`,
+    `Status: ${titles[q.status]||q.status} · Total: Rp ${new Intl.NumberFormat('id-ID').format(Number(q.total))}`,
+    '',
+    'Pilih aksi:',
+    '1. Buka / Cetak Dokumen PDF Resmi',
+    '2. Buat Draft Revisi',
+    q.status==='approved'?'3. Konversi menjadi Sales Order':'',
+    ['draft','revision_requested'].includes(q.status)?'3. Kirim untuk Approval':''
+   ].filter(Boolean).join('\n');
+
+   const choice=window.prompt(menuPrompt,'1');
+   if(choice===null)return;
+   if(choice.trim()==='1'){
+    window.open(`/api/v1/quotation-builder/${quoteId}/document`,'_blank');
+    this.inform(`Membuka dokumen cetak PDF untuk ${q.number}.`);
+    return;
+   }
+   if(choice.trim()==='2'){
+    const revised=await api.post(`/api/v1/quotation-builder/${quoteId}/revise`);
+    await this.refreshList();
+    this.inform(revised.data.message||'Draft revisi berhasil dibuat.');
+    window.dispatchEvent(new Event('sop:workflow-updated'));
+    return;
+   }
+   if(choice.trim()==='3'){
+    if(q.status==='approved'){
+     await api.post(`/api/v1/workflows/quotations/${quoteId}/convert`);
+     this.inform(`Quotation ${q.number} dikonversi menjadi Sales Order.`);
+     window.dispatchEvent(new Event('sop:domain-updated'));
+     return;
+    }
+    if(['draft','revision_requested'].includes(q.status)){
+     await api.post(`/api/v1/workflows/quotations/${quoteId}/submit`);
+     await this.refreshList();
+     this.inform(`Quotation ${q.number} dikirim untuk approval.`);
+     window.dispatchEvent(new Event('sop:workflow-updated'));
+     return;
+    }
+   }
+  } catch(error:unknown){
+   const e=error as {response?:{data?:{message?:string}}};
+   this.inform(e.response?.data?.message||'Gagal memproses aksi quotation.',true);
+  }
+ }
  private getPayload(){
   this.hydrateSelects();
   const root=document.querySelector<HTMLElement>('[data-page-id="quotation"]');

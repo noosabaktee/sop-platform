@@ -23,9 +23,10 @@ class AuthController extends Controller {
    RateLimiter::hit($key,900);$this->loginEvent($request,$user,false,$user&&!$user->is_active?'inactive':'invalid_credentials');
    throw ValidationException::withMessages(['email'=>['Email atau kata sandi salah.']]);
   }
-  $request->session()->regenerate();$user=$request->user();RateLimiter::clear($key);
+  if($request->hasSession())$request->session()->regenerate();
+  $user=$request->user();RateLimiter::clear($key);
   if($user->two_factor_confirmed_at&&$user->two_factor_secret){
-   $request->session()->put(['login.two_factor_user'=>$user->id,'login.remember'=>$request->boolean('remember')]);
+   if($request->hasSession())$request->session()->put(['login.two_factor_user'=>$user->id,'login.remember'=>$request->boolean('remember')]);
    Auth::guard('web')->logout();return response()->json(['requires_two_factor'=>true],202);
   }
   $this->loginEvent($request,$user,true,null);AuditService::record($user,'login','user',$user->id);
@@ -90,23 +91,27 @@ class AuthController extends Controller {
    ->orderByDesc('created_at')->limit(100)->get()]);
  }
  public function sessions(Request $request){
-  $current=$request->session()->getId();
+  $current=$request->hasSession()?$request->session()->getId():null;
   $sessions=DB::table('sessions')->where('user_id',$request->user()->id)->orderByDesc('last_activity')->get()
    ->map(fn($session)=>['id'=>$session->id,'ip_address'=>$session->ip_address,'user_agent'=>$session->user_agent,
-    'last_activity'=>date(DATE_ATOM,$session->last_activity),'current'=>hash_equals($current,$session->id)]);
+    'last_activity'=>date(DATE_ATOM,$session->last_activity),'current'=>$current?hash_equals($current,$session->id):false]);
   return response()->json(['data'=>$sessions]);
  }
  public function revokeSession(Request $request,string $id){
-  abort_if(hash_equals($request->session()->getId(),$id),409,'Sesi aktif tidak dapat dicabut dari halaman ini. Gunakan logout.');
+  $current=$request->hasSession()?$request->session()->getId():null;
+  if($current)abort_if(hash_equals($current,$id),409,'Sesi aktif tidak dapat dicabut dari halaman ini. Gunakan logout.');
   $deleted=DB::table('sessions')->where('user_id',$request->user()->id)->where('id',$id)->delete();abort_unless($deleted,404);
   AuditService::record($request->user(),'session.revoked','session',$id);return response()->noContent();
  }
  public function revokeOtherSessions(Request $request){
-  $current=$request->session()->getId();$ids=DB::table('sessions')->where('user_id',$request->user()->id)->where('id','<>',$current)->pluck('id');
+  $current=$request->hasSession()?$request->session()->getId():null;
+  $q=DB::table('sessions')->where('user_id',$request->user()->id);
+  if($current)$q->where('id','<>',$current);
+  $ids=$q->pluck('id');
   DB::table('sessions')->whereIn('id',$ids)->delete();
   foreach($ids as $id)AuditService::record($request->user(),'session.revoked','session',$id);
   return response()->json(['revoked'=>$ids->count()]);
  }
  public function me(Request $request){return response()->json(['data'=>$request->user()->only('id','company_id','name','email','role')]);}
- public function logout(Request $request){$user=$request->user();AuditService::record($user,'logout','user',$user->id);Auth::guard('web')->logout();$request->session()->invalidate();$request->session()->regenerateToken();return response()->noContent();}
+ public function logout(Request $request){$user=$request->user();AuditService::record($user,'logout','user',$user->id);Auth::guard('web')->logout();if($request->hasSession()){$request->session()->invalidate();$request->session()->regenerateToken();}return response()->noContent();}
 }

@@ -61,4 +61,48 @@ class CrmOperationsController extends Controller {
    return response()->json(['data'=>DB::table('projects')->find($project)],201);
   });
  }
+ public function history(Request $r){$co=$this->company($r);
+  $quotes=DB::table('quotations')->where('company_id',$co)->groupBy('customer_id')
+   ->select('customer_id',DB::raw('COUNT(*) as quote_count'),DB::raw('MAX(created_at) as last_quote'));
+  $orders=DB::table('sales_orders')->where('company_id',$co)->groupBy('customer_id')
+   ->select('customer_id',DB::raw('COUNT(*) as order_count'),DB::raw('MAX(created_at) as last_order'));
+  $invoices=DB::table('invoices')->where('company_id',$co)->groupBy('customer_id')
+   ->select('customer_id',DB::raw('COUNT(*) as invoice_count'),DB::raw('MAX(created_at) as last_invoice'));
+
+  $rows=DB::table('customers as c')
+   ->leftJoinSub($quotes,'q','q.customer_id','=','c.id')
+   ->leftJoinSub($orders,'o','o.customer_id','=','c.id')
+   ->leftJoinSub($invoices,'i','i.customer_id','=','c.id')
+   ->where('c.company_id',$co)
+   ->orderBy('c.name')
+   ->get([
+    'c.id as customer_id', 'c.name as customer',
+    DB::raw('COALESCE(q.quote_count,0) as quotations'),
+    DB::raw('COALESCE(o.order_count,0) as orders'),
+    DB::raw('COALESCE(i.invoice_count,0) as invoices'),
+    DB::raw('GREATEST(q.last_quote, o.last_order, i.last_invoice) as last_activity')
+   ]);
+
+  return response()->json(['data'=>$rows]);
+ }
+ public function forecast(Request $r){$co=$this->company($r);
+  $owners=DB::table('users')->where('company_id',$co)->where('is_active',true)->get(['id','name']);
+  $opps=DB::table('opportunities')->where('company_id',$co)->get();
+
+  $result=$owners->map(function($user) use ($opps){
+   $userOpps=$opps->where('owner_id',$user->id);
+   $pipeline=$userOpps->sum(fn($o)=>(float)$o->amount);
+   $commit=$userOpps->whereIn('stage',['won','negotiation'])->sum(fn($o)=>(float)$o->amount);
+   $best=$userOpps->where('probability','>=',50)->sum(fn($o)=>(float)$o->amount);
+   return [
+    'owner_id'=>$user->id,
+    'owner'=>$user->name,
+    'pipeline'=>number_format($pipeline/1000000,2,'.',''),
+    'commit'=>number_format($commit/1000000,2,'.',''),
+    'best'=>number_format($best/1000000,2,'.',''),
+    'target'=>'2000.00',
+   ];
+  });
+  return response()->json(['data'=>$result]);
+ }
 }

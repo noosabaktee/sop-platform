@@ -66,4 +66,29 @@ class CrmOpportunityTest extends TestCase {
   $other=Company::factory()->create();$alien=User::factory()->create(['company_id'=>$other->id,'role'=>'manager']);
   $this->actingAs($alien)->postJson('/api/v1/operational/crm/opportunities/'.$op['id'].'/project')->assertNotFound();
  }
+ public function test_customer_history_and_sales_forecast_are_tenant_scoped():void {
+  $company=Company::factory()->create();$user=User::factory()->create(['company_id'=>$company->id,'role'=>'sales','name'=>'Aditya Pratama']);
+  $customer=Customer::create(['company_id'=>$company->id,'code'=>'CRM-HIST','name'=>'PT Riwayat']);
+  DB::table('quotations')->insert(['id'=>(string)Str::ulid(),'company_id'=>$company->id,'customer_id'=>$customer->id,'owner_id'=>$user->id,'number'=>'Q-2026-H1','total'=>'1000.00','status'=>'approved','created_at'=>now(),'updated_at'=>now()]);
+  DB::table('sales_orders')->insert(['id'=>(string)Str::ulid(),'company_id'=>$company->id,'customer_id'=>$customer->id,'number'=>'SO-2026-H1','total'=>'1000.00','status'=>'confirmed','created_at'=>now(),'updated_at'=>now()]);
+  DB::table('invoices')->insert(['id'=>(string)Str::ulid(),'company_id'=>$company->id,'customer_id'=>$customer->id,'number'=>'INV-2026-H1','amount'=>'1000.00','paid_amount'=>'0.00','status'=>'posted','created_at'=>now(),'updated_at'=>now()]);
+  DB::table('opportunities')->insert(['id'=>(string)Str::ulid(),'company_id'=>$company->id,'customer_id'=>$customer->id,'owner_id'=>$user->id,'name'=>'Opp 1','stage'=>'negotiation','amount'=>'50000000.00','probability'=>70,'created_at'=>now(),'updated_at'=>now()]);
+
+  $other=Company::factory()->create();$foreignCust=Customer::create(['company_id'=>$other->id,'code'=>'C-OUT','name'=>'Foreign Cust']);
+  DB::table('invoices')->insert(['id'=>(string)Str::ulid(),'company_id'=>$other->id,'customer_id'=>$foreignCust->id,'number'=>'INV-FOREIGN','amount'=>'999.00','paid_amount'=>'0.00','status'=>'posted','created_at'=>now(),'updated_at'=>now()]);
+
+  $hist=$this->actingAs($user)->getJson('/api/v1/operational/crm/history')->assertOk()->json('data');
+  $item=collect($hist)->firstWhere('customer_id',$customer->id);
+  $this->assertNotNull($item);
+  $this->assertSame(1,(int)$item['quotations']);
+  $this->assertSame(1,(int)$item['orders']);
+  $this->assertSame(1,(int)$item['invoices']);
+  $this->assertNull(collect($hist)->firstWhere('customer_id',$foreignCust->id));
+
+  $fc=$this->getJson('/api/v1/operational/crm/forecast')->assertOk()->json('data');
+  $userFc=collect($fc)->firstWhere('owner_id',$user->id);
+  $this->assertNotNull($userFc);
+  $this->assertSame('50.00',$userFc['pipeline']);
+  $this->assertSame('50.00',$userFc['commit']);
+ }
 }

@@ -100,4 +100,44 @@ class QuotationBuilderTest extends TestCase {
         ])->assertStatus(422);
         $this->assertDatabaseHas('quotations',['id'=>$quote['id'],'status'=>'pending_approval']);
     }
+    public function test_show_exposes_full_quotation_and_cannot_leak_across_company():void {
+        [$sales,$customer]=$this->actor();
+        $quote=$this->postJson('/api/v1/quotation-builder/draft',$this->draft($customer,$sales))->assertCreated()->json('data');
+        $detail=$this->getJson('/api/v1/quotation-builder/'.$quote['id'])->assertOk()->json('data');
+        $this->assertSame($quote['number'],$detail['quotation']['number']);
+        $this->assertCount(2,$detail['items']);
+        $this->assertSame('PT QA Test',$detail['quotation']['customer_name']);
+
+        $otherCompany=Company::factory()->create();
+        $foreignUser=User::factory()->create(['company_id'=>$otherCompany->id,'role'=>'sales']);
+        $this->actingAs($foreignUser);
+        $this->getJson('/api/v1/quotation-builder/'.$quote['id'])->assertStatus(404);
+    }
+    public function test_document_renders_printable_quotation_with_company_and_items():void {
+        [$sales,$customer]=$this->actor();
+        $quote=$this->postJson('/api/v1/quotation-builder/draft',$this->draft($customer,$sales))->assertCreated()->json('data');
+        $response=$this->get('/api/v1/quotation-builder/'.$quote['id'].'/document')->assertOk();
+        $this->assertStringContainsString('text/html',$response->headers->get('Content-Type'));
+        $content=$response->getContent();
+        $this->assertStringContainsString($quote['number'],$content);
+        $this->assertStringContainsString('PT QA Test',$content);
+        $this->assertStringContainsString('ERP License',$content);
+        $this->assertStringContainsString('479.797.500,00',$content);
+    }
+    public function test_revise_creates_new_draft_copy_with_items_and_audit():void {
+        [$sales,$customer]=$this->actor();
+        $quote=$this->postJson('/api/v1/quotation-builder/draft',$this->draft($customer,$sales))->assertCreated()->json('data');
+        $revised=$this->postJson('/api/v1/quotation-builder/'.$quote['id'].'/revise')->assertCreated()->json('data');
+        $this->assertNotSame($quote['id'],$revised['id']);
+        $this->assertNotSame($quote['number'],$revised['number']);
+        $this->assertSame('draft',$revised['status']);
+        $this->assertSame($quote['total'],$revised['total']);
+        $this->assertSame(2,DB::table('quotation_items')->where('quotation_id',$revised['id'])->count());
+        $this->assertDatabaseHas('audit_events',[
+            'company_id'=>$sales->company_id,
+            'action'=>'quotation.revised',
+            'entity_type'=>'quotation',
+            'entity_id'=>$revised['id']
+        ]);
+    }
 }

@@ -52,18 +52,24 @@ class SalesWorkflowController extends Controller {
    DB::table('transaction_approvals')->where('company_id',$this->company($r))->where('subject_type','quotation')
      ->where('subject_id',$id)->where('status','pending')->update(['status'=>'superseded','updated_at'=>now()]);
    $approval=(string)Str::ulid();
+   $matrix=\App\Services\ApprovalDelegationService::evaluateMatrix($this->company($r),'quotation',(float)$q->total);
+   $tier=$matrix['level'];
+   $dueAt=now()->addHours($matrix['sla_hours']);
    DB::table('transaction_approvals')->insert(['id'=>$approval,'company_id'=>$this->company($r),'subject_type'=>'quotation','subject_id'=>$id,
-     'requester_id'=>$r->user()->id,'status'=>'pending','comment'=>$data['comment']??null,'created_at'=>now(),'updated_at'=>now()]);
+     'requester_id'=>$r->user()->id,'status'=>'pending','comment'=>$data['comment']??null,
+     'tier'=>$tier,'due_at'=>$dueAt,'created_at'=>now(),'updated_at'=>now()]);
    app(OperationalNotification::class)->toApprovers($this->company($r),(string)$r->user()->id,
     'quotation.approval_requested',['subject_id'=>$id,'number'=>$q->number]);
-   AuditService::record($r->user(),'quotation.submitted','quotation',$id,['status'=>$q->status],['status'=>'pending_approval','approval_id'=>$approval]);
-   return response()->json(['data'=>['quotation_id'=>$id,'approval_id'=>$approval,'status'=>'pending_approval']]);
+   AuditService::record($r->user(),'quotation.submitted','quotation',$id,['status'=>$q->status],['status'=>'pending_approval','approval_id'=>$approval,'tier'=>$tier]);
+   return response()->json(['data'=>['quotation_id'=>$id,'approval_id'=>$approval,'status'=>'pending_approval','tier'=>$tier,'due_at'=>$dueAt->toIso8601String()]]);
   });
  }
  public function decideQuotation(Request $r,string $id){
-  abort_unless($r->user()->canManageRecords(),403,'Hanya approver yang diizinkan.');
+  $delegatedFromId=null;
+  $canApprove=\App\Services\ApprovalDelegationService::isAuthorizedApprover($r->user(),'quotation',$this->company($r),$delegatedFromId);
+  abort_unless($canApprove,403,'Hanya approver atau delegasi resmi yang diizinkan.');
   $data=$r->validate(['decision'=>['required',Rule::in(['approved','rejected','revision_requested'])],'comment'=>['nullable','string','max:2000']]);
-  return DB::transaction(function()use($r,$id,$data){
+  return DB::transaction(function()use($r,$id,$data,$delegatedFromId){
    $q=$this->scoped($r,'quotations',$id);
    abort_unless($q->status==='pending_approval',409,'Quotation tidak sedang menunggu approval.');
    abort_if($q->owner_id===$r->user()->id && $r->user()->role!=='super_admin',403,'Pembuat tidak dapat menyetujui sendiri.');
@@ -72,12 +78,14 @@ class SalesWorkflowController extends Controller {
    abort_unless($ap,409,'Approval aktif tidak ditemukan.');
    if($data['decision']!=='approved')abort_unless(trim((string)($data['comment']??''))!=='',422,'Alasan penolakan atau revisi wajib diisi.');
    DB::table('transaction_approvals')->where('id',$ap->id)->update(['status'=>$data['decision'],'comment'=>$data['comment']??null,
-    'approver_id'=>$r->user()->id,'decided_at'=>now(),'updated_at'=>now()]);
+    'approver_id'=>$r->user()->id,'delegated_from_id'=>$delegatedFromId,'decided_at'=>now(),'updated_at'=>now()]);
    DB::table('quotations')->where('id',$id)->update(['status'=>$data['decision'],'version'=>$q->version+1,'updated_at'=>now()]);
    app(OperationalNotification::class)->toUser((string)$q->owner_id,'quotation.'.$data['decision'],
     ['subject_id'=>$id,'number'=>$q->number]);
-   AuditService::record($r->user(),'quotation.'.$data['decision'],'quotation',$id,['status'=>$q->status],['status'=>$data['decision']]);
-   return response()->json(['data'=>['quotation_id'=>$id,'status'=>$data['decision']]]);
+   $auditMeta=['status'=>$data['decision']];
+   if($delegatedFromId)$auditMeta['delegated_from_id']=$delegatedFromId;
+   AuditService::record($r->user(),'quotation.'.$data['decision'],'quotation',$id,['status'=>$q->status],$auditMeta);
+   return response()->json(['data'=>['quotation_id'=>$id,'status'=>$data['decision'],'delegated_from_id'=>$delegatedFromId]]);
   });
  }
  public function convertQuotation(Request $r,string $id){
@@ -120,7 +128,8 @@ class SalesWorkflowController extends Controller {
   $data=$r->validate(['warehouse_id'=>['required','ulid',Rule::exists('warehouses','id')->where('company_id',$co)],
    'idempotency_key'=>['required','string','min:8','max:95'],'lines'=>['nullable','array','min:1','max:100'],
    'lines.*.product_id'=>['required_with:lines','ulid',Rule::exists('products','id')->where('company_id',$co)],
-   'lines.*.quantity'=>['required_with:lines','numeric','gt:0','decimal:0,4']]);
+   'lines.*.quantity'=>['required_with:lines','numeric','gt:0','decimal:0,4'],
+   'lines.*.batch_number'=>['nullable','string','max:100']]);
   return DB::transaction(function()use($r,$id,$co,$data){
    $order=$this->scoped($r,'sales_orders',$id);
    $existing=DB::table('sales_deliveries')->where('company_id',$co)->where('idempotency_key',$data['idempotency_key'])->first();
@@ -137,31 +146,38 @@ class SalesWorkflowController extends Controller {
     ->groupBy('dl.product_id')->select('dl.product_id')->selectRaw('SUM(dl.quantity) as delivered_quantity')->pluck('delivered_quantity','product_id');
    $requested=[];
    foreach($data['lines']??[] as $line){$product=$line['product_id'];abort_unless(isset($items[$product]),422,'Produk tidak ada pada Sales Order.');abort_if(isset($requested[$product]),422,'Duplikat produk delivery.');
-    $qty=Dec::parse((string)$line['quantity'],4);$remaining=Dec::parse((string)$items[$product]->quantity,4)-Dec::parse((string)($delivered[$product]??'0'),4);abort_unless($qty<=$remaining,422,'Jumlah delivery melebihi sisa Sales Order.');$requested[$product]=$qty;}
-   if(!$requested)foreach($items as $product=>$item){$remaining=Dec::parse((string)$item->quantity,4)-Dec::parse((string)($delivered[$product]??'0'),4);if($remaining>0)$requested[$product]=$remaining;}
+    $qty=Dec::parse((string)$line['quantity'],4);$remaining=Dec::parse((string)$items[$product]->quantity,4)-Dec::parse((string)($delivered[$product]??'0'),4);abort_unless($qty<=$remaining,422,'Jumlah delivery melebihi sisa Sales Order.');$requested[$product]=['qty'=>$qty,'batch_number'=>$line['batch_number']??null];}
+   if(!$requested)foreach($items as $product=>$item){$remaining=Dec::parse((string)$item->quantity,4)-Dec::parse((string)($delivered[$product]??'0'),4);if($remaining>0)$requested[$product]=['qty'=>$remaining,'batch_number'=>null];}
    abort_unless($requested,409,'Seluruh kuantitas Sales Order sudah dikirim.');
    $delivery=(string)Str::ulid();$now=now();$cost=0;
    DB::table('sales_deliveries')->insert(['id'=>$delivery,'company_id'=>$co,'sales_order_id'=>$id,'warehouse_id'=>$data['warehouse_id'],
     'created_by'=>$r->user()->id,'number'=>$this->number('DO'),'status'=>'delivered','delivered_at'=>$now,'idempotency_key'=>$data['idempotency_key'],
     'created_at'=>$now,'updated_at'=>$now]);
-   foreach($requested as $productId=>$qty){$item=$items[$productId];
+   foreach($requested as $productId=>$req){$item=$items[$productId];$qty=$req['qty'];$batchNum=$req['batch_number'];
     // The product lock serializes stock checks even when a product has no movement rows yet.
     DB::table('products')->where('company_id',$co)->where('id',$item->product_id)->lockForUpdate()->firstOrFail();
-    $balance=Dec::parse((string)DB::table('inventory_movements')->where('company_id',$co)
-     ->where('warehouse_id',$data['warehouse_id'])->where('product_id',$item->product_id)->sum('quantity'),4);
+    $balQuery=DB::table('inventory_movements')->where('company_id',$co)
+     ->where('warehouse_id',$data['warehouse_id'])->where('product_id',$item->product_id);
+    if($batchNum)$balQuery->where('batch_number',$batchNum);
+    $balance=Dec::parse((string)$balQuery->sum('quantity'),4);
     abort_unless($balance>=$qty,422,'Stok tidak cukup untuk pengiriman.');
     $unitCost=Dec::parse((string)$item->standard_cost);$cost+=Dec::line(Dec::format($qty,4),Dec::format($unitCost));
     $unitPrice=Dec::parse((string)$item->unit_price);$priorQuantity=Dec::parse((string)($delivered[$productId]??'0'),4);$itemQuantity=Dec::parse((string)$item->quantity,4);
     $productNet=$this->proportion($this->cents((string)$item->gross_amount),$quoteSubtotal-$quoteDiscount,$quoteSubtotal);
     $net=$this->proportion($productNet,$priorQuantity+$qty,$itemQuantity)-$this->proportion($productNet,$priorQuantity,$itemQuantity);
+    $expDate=null;
+    if($batchNum){
+     $expDate=DB::table('inventory_movements')->where('company_id',$co)->where('product_id',$item->product_id)->where('batch_number',$batchNum)->whereNotNull('expiry_date')->value('expiry_date');
+    }
     DB::table('sales_delivery_lines')->insert(['id'=>(string)Str::ulid(),'sales_delivery_id'=>$delivery,'product_id'=>$item->product_id,
-     'quantity'=>Dec::format($qty,4),'unit_cost'=>Dec::format($unitCost),'unit_price'=>Dec::format($unitPrice),'net_amount'=>$this->money($net),'created_at'=>$now,'updated_at'=>$now]);
+     'quantity'=>Dec::format($qty,4),'unit_cost'=>Dec::format($unitCost),'unit_price'=>Dec::format($unitPrice),'net_amount'=>$this->money($net),
+     'batch_number'=>$batchNum,'created_at'=>$now,'updated_at'=>$now]);
     DB::table('inventory_movements')->insert(['id'=>(string)Str::ulid(),'company_id'=>$co,'product_id'=>$item->product_id,
      'warehouse_id'=>$data['warehouse_id'],'actor_id'=>$r->user()->id,'quantity'=>Dec::format(-$qty,4),'unit_cost'=>Dec::format($unitCost),
-     'movement_type'=>'sales_delivery','reference'=>$delivery,'idempotency_key'=>$data['idempotency_key'].'-'.$item->product_id,
+     'movement_type'=>'sales_delivery','reference'=>$delivery,'batch_number'=>$batchNum,'expiry_date'=>$expDate,'idempotency_key'=>$data['idempotency_key'].'-'.$item->product_id,
      'posted_at'=>$now,'created_at'=>$now,'updated_at'=>$now]);
    }
-   $complete=true;foreach($items as $product=>$item){$totalDelivered=Dec::parse((string)($delivered[$product]??'0'),4)+($requested[$product]??0);if($totalDelivered<Dec::parse((string)$item->quantity,4)){$complete=false;break;}}
+   $complete=true;foreach($items as $product=>$item){$totalDelivered=Dec::parse((string)($delivered[$product]??'0'),4)+(isset($requested[$product])?$requested[$product]['qty']:0);if($totalDelivered<Dec::parse((string)$item->quantity,4)){$complete=false;break;}}
    DB::table('sales_orders')->where('id',$id)->update(['status'=>$complete?'delivered':'partial_delivered','updated_at'=>$now]);
    if($cost>0)app(JournalPostingService::class)->post($co,'sales_delivery',$delivery,'HPP pengiriman '.$order->number,'5100','1300',Dec::format($cost),$now->toDateString());
    AuditService::record($r->user(),'sales_order.delivered','sales_delivery',$delivery,null,['sales_order_id'=>$id,'warehouse_id'=>$data['warehouse_id']]);
@@ -199,6 +215,7 @@ class SalesWorkflowController extends Controller {
      'quantity'=>Dec::format($qty,4),'unit_cost'=>Dec::format($unitCost),'created_at'=>$now,'updated_at'=>$now]);
     DB::table('inventory_movements')->insert(['id'=>(string)Str::ulid(),'company_id'=>$co,'product_id'=>$line->product_id,'warehouse_id'=>$delivery->warehouse_id,
      'actor_id'=>$r->user()->id,'quantity'=>Dec::format($qty,4),'unit_cost'=>Dec::format($unitCost),'movement_type'=>'sales_return','reference'=>$return,
+     'batch_number'=>$line->batch_number,
      'idempotency_key'=>$data['idempotency_key'].'-'.$index,'posted_at'=>$now,'created_at'=>$now,'updated_at'=>$now]);
    }
    $complete=true;foreach($deliveryLines as $line){$returned=Dec::parse((string)DB::table('sales_return_lines as rl')->join('sales_returns as sr','sr.id','=','rl.sales_return_id')->where('sr.sales_delivery_id',$id)->where('rl.product_id',$line->product_id)->sum('rl.quantity'),4);
@@ -278,14 +295,38 @@ class SalesWorkflowController extends Controller {
   });
  }
  public function approvals(Request $r){
+  $co=$this->company($r);
+  \App\Services\ApprovalDelegationService::syncExpiredDelegations($co);
+  $delegationScopes=[];
+  if(!$r->user()->canManageRecords()){
+   $delegationScopes=DB::table('approval_delegations')
+     ->where('company_id',$co)->where('delegatee_id',$r->user()->id)->where('status','active')
+     ->where('start_date','<=',now())->where('end_date','>=',now())->pluck('scope')->toArray();
+  }
   $items=DB::table('transaction_approvals as a')
    ->leftJoin('quotations as q',function($join){$join->on('q.id','=','a.subject_id')->where('a.subject_type','=','quotation');})
    ->leftJoin('purchase_requests as pr',function($join){$join->on('pr.id','=','a.subject_id')->where('a.subject_type','=','purchase_request');})
    ->leftJoin('users as u','u.id','=','a.requester_id')
-   ->where('a.company_id',$this->company($r))
-   ->when(!$r->user()->canManageRecords(),fn($query)=>$query->where('a.requester_id',$r->user()->id))
+   ->leftJoin('users as u_del','u_del.id','=','a.delegated_from_id')
+   ->where('a.company_id',$co)
+   ->when(!$r->user()->canManageRecords(),function($query)use($r,$delegationScopes){
+     if(empty($delegationScopes)){
+      return $query->where('a.requester_id',$r->user()->id);
+     }
+     return $query->where(function($sub)use($r,$delegationScopes){
+      $sub->where('a.requester_id',$r->user()->id);
+      if(in_array('all',$delegationScopes,true)){
+       $sub->orWhere('a.status','pending');
+      }else{
+       $sub->orWhere(function($typeSub)use($delegationScopes){
+        $typeSub->where('a.status','pending')->whereIn('a.subject_type',$delegationScopes);
+       });
+      }
+     });
+   })
    ->orderByDesc('a.created_at')
    ->select(['a.id','a.subject_id','a.subject_type','a.status','a.comment','a.created_at',
+       'a.tier','a.due_at','a.delegated_from_id','u_del.name as delegated_from_name',
        DB::raw('COALESCE(q.number, pr.number) AS number'),
        DB::raw('COALESCE(q.total, pr.estimated_total) AS amount'),
        'u.name as requester','a.decided_at'])
