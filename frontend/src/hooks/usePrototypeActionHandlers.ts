@@ -5,7 +5,10 @@ import type { Snapshot } from "../types/prototype";
 import type { GridBridge } from "../api/gridBridge";
 import type { ModuleStateBridge } from "../api/moduleStateBridge";
 import { refreshNativeKpis } from "../api/kpiProjection";
-import { handleNativeWorkspaceAction } from "../api/workspaceProjection";
+import {
+  handleNativeWorkspaceAction,
+  refreshNativeWorkspace,
+} from "../api/workspaceProjection";
 import {
   exportTableElementToExcel,
   exportDataToExcel,
@@ -143,13 +146,17 @@ export function usePrototypeActionHandlers(
     // 5. Dashboard Tab and Range updates
     const handleDashboardTab = (event: Event) => {
       const btn = (event.target as HTMLElement).closest<HTMLElement>(
-        '[data-action="dash:tab"],[data-action="dash:refresh"],[data-action="dash:reset"],[data-action="dash:filter"],[data-action="kravio-range:change"],[data-action="kravio:refresh"],[data-page-id="management"] [role="tab"]',
+        '[data-action="dash:tab"],[data-action="ws:tab"],[data-action="dash:refresh"],[data-action="dash:reset"],[data-action="dash:filter"],[data-action="kravio-range:change"],[data-action="kravio:refresh"],[role="tab"]',
       );
       if (btn && user) {
         window.setTimeout(
           () => void refreshNativeKpis().catch(console.error),
           40,
         );
+        window.setTimeout(() => {
+          bridge.reconcileProjectedSelects();
+          void refreshNativeWorkspace().catch(console.error);
+        }, 50);
       }
     };
 

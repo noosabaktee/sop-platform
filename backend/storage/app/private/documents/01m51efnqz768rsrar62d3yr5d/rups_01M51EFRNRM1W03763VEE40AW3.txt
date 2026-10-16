@@ -1,0 +1,18 @@
+RISALAH DAN KEPUTUSAN RAPAT PERUSAHAAN (RUPS/BOD)
+==================================================
+Judul Rapat   : RUPS QA
+Jenis         : rups_annual
+Jadwal/Waktu  : 2026-10-15 09:00:00+07
+Lokasi        : -
+Total Saham   : 1000
+Saham Hadir   : 800
+Status        : CLOSED (Telah Ditutup)
+
+NOTULEN RAPAT (MINUTES OF MEETING):
+------------------------------------
+Quorum confirmed; voting recorded.
+
+DAFTAR KEPUTUSAN / RESOLUSI:
+----------------------------
+1. Approve Annual Statement [Status: approved]
+   Setuju: 700, Tolak: 90, Abstain: 10

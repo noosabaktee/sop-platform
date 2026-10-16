@@ -25,6 +25,169 @@ const committed = (state: GridState): Row[] =>
   state.rows.filter((r) => !r.__new).map((r) => structuredClone(r));
 const same = (a: Row[], b: Row[]) => JSON.stringify(a) === JSON.stringify(b);
 
+interface DomainBannerConfig {
+  icon: string;
+  badge: string;
+  tone: "blue" | "green" | "amber" | "slate";
+  title: string;
+  desc: string;
+  flow: string;
+}
+
+const DOMAIN_BANNERS: Record<string, DomainBannerConfig> = {
+  // Finance
+  "/finance|accounting": {
+    icon: "lucide:book-open",
+    badge: "Buku Besar Resmi",
+    tone: "amber",
+    title: "Entri Jurnal Umum & Buku Besar Terverifikasi",
+    desc: "Tabel ini menyajikan pencatatan jurnal debit dan kredit resmi yang dibukukan secara otomatis dari transaksi penjualan, pengadaan, dan kas/bank.",
+    flow: "Demi kepatuhan akuntansi dan integritas audit, entri jurnal yang telah dibukukan tidak dapat diubah secara langsung di tabel. Untuk membuat jurnal penyesuaian baru, klik tombol '+ Tambah' di atas.",
+  },
+  "/finance|cash": {
+    icon: "lucide:landmark",
+    badge: "Rekonsiliasi Kas & Bank",
+    tone: "amber",
+    title: "Rekapitulasi Rekening Bank & Mutasi Kas",
+    desc: "Tabel ini memuat daftar rekening perusahaan dan mutasi kas masuk/keluar yang telah diverifikasi.",
+    flow: "Untuk mendaftarkan rekening bank baru atau mengimpor mutasi rekening koran (bank statement), gunakan tombol '+ Tambah' di atas.",
+  },
+  // Inventory
+  "/inventory|opname": {
+    icon: "lucide:clipboard-check",
+    badge: "Stock Opname",
+    tone: "blue",
+    title: "Hasil Perhitungan Fisik Stok Gudang",
+    desc: "Tabel ini mencatat hasil perhitungan fisik stock opname barang di gudang sebagai pembanding stok tercatat di sistem.",
+    flow: "Data hasil opname bersifat historis. Untuk menjadwalkan atau memulai sesi stock opname baru, klik tombol '+ Tambah' di atas.",
+  },
+  "/inventory|adjustment": {
+    icon: "lucide:sliders-horizontal",
+    badge: "Penyesuaian Stok",
+    tone: "amber",
+    title: "Dokumen Penyesuaian Kuantitas Persediaan",
+    desc: "Tabel ini memuat rekaman penyesuaian stok yang telah disetujui supervisor gudang untuk mencocokkan stok fisik dan buku persediaan.",
+    flow: "Setiap penyesuaian stok otomatis memperbarui kartu stok dan nilai persediaan di neraca. Pengajuan penyesuaian baru dilakukan melalui tombol '+ Tambah' di atas.",
+  },
+  // Projects
+  "/projects|cost": {
+    icon: "lucide:receipt",
+    badge: "Biaya Aktual Proyek",
+    tone: "blue",
+    title: "Rekapitulasi Pembebanan Biaya Riil Proyek",
+    desc: "Tabel ini mengakumulasi seluruh biaya riil (aktual) proyek yang bersumber dari Purchase Order, pengeluaran kas, dan material.",
+    flow: "Pembebanan biaya terjadi otomatis saat transaksi pengadaan atau kas keluar ditautkan ke kode proyek. Untuk mencatat biaya langsung proyek, gunakan tombol '+ Tambah' di atas.",
+  },
+  "/projects|profitability": {
+    icon: "lucide:trending-up",
+    badge: "Analisis Profitabilitas",
+    tone: "green",
+    title: "Analisis Marjin & Kinerja Finansial Proyek",
+    desc: "Tabel ini menyajikan perhitungan profitabilitas proyek berdasarkan perbandingan nilai pendapatan kontrak terhadap akumulasi biaya aktual.",
+    flow: "Nilai keuntungan dan marjin dihitung secara otomatis oleh sistem secara real-time berdasarkan faktur penjualan dan realisasi biaya proyek.",
+  },
+  // Sales
+  "/sales|order": {
+    icon: "lucide:shopping-cart",
+    badge: "Pesanan Penjualan",
+    tone: "blue",
+    title: "Dokumen Sales Order (Pesanan Penjualan) Resmi",
+    desc: "Tabel ini memuat pesanan penjualan yang telah disepakati bersama pelanggan dan terdaftar resmi di sistem.",
+    flow: "Sales Order yang telah dikonfirmasi menjadi dasar penerbitan Surat Jalan dan Faktur Penjualan. Pengubahan data langsung pada tabel dinonaktifkan demi konsistensi rantai pasok.",
+  },
+  "/sales|delivery": {
+    icon: "lucide:truck",
+    badge: "Pengiriman Barang",
+    tone: "blue",
+    title: "Surat Jalan & Bukti Pengiriman Barang",
+    desc: "Tabel ini mencatat seluruh dokumen pengiriman barang ke pelanggan yang diterbitkan dari Sales Order.",
+    flow: "Penerbitan surat jalan memotong kuantitas stok di gudang secara otomatis. Surat jalan baru diterbitkan melalui proses pemenuhan pesanan pada modul Penjualan/Gudang.",
+  },
+  "/sales|return": {
+    icon: "lucide:undo-2",
+    badge: "Retur Penjualan",
+    tone: "amber",
+    title: "Dokumen Retur & Pengembalian Barang",
+    desc: "Tabel ini mencatat pengembalian barang dari pelanggan yang telah diverifikasi oleh tim quality control dan gudang.",
+    flow: "Retur penjualan otomatis mengembalikan stok ke gudang dan menerbitkan nota kredit piutang. Proses retur diajukan melalui alur verifikasi resmi retur penjualan.",
+  },
+  "/sales|invoice": {
+    icon: "lucide:file-text",
+    badge: "Faktur Tagihan",
+    tone: "blue",
+    title: "Faktur Penjualan (Sales Invoice) Resmi",
+    desc: "Tabel ini memuat faktur tagihan resmi yang diterbitkan kepada pelanggan beserta tanggal jatuh tempo pembayarannya.",
+    flow: "Penerbitan faktur otomatis mengakui piutang usaha dan kewajiban pajak PPN. Pelunasan tagihan dicatat melalui alur pelunasan faktur.",
+  },
+  "/sales|payment": {
+    icon: "lucide:credit-card",
+    badge: "Penerimaan Kas",
+    tone: "green",
+    title: "Bukti Penerimaan Pembayaran Pelanggan",
+    desc: "Tabel ini mencatat seluruh pembayaran pelanggan yang telah masuk ke rekening kas atau bank perusahaan.",
+    flow: "Penerimaan pembayaran secara otomatis memotong saldo piutang pelanggan dan membukukan mutasi debet kas/bank pada buku besar.",
+  },
+  "/sales|ar": {
+    icon: "lucide:scale",
+    badge: "Buku Pembantu Piutang",
+    tone: "slate",
+    title: "Buku Pembantu Piutang Usaha (Aging AR)",
+    desc: "Tabel ini menampilkan saldo piutang usaha dan klasifikasi umur piutang per pelanggan secara komprehensif.",
+    flow: "Saldo piutang diperbarui secara otomatis dari transaksi faktur penjualan dan pelunasan pembayaran. Data ini bersifat laporan analitis.",
+  },
+  // Purchase
+  "/purchase|request": {
+    icon: "lucide:file-plus",
+    badge: "Permintaan Pembelian",
+    tone: "blue",
+    title: "Pengajuan Permintaan Pembelian (Purchase Request)",
+    desc: "Tabel ini memuat pengajuan pengadaan barang/jasa dari masing-masing departemen internal.",
+    flow: "Permintaan yang telah disetujui (Approved) akan diteruskan ke departemen pengadaan untuk diterbitkan menjadi Purchase Order (PO). Klik '+ Tambah' untuk mengajukan permintaan baru.",
+  },
+  // Business Development
+  "/business-development|tender": {
+    icon: "lucide:briefcase",
+    badge: "Tender Bisnis",
+    tone: "blue",
+    title: "Daftar Partisipasi Tender Resmi",
+    desc: "Tabel ini merangkum keikutsertaan tender resmi yang sedang berlangsung beserta jadwal evaluasi dokumen.",
+    flow: "Status tahapan tender diperbarui sesuai proses pembukaan dokumen dan evaluasi panitia tender pada menu rincian terkait.",
+  },
+  "/business-development|proposal": {
+    icon: "lucide:file-check",
+    badge: "Proposal Komersial",
+    tone: "blue",
+    title: "Dokumen Proposal Penawaran & Presentasi",
+    desc: "Tabel ini memuat berkas proposal teknis dan penawaran harga yang diajukan ke prospek pelanggan.",
+    flow: "Proposal yang disetujui klien akan dialihkan statusnya menjadi dokumen kontrak atau diterbitkan Sales Order.",
+  },
+  // Reports
+  "/reports|financial": {
+    icon: "lucide:bar-chart-3",
+    badge: "Laporan Keuangan",
+    tone: "green",
+    title: "Laporan Keuangan Resmi Perusahaan",
+    desc: "Laporan ini menyajikan posisi keuangan, laba rugi, dan arus kas yang dihasilkan langsung dari buku besar akuntansi.",
+    flow: "Data laporan terproyeksi otomatis dari seluruh transaksi yang telah terverifikasi. Gunakan tombol 'Export' di toolbar untuk mengunduh laporan dalam format Excel.",
+  },
+  "/reports|sales": {
+    icon: "lucide:bar-chart-2",
+    badge: "Laporan Penjualan",
+    tone: "blue",
+    title: "Laporan Analisis Penjualan & Pendapatan",
+    desc: "Laporan ini merekapitulasi volume dan nilai penjualan per pelanggan, produk, serta tenaga penjual.",
+    flow: "Dihasilkan secara otomatis dari transaksi faktur dan pesanan penjualan. Gunakan tombol 'Export' untuk mengunduh laporan dalam format Excel.",
+  },
+  "/reports|purchase": {
+    icon: "lucide:pie-chart",
+    badge: "Laporan Pengadaan",
+    tone: "amber",
+    title: "Laporan Pembelian & Pengeluaran Vendor",
+    desc: "Laporan ini merangkum realisasi belanja pengadaan barang/jasa per vendor dan kategori beban.",
+    flow: "Dihasilkan secara otomatis dari Purchase Order dan tagihan vendor yang terverifikasi. Gunakan tombol 'Export' untuk mengunduh file Excel.",
+  },
+};
+
 /** All data handling lives outside the frozen prototype UI.
  * The original JavaScript owns interaction and staging; PostgreSQL owns committed rows.
  * A debounced commit detector catches native save/delete, drag/drop, status, quick-create
@@ -98,6 +261,9 @@ export class GridBridge {
     // Some native tabs build their grid lazily; seed those when first opened.
     if (this.authenticated && !saved)
       void this.seedUninitialized().catch(console.error);
+    if (this.isDomainReadOnly(route, panel_id)) {
+      this.applyDomainTableEnhancements(route, panel_id);
+    }
   }
   has(route: string, panelId: string) {
     return this.mounted.has(key(route, panelId));
@@ -359,6 +525,7 @@ export class GridBridge {
       throw e;
     }
   }
+
   /** Domain-backed panels are READ-ONLY projections of PostgreSQL.
    * Never persist these rows to grid_snapshots or retain stale demo fixtures. */
   mergeDomainRows(
@@ -371,21 +538,111 @@ export class GridBridge {
     this.authoritative.add(id);
     const grid = this.mounted.get(id);
     if (!grid) return;
-    if (same(grid.state.rows, rows)) return;
+    if (same(grid.state.rows, rows)) {
+      this.applyDomainTableEnhancements(route, panelId);
+      return;
+    }
     grid.state.rows = structuredClone(rows);
     grid.state.staged?.clear();
     grid.state.selected?.clear();
     grid.render();
     this.reconcileProjectedSelects();
+    this.applyDomainTableEnhancements(route, panelId);
   }
+
   isDomainReadOnly(route: string, panelId: string) {
     return this.authoritative.has(key(route, panelId));
   }
+
+  applyDomainTableEnhancements(route: string, panelId: string) {
+    if (typeof document === "undefined") return;
+    const page = document.querySelector<HTMLElement>(
+      `[data-prototype-page][data-route="${route}"]`,
+    );
+    if (!page) return;
+
+    const panel =
+      page.querySelector<HTMLElement>(`[data-bd-panel="${panelId}"]`) ||
+      page.querySelector<HTMLElement>(`[data-tabpanel="${panelId}"]`);
+    if (!panel) return;
+
+    panel.dataset.domainLocked = "true";
+
+    const noAddPanels = [
+      "/sales|order",
+      "/sales|delivery",
+      "/sales|return",
+      "/sales|invoice",
+      "/sales|payment",
+      "/sales|ar",
+      "/projects|profitability",
+      "/reports|financial",
+      "/reports|sales",
+      "/reports|purchase",
+      "/reports|tax",
+      "/reports|management",
+    ];
+    if (noAddPanels.includes(`${route}|${panelId}`)) {
+      panel.dataset.noAdd = "true";
+    }
+
+    panel.querySelectorAll<HTMLInputElement>(".bd-cell").forEach((input) => {
+      input.readOnly = true;
+      input.tabIndex = -1;
+    });
+
+    let banner = panel.querySelector<HTMLElement>(".sop-context-banner");
+    const configKey = `${route}|${panelId}`;
+    const info = DOMAIN_BANNERS[configKey] || {
+      icon: "lucide:database",
+      badge: "Pencatatan Resmi",
+      tone: "blue" as const,
+      title: "Data Transaksi Terverifikasi",
+      desc: "Tabel ini menyajikan pencatatan resmi transaksi yang terhubung langsung dengan basis data sistem.",
+      flow: "Pengubahan langsung pada tabel dinonaktifkan demi integritas pembukuan. Gunakan tombol atau alur transaksi resmi di atas untuk melakukan mutasi baru.",
+    };
+
+    if (!banner) {
+      banner = document.createElement("div");
+      banner.className = `sop-context-banner tone-${info.tone}`;
+      const toolbar = panel.querySelector<HTMLElement>("[data-bd-toolbar]");
+      const tableWrap = panel.querySelector<HTMLElement>("[data-bd-tablewrap]");
+      const target = toolbar || tableWrap;
+      if (target && target.parentElement) {
+        target.parentElement.insertBefore(banner, target);
+      } else {
+        panel.prepend(banner);
+      }
+    } else {
+      banner.className = `sop-context-banner tone-${info.tone}`;
+    }
+
+    banner.innerHTML = `
+      <div class="sop-context-icon" aria-hidden="true">
+        <iconify-icon noobserver icon="${info.icon}"></iconify-icon>
+      </div>
+      <div class="sop-context-body">
+        <div class="sop-context-head">
+          <h3 class="sop-context-title">${info.title}</h3>
+          <span class="sop-context-badge">${info.badge}</span>
+        </div>
+        <p class="sop-context-desc">${info.desc}</p>
+        <div class="sop-context-flow">
+          <strong>Alur resmi:</strong> ${info.flow}
+        </div>
+      </div>
+    `;
+  }
+
   /** Native prototype status selects only contain demo statuses. When server
    * sends a new real status, preserve the exact original select styling and
    * add only its missing option value (no CSS or markup layout changes). */
   reconcileProjectedSelects() {
     for (const id of this.authoritative) {
+      const [route, panelId] = id.split("|");
+      if (route && panelId) {
+        this.applyDomainTableEnhancements(route, panelId);
+      }
       const mounted = this.mounted.get(id);
       if (!mounted) continue;
       const page = document.querySelector<HTMLElement>(

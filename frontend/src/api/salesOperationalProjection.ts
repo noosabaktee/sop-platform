@@ -82,8 +82,8 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
       __id: "db-order-" + order.id,
       number: order.number,
       customer: order.customer,
-      delivery: "â€”",
-      owner: "â€”",
+      delivery: "—",
+      owner: "—",
       value: money(order.total),
       status: order.status === "confirmed" ? "Confirmed" : order.status,
     })),
@@ -97,7 +97,7 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
       number: delivery.number,
       so: delivery.sales_order,
       customer: delivery.customer,
-      receiver: "â€”",
+      receiver: "—",
       location: delivery.warehouse,
       status: delivery.status === "delivered" ? "Delivered" : delivery.status,
     })),
@@ -112,21 +112,7 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
       customer: item.customer,
       source: item.delivery_number,
       reason: item.reason,
-      value: "â€”",
-      status: item.status === "received" ? "Approved" : item.status,
-    })),
-  );
-  bridge.mergeDomainRows(
-    "/sales",
-    "return",
-    "db-return-",
-    (data.returns || []).map((item) => ({
-      __id: "db-return-" + item.id,
-      number: item.number,
-      customer: item.customer,
-      source: item.delivery_number,
-      reason: item.reason,
-      value: item.credit_note_amount ? money(item.credit_note_amount) : "",
+      value: item.credit_note_amount ? money(item.credit_note_amount) : "—",
       status: item.refund_amount
         ? "Refunded"
         : item.credit_note_status === "posted"

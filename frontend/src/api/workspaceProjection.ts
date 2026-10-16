@@ -74,6 +74,126 @@ function fill(
   }
 }
 
+interface WorkspaceBannerInfo {
+  icon: string;
+  badge: string;
+  tone: "blue" | "green" | "amber" | "slate";
+  title: string;
+  desc: string;
+  flow: string;
+}
+
+const WORKSPACE_BANNERS: Record<string, WorkspaceBannerInfo> = {
+  "my-workspace": {
+    icon: "lucide:check-circle-2",
+    badge: "Tugas Aktif",
+    tone: "blue",
+    title: "Rangkuman Tugas & Tindak Lanjut Personal",
+    desc: "Tabel ini merangkum seluruh tugas operasional yang dialokasikan kepada Anda dari Modul Projects serta catatan tindak lanjut personal.",
+    flow: "Centang kotak pada baris untuk menandai tugas selesai. Klik tombol '+ Task' di kanan atas untuk menambah tugas personal baru. Perubahan rincian proyek atau jadwal resmi dikelola melalui Modul Projects.",
+  },
+  dashboard: {
+    icon: "lucide:folder-kanban",
+    badge: "Data Terintegrasi",
+    tone: "blue",
+    title: "Daftar Proyek di Bawah Kelolaan Anda",
+    desc: "Tabel ini menampilkan proyek aktif yang Anda kelola dan terhubung langsung dengan database Modul Projects.",
+    flow: "Pembaruan progres, tahapan kerja, anggaran, dan alokasi tim dilakukan terpusat di Modul Projects. Halaman ini berfungsi sebagai pemantauan terpadu.",
+  },
+  "crm-sales": {
+    icon: "lucide:stamp",
+    badge: "Otorisasi Transaksi",
+    tone: "amber",
+    title: "Antrean Otorisasi Dokumen Komersial & Pengadaan",
+    desc: "Tabel ini memuat pengajuan penawaran harga, pesanan, dan dokumen pengadaan yang menunggu persetujuan (approval) Anda.",
+    flow: "Persetujuan resmi (Approve/Reject) dilakukan melalui alur verifikasi resmi pada masing-masing dokumen transaksi terkait untuk menjaga kepatuhan dan keabsahan pembukuan.",
+  },
+  "business-development": {
+    icon: "lucide:shield-check",
+    badge: "Jejak Audit Resmi",
+    tone: "slate",
+    title: "Log Aktivitas & Riwayat Transaksi (Audit Trail)",
+    desc: "Tabel ini mencatat seluruh jejak audit aktivitas sistem dan perubahan data penting Anda secara otomatis.",
+    flow: "Demi kepatuhan standar akuntansi dan integritas audit perusahaan, seluruh log aktivitas terekam permanen dan tidak dapat diubah atau dihapus.",
+  },
+  quotation: {
+    icon: "lucide:calendar",
+    badge: "Jadwal Kerja",
+    tone: "green",
+    title: "Kalender Agenda & Pertemuan Bisnis",
+    desc: "Tabel ini menyajikan agenda pertemuan, rapat koordinasi proyek, dan tindak lanjut klien yang telah dijadwalkan.",
+    flow: "Gunakan tombol '+ Event' di kanan atas untuk mendaftarkan jadwal pertemuan baru. Agenda akan otomatis tersinkronisasi dengan kalender aktivitas sistem.",
+  },
+  sales: {
+    icon: "lucide:file-text",
+    badge: "Arsip Dokumen",
+    tone: "blue",
+    title: "Daftar Arsip & Berkas Transaksi Resmi",
+    desc: "Tabel ini menyajikan arsip berkas digital, dokumen tagihan, dan lampiran kontrak resmi yang tertaut ke akun Anda.",
+    flow: "Dokumen dihasilkan otomatis saat transaksi resmi diterbitkan (Invoice, Surat Jalan, dll.) atau diunggah melalui formulir lampiran pada modul transaksi terkait.",
+  },
+  projects: {
+    icon: "lucide:bell",
+    badge: "Pemberitahuan Sistem",
+    tone: "blue",
+    title: "Notifikasi & Pengingat Transaksi Terkini",
+    desc: "Tabel ini memuat pemberitahuan penting terkait status pekerjaan, tenggat waktu proyek, dan pembaruan persetujuan.",
+    flow: "Notifikasi terkirim otomatis oleh sistem. Klik ikon rincian pada baris notifikasi untuk menandai bahwa pesan telah dibaca.",
+  },
+  purchase: {
+    icon: "lucide:mail",
+    badge: "Arsip Korespondensi",
+    tone: "slate",
+    title: "Riwayat Pengiriman Email Dokumen Resmi",
+    desc: "Tabel ini mencatat riwayat korespondensi email resmi yang dikirimkan sistem ke mitra, vendor, atau pelanggan.",
+    flow: "Email dikirimkan secara otomatis oleh sistem saat dokumen transaksi diterbitkan atau dikonfirmasi dari modul transaksi terkait.",
+  },
+  inventory: {
+    icon: "lucide:user-check",
+    badge: "Keamanan Akun",
+    tone: "green",
+    title: "Profil Pengguna & Wewenang Akses",
+    desc: "Tabel ini menampilkan ringkasan hak akses pengguna, peran operasional, dan parameter keamanan akun Anda.",
+    flow: "Pengaturan profil dan hak akses diatur secara terpusat oleh Administrator Sistem demi keamanan wewenang dan kepatuhan transaksi perusahaan.",
+  },
+};
+
+function injectWorkspaceBanner(
+  panel: HTMLElement | null,
+  info: WorkspaceBannerInfo,
+) {
+  if (!panel) return;
+  let banner = panel.querySelector<HTMLElement>(".sop-context-banner");
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.className = `sop-context-banner tone-${info.tone}`;
+    const card = panel.querySelector(".card");
+    if (card) {
+      panel.insertBefore(banner, card);
+    } else {
+      panel.prepend(banner);
+    }
+  } else {
+    banner.className = `sop-context-banner tone-${info.tone}`;
+  }
+
+  banner.innerHTML = `
+    <div class="sop-context-icon" aria-hidden="true">
+      <iconify-icon noobserver icon="${info.icon}"></iconify-icon>
+    </div>
+    <div class="sop-context-body">
+      <div class="sop-context-head">
+        <h3 class="sop-context-title">${info.title}</h3>
+        <span class="sop-context-badge">${info.badge}</span>
+      </div>
+      <p class="sop-context-desc">${info.desc}</p>
+      <div class="sop-context-flow">
+        <strong>Alur resmi:</strong> ${info.flow}
+      </div>
+    </div>
+  `;
+}
+
 /** Replaces all nine My Workspace fixture tables with user-scoped SQL projections. */
 export async function refreshNativeWorkspace() {
   const page = document.querySelector<HTMLElement>(
@@ -84,6 +204,11 @@ export async function refreshNativeWorkspace() {
   const state = response.data as Workspace;
   const panel = (id: string) =>
     page.querySelector<HTMLElement>(`.ws-panel[data-panel="${id}"]`);
+
+  // Render context banner for each tab panel
+  for (const [panelId, info] of Object.entries(WORKSPACE_BANNERS)) {
+    injectWorkspaceBanner(panel(panelId), info);
+  }
 
   fill(panel("my-workspace"), state.tasks, (row, item) => {
     label(row, item.title);

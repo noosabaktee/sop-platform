@@ -275,7 +275,7 @@ export class OperationalProjectionBridge {
               type: "AP",
               account: "Hutang Usaha",
               desc: `Tagihan ${str(r.vendor)}`,
-              debit: "â€”",
+              debit: "—",
               credit: money(r.amount),
               status: state(r.status),
             }
@@ -286,7 +286,7 @@ export class OperationalProjectionBridge {
               account: "Kas / Bank",
               desc: `Bayar ${str(r.vendor)}`,
               debit: money(r.amount),
-              credit: "â€”",
+              credit: "—",
               status: "Posted",
             },
       this.grid,

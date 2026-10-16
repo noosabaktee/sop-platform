@@ -99,3 +99,51 @@ test('Settings native permission edit persists to module-states without changing
   await page.locator('[data-page-id="settings"] [data-crud="role-perm"]').first().click();
   await expect.poll(()=>wrote).toBe(true);
 });
+
+test('My Workspace renders informative context banner and hides misleading action buttons',async({page})=>{
+  await session(page);
+  await page.route('**/api/v1/workspace',route=>route.fulfill({
+    json:{
+      data:{
+        tasks:[{id:'task-1',title:'Follow up penawaran',status:'pending',project:'PRJ-01',due_at:'2026-10-25'}],
+        projects:[{id:'prj-1',code:'PRJ-01',name:'Pabrik Baru',customer:'PT Maju',status:'in_progress',progress:45}],
+        approvals:[],
+        activities:[],
+        calendar:[],
+        documents:[],
+        notifications:[],
+        emails:[],
+        profile:[],
+        summary:{open_tasks:1,pending_approvals:0,unread_notifications:0}
+      }
+    }
+  }));
+  await page.goto('/#/my-workspace');
+  const banner=page.locator('#ws-panel-my-workspace .sop-context-banner');
+  await expect(banner).toBeVisible({timeout:15_000});
+  await expect(banner).toContainText('Rangkuman Tugas & Tindak Lanjut Personal');
+  await expect(banner).toContainText('Alur resmi:');
+
+  // Verify misleading create button in Dashboard projects panel is hidden
+  const fakeCreateProject=page.locator('.ws-panel[data-panel="dashboard"] [data-action="sop:create"]');
+  await expect(fakeCreateProject).toBeHidden();
+  const fakeCreateApproval=page.locator('.ws-panel[data-panel="crm-sales"] [data-action="sop:create"]');
+  await expect(fakeCreateApproval).toBeHidden();
+});
+
+test('Authoritative domain projection renders informative context banner and hides misleading CRUD buttons',async({page})=>{
+  await session(page);
+  await page.goto('/#/finance');
+  await bridgeReady(page,'grid');
+  await page.locator('#ws-tab-accounting').click();
+  const panel=page.locator('[data-bd-panel="accounting"]');
+  await expect(panel).toBeVisible({timeout:15_000});
+  const banner=panel.locator('.sop-context-banner');
+  await expect(banner).toBeVisible({timeout:15_000});
+  await expect(banner).toContainText('Entri Jurnal Umum & Buku Besar Terverifikasi');
+
+  // Misleading bulk delete and commit buttons on locked accounting grid are hidden
+  await expect(panel.locator('[data-bd-act="delete"]')).toBeHidden();
+  await expect(panel.locator('[data-bd-act="commit"]')).toBeHidden();
+});
+

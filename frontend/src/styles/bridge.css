@@ -517,3 +517,203 @@
 .sop-swal-actions .sop-btn {
   min-width: 140px;
 }
+
+/* ========================================================
+   SOP Context Banners & Read-Only Domain Visuals
+   ======================================================== */
+.sop-context-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #0284c7;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 0 0 16px 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    sans-serif;
+  animation: sopFadeIn 0.2s ease-out;
+}
+
+.sop-context-banner.tone-amber {
+  border-left-color: #d97706;
+  background: #fffbeb;
+  border-color: #fef3c7;
+}
+
+.sop-context-banner.tone-green {
+  border-left-color: #16a34a;
+  background: #f0fdf4;
+  border-color: #dcfce7;
+}
+
+.sop-context-banner.tone-blue {
+  border-left-color: #0284c7;
+  background: #f0f9ff;
+  border-color: #e0f2fe;
+}
+
+.sop-context-banner.tone-slate {
+  border-left-color: #475569;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.sop-context-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+  background: #e0f2fe;
+  color: #0369a1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  margin-top: 1px;
+}
+
+.sop-context-banner.tone-amber .sop-context-icon {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.sop-context-banner.tone-green .sop-context-icon {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.sop-context-banner.tone-slate .sop-context-icon {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.sop-context-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.sop-context-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sop-context-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.sop-context-badge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.sop-context-banner.tone-blue .sop-context-badge {
+  background: #bae6fd;
+  color: #0369a1;
+}
+
+.sop-context-banner.tone-green .sop-context-badge {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+.sop-context-banner.tone-amber .sop-context-badge {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.sop-context-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #334155;
+  margin: 0 0 6px 0;
+}
+
+.sop-context-flow {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.sop-context-flow strong {
+  color: #0f172a;
+}
+
+/* ========================================================
+   Hide Misleading Action Buttons on Read-Only Views
+   ======================================================== */
+/* 1. Workspace misleading create buttons */
+.ws-panel[data-panel="dashboard"] [data-action="sop:create"],
+.ws-panel[data-panel="crm-sales"] [data-action="sop:create"],
+.ws-panel[data-panel="business-development"] [data-action="sop:create"],
+.ws-panel[data-panel="sales"] [data-action="sop:create"],
+.ws-panel[data-panel="purchase"] [data-action="sop:create"],
+.ws-panel[data-panel="inventory"] [data-action="sop:create"],
+.ws-panel[data-panel="projects"] [data-action="sop:create"] {
+  display: none !important;
+}
+
+/* 2. Authoritative Domain Tables: Hide delete, delrow, commit, discard, import & checkboxes */
+[data-domain-locked="true"] [data-bd-act="delete"],
+[data-domain-locked="true"] [data-bd-act="delrow"],
+[data-domain-locked="true"] [data-bd-act="commit"],
+[data-domain-locked="true"] [data-bd-act="discard"],
+[data-domain-locked="true"] [data-bd-act="import"],
+[data-domain-locked="true"] input[data-bd-all],
+[data-domain-locked="true"] input[data-bd-sel],
+[data-domain-locked="true"] .bd-dirty {
+  display: none !important;
+}
+
+/* 3. Authoritative Domain Tables: Hide add button if panel is strictly read-only */
+[data-domain-locked="true"][data-no-add="true"] [data-bd-act="add"] {
+  display: none !important;
+}
+
+/* 4. Display input cells on domain locked tables as clean read-only text */
+[data-domain-locked="true"] .bd-cell {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  cursor: default !important;
+  color: #1e293b !important;
+  padding: 4px 6px !important;
+  user-select: text;
+}
+
+[data-domain-locked="true"] .bd-cell:focus,
+[data-domain-locked="true"] .bd-cell:hover {
+  background: rgba(241, 245, 249, 0.6) !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* 5. In table header, hide empty select checkbox column when all/sel checkboxes are hidden */
+[data-domain-locked="true"] table.bd-table th:first-child:has(input[data-bd-all]),
+[data-domain-locked="true"] table.bd-table td:first-child:has(input[data-bd-sel]) {
+  width: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
