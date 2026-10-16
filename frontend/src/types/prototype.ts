@@ -33,3 +33,15 @@ export interface RecordPayload {
   status?: string;
   version?: number;
 }
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'iconify-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        icon?: string;
+        noobserver?: boolean | string;
+      };
+    }
+  }
+}
+

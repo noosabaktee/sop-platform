@@ -3,11 +3,10 @@ import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'iconify-icon';
 
-import './styles/prototype.css';
-import './styles/bridge.css';
+import './styles/index.css';
 
 import { AuthProvider } from './app/AuthContext';
-import { ExactPrototype } from './pages/ExactPrototype';
+import { App } from './app/App';
 import { installGlobalExcelInterceptor } from './utils/excelExport';
 
 // Ensure any and all CSV exports across the application are transformed into Excel (.xlsx)
@@ -31,7 +30,7 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <ExactPrototype />
+      <App />
     </AuthProvider>
   </QueryClientProvider>
 );

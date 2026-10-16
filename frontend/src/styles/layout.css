@@ -1,0 +1,31 @@
+/* ===== Mobile app-like experience ===== */
+.app-tabbar{display:none}
+@media(max-width:760px){
+  html,body{overflow-x:hidden}
+  .dashboard,.main-column,.page-region,.card,.section-card,.c-kravio-table,.c-kravio-metric,.c-kravio-updates,.c-kravio-chart{min-width:0;max-width:100%}
+  .dashboard .main-column{padding-bottom:80px}
+  .c-nuvio-topbar{gap:8px;padding:0 2px}
+  .c-nuvio-topbar nav{gap:6px;overflow:hidden;flex-wrap:nowrap}
+  .c-nuvio-topbar nav a,.c-nuvio-topbar nav>span{display:none}
+  .c-nuvio-topbar nav strong{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .c-nuvio-topbar button,.c-nuvio-topbar__lang{flex-shrink:0}
+  .c-nuvio-topbar__lang{padding:0 6px}
+  .app-tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:95;background:var(--color-surface);border-top:1px solid var(--color-border);padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px color-mix(in srgb,var(--color-text) 8%,transparent)}
+  .app-tabbar[hidden]{display:none!important}
+  .app-tabbar__item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:none;font:inherit;font-size:10px;font-weight:600;letter-spacing:.01em;color:var(--color-secondary);padding:5px 2px;border-radius:12px;cursor:pointer}
+  .app-tabbar__item iconify-icon{width:22px;height:22px}
+  .app-tabbar__item[aria-current="page"],.app-tabbar__item[aria-current="page"] iconify-icon{color:#217346}
+}
+
+/* ===== Profile menu ===== */
+.profile-menu{position:fixed;z-index:120;min-width:224px;padding:6px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-card);box-shadow:0 16px 40px color-mix(in srgb,var(--color-text) 20%,transparent)}
+.profile-menu[hidden]{display:none}
+.profile-menu__head{display:flex;flex-direction:column;gap:2px;padding:8px 10px;margin-bottom:4px;border-bottom:1px solid var(--color-border)}
+.profile-menu__head strong{font-size:var(--text-sm);font-weight:600;color:var(--color-text)}
+.profile-menu__head small{font-size:11px;color:var(--color-muted);overflow:hidden;text-overflow:ellipsis}
+.profile-menu button{display:flex;width:100%;align-items:center;gap:10px;padding:9px 10px;border:0;border-radius:var(--radius-control);background:none;color:var(--color-text);font:inherit;font-size:var(--text-xs);text-align:left;cursor:pointer}
+.profile-menu button:hover,.profile-menu button:focus-visible{background:var(--color-sidebar);outline:none}
+.profile-menu button.danger{color:var(--color-danger)}
+.profile-menu button.danger:hover{background:color-mix(in srgb,var(--color-danger) 10%,transparent)}
+.profile-menu button iconify-icon{width:16px;height:16px;color:var(--color-secondary)}
+.profile-menu button.danger iconify-icon{color:currentColor}
