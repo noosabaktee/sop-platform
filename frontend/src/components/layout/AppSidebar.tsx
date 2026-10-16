@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "../../app/AuthContext";
 
 export interface NavItem {
   title: string;
@@ -84,96 +85,117 @@ export interface AppSidebarProps {
   currentRoute?: string;
   userName?: string;
   userEmail?: string;
+  nodePrefix?: string;
+  nodeId?: string;
+  regionNodeId?: string;
 }
 
 export function AppSidebar({
-  currentRoute = "/my-workspace",
-  userName = "Aditya Pratama",
-  userEmail = "aditya.pratama@example.com",
+  currentRoute,
+  userName,
+  userEmail,
+  nodePrefix,
+  nodeId,
+  regionNodeId,
 }: AppSidebarProps) {
+  const { user } = useAuth();
+  const displayName = userName || user?.name || "Aditya Pratama";
+  const displayEmail = userEmail || user?.email || "aditya.pratama@example.com";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const sidebarRegionId = regionNodeId || (nodePrefix ? `${nodePrefix}.sidebar` : undefined);
+  const sidebarNavId = nodeId || (nodePrefix ? `${nodePrefix}.sidebar.navigation` : "kravio.sidebar.navigation");
+
   return (
-    <aside
-      className="c-kravio-sidebar"
-      data-component="kravio-sidebar"
-      aria-label="Primary navigation"
-    >
-      <div className="c-kravio-sidebar__brand" data-part="brand">
-        <button
-          type="button"
-          className="c-kravio-sidebar__home"
-          data-action="kravio-sidebar:navigate"
-          title="Overview"
-          aria-label="Buka Overview"
-        >
-          <span className="c-kravio-sidebar__logo" aria-hidden="true">
-            SO
-          </span>
-          <strong>Platform</strong>
-        </button>
-        <button
-          type="button"
-          aria-label="Collapse sidebar"
-          data-action="kravio:sidebar"
-        >
-          <iconify-icon noobserver icon="lucide:panel-left" aria-hidden="true" />
-        </button>
-      </div>
-
-      <div className="c-kravio-sidebar__search">
-        <label
-          className="c-kravio-search"
-          data-component="kravio-search"
-          data-node-id="kravio.navigation-search"
-        >
-          <iconify-icon noobserver icon="lucide:search" aria-hidden="true" />
-          <input
-            type="search"
-            placeholder="Search anything"
-            aria-label="Search anything"
-            data-action="kravio-sidebar:search"
-            data-part="input"
-          />
-        </label>
-        <kbd>⌘ K</kbd>
-      </div>
-
-      <nav data-part="navigation">
-        {SIDEBAR_NAV_SECTIONS.map((section) => (
-          <React.Fragment key={section.caption}>
-            <p className="c-kravio-sidebar__caption">{section.caption}</p>
-            {section.items.map((it) => (
-              <button
-                key={it.route}
-                type="button"
-                data-action="kravio-sidebar:navigate"
-                title={it.title}
-                aria-current={currentRoute === it.route ? "page" : undefined}
-              >
-                <iconify-icon noobserver icon={it.icon} aria-hidden="true" />
-                <span>{it.title}</span>
-              </button>
-            ))}
-          </React.Fragment>
-        ))}
-      </nav>
-
-      <button
-        type="button"
-        className="c-kravio-sidebar__profile"
-        data-action="kravio:profile"
+    <div className="sidebar-region" data-node-id={sidebarRegionId}>
+      <aside
+        className="c-kravio-sidebar"
+        data-component="kravio-sidebar"
+        data-node-id={sidebarNavId}
+        aria-label="Primary navigation"
       >
-        <span className="c-kravio-sidebar__avatar">AP</span>
-        <span>
-          <strong>{userName}</strong>
-          <small>{userEmail}</small>
-        </span>
-        <iconify-icon
-          noobserver
-          icon="lucide:chevrons-up-down"
-          aria-hidden="true"
-        />
-      </button>
-    </aside>
+        <div className="c-kravio-sidebar__brand" data-part="brand">
+          <button
+            type="button"
+            className="c-kravio-sidebar__home"
+            data-action="kravio-sidebar:navigate"
+            title="Overview"
+            aria-label="Buka Overview"
+          >
+            <span className="c-kravio-sidebar__logo" aria-hidden="true">
+              SO
+            </span>
+            <strong>Platform</strong>
+          </button>
+          <button
+            type="button"
+            aria-label="Collapse sidebar"
+            data-action="kravio:sidebar"
+          >
+            <iconify-icon noobserver icon="lucide:panel-left" aria-hidden="true"></iconify-icon>
+          </button>
+        </div>
+
+        <div className="c-kravio-sidebar__search">
+          <label
+            className="c-kravio-search"
+            data-component="kravio-search"
+            data-node-id="kravio.navigation-search"
+          >
+            <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+            <input
+              type="search"
+              placeholder="Search anything"
+              aria-label="Search anything"
+              data-action="kravio-sidebar:search"
+              data-part="input"
+            />
+          </label>
+          <kbd>⌘ K</kbd>
+        </div>
+
+        <nav data-part="navigation">
+          {SIDEBAR_NAV_SECTIONS.map((section) => (
+            <React.Fragment key={section.caption}>
+              <p className="c-kravio-sidebar__caption">{section.caption}</p>
+              {section.items.map((it) => (
+                <button
+                  key={it.route}
+                  type="button"
+                  data-action="kravio-sidebar:navigate"
+                  title={it.title}
+                  aria-current={currentRoute === it.route ? "page" : undefined}
+                >
+                  <iconify-icon noobserver icon={it.icon} aria-hidden="true"></iconify-icon>
+                  <span>{it.title}</span>
+                </button>
+              ))}
+            </React.Fragment>
+          ))}
+        </nav>
+
+        <button
+          type="button"
+          className="c-kravio-sidebar__profile"
+          data-action="kravio:profile"
+        >
+          <span className="c-kravio-sidebar__avatar">{initials}</span>
+          <span>
+            <strong>{displayName}</strong>
+            <small>{displayEmail}</small>
+          </span>
+          <iconify-icon
+            noobserver
+            icon="lucide:chevrons-up-down"
+            aria-hidden="true"
+          ></iconify-icon>
+        </button>
+      </aside>
+    </div>
   );
 }
-
