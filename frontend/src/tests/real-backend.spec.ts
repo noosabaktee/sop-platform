@@ -21,8 +21,8 @@ async function login(page:Page){
   await page.locator('[data-page-id="login"] #email').fill(credentials.email);
   await page.locator('[data-page-id="login"] #password').fill(credentials.password);
   await page.locator('[data-page-id="login"] [data-form="login"] button[type="submit"]').click();
-  await expect(page).toHaveURL(/#\/overview$/, {timeout:30_000});
-  await expect(page.locator('[data-prototype-page][data-route="/overview"]')).toBeVisible({timeout:30_000});
+  await expect(page).toHaveURL(/#\/my-workspace$/, {timeout:30_000});
+  await expect(page.locator('[data-prototype-page][data-route="/my-workspace"]')).toBeVisible({timeout:30_000});
 }
 
 async function gridReady(page:Page){
@@ -49,6 +49,7 @@ test.describe('real Laravel + PostgreSQL browser flow',()=>{
     });
 
     await login(page);
+    await page.evaluate(()=>{location.hash='#/overview'});
     const overview=page.locator('[data-prototype-page][data-route="/overview"]');
     await expect(overview.getByText('Quotation diajukan',{exact:true})).toHaveCount(0,{timeout:30_000});
     await expect(overview.getByText('Q-2026-014',{exact:true})).toHaveCount(0);

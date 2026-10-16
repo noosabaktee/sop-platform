@@ -1,35 +1,68 @@
-import {api} from './client';
-import type {GridBridge} from './gridBridge';
-import {showConfirmModal} from './modalHelper';
+import { api } from "./client";
+import type { GridBridge } from "./gridBridge";
+import { showConfirmModal } from "./modalHelper";
 
-type Option = {id: string; name: string; code?: string};
-type Opportunity = {id: string; name: string; customer: string; owner: string | null; amount: string; probability: number; stage: string};
-type Tender = {id: string; code: string; name: string; client: string; value: string; deadline: string | null; bid: string; status: string; owner_name: string | null; project_code: string | null};
-type Proposal = {id: string; code: string; name: string; client: string; template: string; version: string; status: string; owner_name: string | null; value: string};
+type Option = { id: string; name: string; code?: string };
+type Opportunity = {
+  id: string;
+  name: string;
+  customer: string;
+  owner: string | null;
+  amount: string;
+  probability: number;
+  stage: string;
+};
+type Tender = {
+  id: string;
+  code: string;
+  name: string;
+  client: string;
+  value: string;
+  deadline: string | null;
+  bid: string;
+  status: string;
+  owner_name: string | null;
+  project_code: string | null;
+};
+type Proposal = {
+  id: string;
+  code: string;
+  name: string;
+  client: string;
+  template: string;
+  version: string;
+  status: string;
+  owner_name: string | null;
+  value: string;
+};
 
-const title = (value: string) => value.replace(/\b\w/g, c => c.toUpperCase());
+const title = (value: string) => value.replace(/\b\w/g, (c) => c.toUpperCase());
 
 /** Connects Business Development opportunities, tenders, and proposals to PostgreSQL domain workflows. */
 export class CrmOpportunityNativeBridge {
   private listener = (event: Event) => {
-    void this.handle(event).catch(error => this.notice(error?.response?.data?.message || String(error)));
+    void this.handle(event).catch((error) =>
+      this.notice(error?.response?.data?.message || String(error)),
+    );
   };
 
   constructor(private readonly grid: GridBridge) {}
 
   install() {
-    document.addEventListener('click', this.listener, true);
-    document.addEventListener('change', this.listener, true);
+    document.addEventListener("click", this.listener, true);
+    document.addEventListener("change", this.listener, true);
     void this.refresh();
   }
 
   uninstall() {
-    document.removeEventListener('click', this.listener, true);
-    document.removeEventListener('change', this.listener, true);
+    document.removeEventListener("click", this.listener, true);
+    document.removeEventListener("change", this.listener, true);
   }
 
   private notice(message: string, _isError = false) {
-    const toast = document.querySelector<HTMLElement>('[data-page-id="business-development"] .toast');
+    const toast = document.querySelector<HTMLElement>(
+      '[data-page-id="business-development"] .toast',
+    );
     if (toast) {
       toast.textContent = message;
       toast.hidden = false;
@@ -40,57 +73,81 @@ export class CrmOpportunityNativeBridge {
   }
 
   async refresh() {
-    await Promise.all([this.refreshOpportunities(), this.refreshTenders(), this.refreshProposals()]);
+    await Promise.all([
+      this.refreshOpportunities(),
+      this.refreshTenders(),
+      this.refreshProposals(),
+    ]);
   }
 
   private async refreshOpportunities() {
     try {
-      const rows = (await api.get('/api/v1/operational/crm/opportunities')).data.data as Opportunity[];
-      this.grid.mergeDomainRows('/business-development', 'opportunities', 'db-', rows.map(item => ({
-        __id: 'db-' + item.id,
-        name: item.name,
-        market: item.customer,
-        value: Number(item.amount) / 1_000_000,
-        prob: item.probability,
-        owner: item.owner || '—',
-        status: title(item.stage),
-      })));
+      const raw = (await api.get("/api/v1/operational/crm/opportunities")).data
+        ?.data;
+      const rows = (Array.isArray(raw) ? raw : []) as Opportunity[];
+      this.grid.mergeDomainRows(
+        "/business-development",
+        "opportunities",
+        "db-",
+        rows.map((item) => ({
+          __id: "db-" + item.id,
+          name: item.name,
+          market: item.customer,
+          value: Number(item.amount) / 1_000_000,
+          prob: item.probability,
+          owner: item.owner || "—",
+          status: title(item.stage),
+        })),
+      );
     } catch (e) {
-      console.error('Gagal memuat CRM opportunities:', e);
+      console.error("Gagal memuat CRM opportunities:", e);
     }
   }
 
   private async refreshTenders() {
     try {
-      const rows = (await api.get('/api/v1/operational/bd/tenders')).data.data as Tender[];
-      this.grid.mergeDomainRows('/business-development', 'tender', 'db-', rows.map(item => ({
-        __id: 'db-' + item.id,
-        name: item.name,
-        client: item.client,
-        value: Number(item.value) / 1_000_000,
-        deadline: item.deadline || '—',
-        bid: item.bid,
-        status: item.status,
-      })));
+      const raw = (await api.get("/api/v1/operational/bd/tenders")).data?.data;
+      const rows = (Array.isArray(raw) ? raw : []) as Tender[];
+      this.grid.mergeDomainRows(
+        "/business-development",
+        "tender",
+        "db-",
+        rows.map((item) => ({
+          __id: "db-" + item.id,
+          name: item.name,
+          client: item.client,
+          value: Number(item.value) / 1_000_000,
+          deadline: item.deadline || "—",
+          bid: item.bid,
+          status: item.status,
+        })),
+      );
     } catch (e) {
-      console.error('Gagal memuat BD tenders:', e);
+      console.error("Gagal memuat BD tenders:", e);
     }
   }
 
   private async refreshProposals() {
     try {
-      const rows = (await api.get('/api/v1/operational/bd/proposals')).data.data as Proposal[];
-      this.grid.mergeDomainRows('/business-development', 'proposal', 'db-', rows.map(item => ({
-        __id: 'db-' + item.id,
-        name: item.name,
-        client: item.client,
-        template: item.template,
-        version: item.version,
-        owner: item.owner_name || '—',
-        status: item.status,
-      })));
+      const raw = (await api.get("/api/v1/operational/bd/proposals")).data
+        ?.data;
+      const rows = (Array.isArray(raw) ? raw : []) as Proposal[];
+      this.grid.mergeDomainRows(
+        "/business-development",
+        "proposal",
+        "db-",
+        rows.map((item) => ({
+          __id: "db-" + item.id,
+          name: item.name,
+          client: item.client,
+          template: item.template,
+          version: item.version,
+          owner: item.owner_name || "—",
+          status: item.status,
+        })),
+      );
     } catch (e) {
-      console.error('Gagal memuat BD proposals:', e);
+      console.error("Gagal memuat BD proposals:", e);
     }
   }
 
@@ -98,51 +155,81 @@ export class CrmOpportunityNativeBridge {
     const target = event.target as HTMLElement;
 
     // 1. Handle Status Changes
-    const stage = target.closest<HTMLSelectElement>('select[data-bd-key="status"][data-bd-id]');
-    if (stage && event.type === 'change' && stage.dataset.bdId?.startsWith('db-')) {
+    const stage = target.closest<HTMLSelectElement>(
+      'select[data-bd-key="status"][data-bd-id]',
+    );
+    if (
+      stage &&
+      event.type === "change" &&
+      stage.dataset.bdId?.startsWith("db-")
+    ) {
       const id = stage.dataset.bdId.slice(3);
 
-      if (stage.closest('[data-page-id="business-development"] [data-bd-panel="opportunities"]')) {
+      if (
+        stage.closest(
+          '[data-page-id="business-development"] [data-bd-panel="opportunities"]',
+        )
+      ) {
         event.preventDefault();
         event.stopImmediatePropagation();
         const value = stage.value.toLowerCase();
-        await api.patch(`/api/v1/operational/crm/opportunities/${id}`, {stage: value});
-        if (value === 'won') {
+        await api.patch(`/api/v1/operational/crm/opportunities/${id}`, {
+          stage: value,
+        });
+        if (value === "won") {
           const createProj = await showConfirmModal({
-            title: 'Peluang Bisnis Berstatus Won',
-            message: 'Peluang bisnis ini berhasil dimenangkan (Won). Apakah Anda ingin langsung membuat Project baru dari peluang ini?',
-            confirmText: 'Ya, Buat Project',
-            cancelText: 'Nanti Saja',
+            title: "Peluang Bisnis Berstatus Won",
+            message:
+              "Peluang bisnis ini berhasil dimenangkan (Won). Apakah Anda ingin langsung membuat Project baru dari peluang ini?",
+            confirmText: "Ya, Buat Project",
+            cancelText: "Nanti Saja",
           });
           if (createProj) {
-            const result = await api.post(`/api/v1/operational/crm/opportunities/${id}/project`, {});
-            this.notice(`Project ${result.data.data.code} berhasil dibuat dari opportunity Won.`);
+            const result = await api.post(
+              `/api/v1/operational/crm/opportunities/${id}/project`,
+              {},
+            );
+            this.notice(
+              `Project ${result.data.data.code} berhasil dibuat dari opportunity Won.`,
+            );
           } else {
-            this.notice('Tahapan peluang bisnis diperbarui menjadi Won.');
+            this.notice("Tahapan peluang bisnis diperbarui menjadi Won.");
           }
         } else {
-          this.notice('Tahapan peluang bisnis diperbarui.');
+          this.notice("Tahapan peluang bisnis diperbarui.");
         }
         await this.refresh();
-        window.dispatchEvent(new Event('sop:domain-updated'));
+        window.dispatchEvent(new Event("sop:domain-updated"));
         return;
       }
 
-      if (stage.closest('[data-page-id="business-development"] [data-bd-panel="tender"]')) {
+      if (
+        stage.closest(
+          '[data-page-id="business-development"] [data-bd-panel="tender"]',
+        )
+      ) {
         event.preventDefault();
         event.stopImmediatePropagation();
         const status = stage.value;
-        await api.patch(`/api/v1/operational/bd/tenders/${id}/status`, {status});
-        if (status.toLowerCase() === 'won') {
+        await api.patch(`/api/v1/operational/bd/tenders/${id}/status`, {
+          status,
+        });
+        if (status.toLowerCase() === "won") {
           const createProj = await showConfirmModal({
-            title: 'Tender Berstatus Won',
-            message: 'Tender pengadaan berhasil dimenangkan (Won). Apakah Anda ingin langsung membuat Project baru dari tender ini?',
-            confirmText: 'Ya, Buat Project',
-            cancelText: 'Nanti Saja',
+            title: "Tender Berstatus Won",
+            message:
+              "Tender pengadaan berhasil dimenangkan (Won). Apakah Anda ingin langsung membuat Project baru dari tender ini?",
+            confirmText: "Ya, Buat Project",
+            cancelText: "Nanti Saja",
           });
           if (createProj) {
-            const result = await api.post(`/api/v1/operational/bd/tenders/${id}/project`, {});
-            this.notice(`Project ${result.data.data.code} berhasil dibuat dari tender Won.`);
+            const result = await api.post(
+              `/api/v1/operational/bd/tenders/${id}/project`,
+              {},
+            );
+            this.notice(
+              `Project ${result.data.data.code} berhasil dibuat dari tender Won.`,
+            );
           } else {
             this.notice(`Status tender diperbarui menjadi ${status}.`);
           }
@@ -150,118 +237,165 @@ export class CrmOpportunityNativeBridge {
           this.notice(`Status tender diperbarui menjadi ${status}.`);
         }
         await this.refresh();
-        window.dispatchEvent(new Event('sop:domain-updated'));
+        window.dispatchEvent(new Event("sop:domain-updated"));
         return;
       }
 
-      if (stage.closest('[data-page-id="business-development"] [data-bd-panel="proposal"]')) {
+      if (
+        stage.closest(
+          '[data-page-id="business-development"] [data-bd-panel="proposal"]',
+        )
+      ) {
         event.preventDefault();
         event.stopImmediatePropagation();
         const status = stage.value;
-        await api.patch(`/api/v1/operational/bd/proposals/${id}/status`, {status});
+        await api.patch(`/api/v1/operational/bd/proposals/${id}/status`, {
+          status,
+        });
         this.notice(`Status proposal diperbarui menjadi ${status}.`);
         await this.refresh();
-        window.dispatchEvent(new Event('sop:domain-updated'));
+        window.dispatchEvent(new Event("sop:domain-updated"));
         return;
       }
     }
 
     // 2. Handle Add Actions
-    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-bd-act="add"]');
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
+      '[data-bd-act="add"]',
+    );
     if (!button) return;
 
-    if (button.closest('[data-page-id="business-development"] [data-bd-panel="opportunities"]')) {
+    if (
+      button.closest(
+        '[data-page-id="business-development"] [data-bd-panel="opportunities"]',
+      )
+    ) {
       event.preventDefault();
       event.stopImmediatePropagation();
       button.disabled = true;
-      document.body.classList.add('sop-api-busy');
+      document.body.classList.add("sop-api-busy");
       try {
-        const options = (await api.get('/api/v1/operational/crm/options')).data.data as {customers: Option[]; owners: Option[]};
-        if (!options.customers.length) throw new Error('Tambahkan customer aktif di Master Data terlebih dahulu.');
-        
+        const options = (await api.get("/api/v1/operational/crm/options")).data
+          .data as { customers: Option[]; owners: Option[] };
+        if (!options.customers.length)
+          throw new Error(
+            "Tambahkan customer aktif di Master Data terlebih dahulu.",
+          );
+
         button.disabled = false;
-        document.body.classList.remove('sop-api-busy');
+        document.body.classList.remove("sop-api-busy");
 
         const formData = await this.showOpportunityModal(options);
         if (!formData) return;
 
         button.disabled = true;
-        document.body.classList.add('sop-api-busy');
+        document.body.classList.add("sop-api-busy");
 
-        await api.post('/api/v1/operational/crm/opportunities', formData);
+        await api.post("/api/v1/operational/crm/opportunities", formData);
         await this.refresh();
-        window.dispatchEvent(new Event('sop:domain-updated'));
-        this.notice('Peluang bisnis (Opportunity) berhasil disimpan.');
+        window.dispatchEvent(new Event("sop:domain-updated"));
+        this.notice("Peluang bisnis (Opportunity) berhasil disimpan.");
       } catch (err: unknown) {
-        const e = err as {response?: {data?: {message?: string}}, message?: string};
-        this.notice(e.response?.data?.message || e.message || 'Gagal menyimpan opportunity.', true);
+        const e = err as {
+          response?: { data?: { message?: string } };
+          message?: string;
+        };
+        this.notice(
+          e.response?.data?.message ||
+            e.message ||
+            "Gagal menyimpan opportunity.",
+          true,
+        );
       } finally {
         button.disabled = false;
-        document.body.classList.remove('sop-api-busy');
+        document.body.classList.remove("sop-api-busy");
       }
       return;
     }
 
-    if (button.closest('[data-page-id="business-development"] [data-bd-panel="tender"]')) {
+    if (
+      button.closest(
+        '[data-page-id="business-development"] [data-bd-panel="tender"]',
+      )
+    ) {
       event.preventDefault();
       event.stopImmediatePropagation();
       button.disabled = true;
-      document.body.classList.add('sop-api-busy');
+      document.body.classList.add("sop-api-busy");
       try {
         button.disabled = false;
-        document.body.classList.remove('sop-api-busy');
+        document.body.classList.remove("sop-api-busy");
 
         const tenderData = await this.showTenderModal();
         if (!tenderData) return;
 
         button.disabled = true;
-        document.body.classList.add('sop-api-busy');
+        document.body.classList.add("sop-api-busy");
 
-        await api.post('/api/v1/operational/bd/tenders', tenderData);
+        await api.post("/api/v1/operational/bd/tenders", tenderData);
         await this.refresh();
-        window.dispatchEvent(new Event('sop:domain-updated'));
-        this.notice('Data tender berhasil disimpan.');
+        window.dispatchEvent(new Event("sop:domain-updated"));
+        this.notice("Data tender berhasil disimpan.");
       } catch (err: unknown) {
-        const e = err as {response?: {data?: {message?: string}}, message?: string};
-        this.notice(e.response?.data?.message || e.message || 'Gagal menyimpan tender.', true);
+        const e = err as {
+          response?: { data?: { message?: string } };
+          message?: string;
+        };
+        this.notice(
+          e.response?.data?.message || e.message || "Gagal menyimpan tender.",
+          true,
+        );
       } finally {
         button.disabled = false;
-        document.body.classList.remove('sop-api-busy');
+        document.body.classList.remove("sop-api-busy");
       }
       return;
     }
 
-    if (button.closest('[data-page-id="business-development"] [data-bd-panel="proposal"]')) {
+    if (
+      button.closest(
+        '[data-page-id="business-development"] [data-bd-panel="proposal"]',
+      )
+    ) {
       event.preventDefault();
       event.stopImmediatePropagation();
       button.disabled = true;
-      document.body.classList.add('sop-api-busy');
+      document.body.classList.add("sop-api-busy");
       try {
         button.disabled = false;
-        document.body.classList.remove('sop-api-busy');
+        document.body.classList.remove("sop-api-busy");
 
         const proposalData = await this.showProposalModal();
         if (!proposalData) return;
 
         button.disabled = true;
-        document.body.classList.add('sop-api-busy');
+        document.body.classList.add("sop-api-busy");
 
-        await api.post('/api/v1/operational/bd/proposals', proposalData);
+        await api.post("/api/v1/operational/bd/proposals", proposalData);
         await this.refresh();
-        window.dispatchEvent(new Event('sop:domain-updated'));
-        this.notice('Data proposal berhasil disimpan.');
+        window.dispatchEvent(new Event("sop:domain-updated"));
+        this.notice("Data proposal berhasil disimpan.");
       } catch (err: unknown) {
-        const e = err as {response?: {data?: {message?: string}}, message?: string};
-        this.notice(e.response?.data?.message || e.message || 'Gagal menyimpan proposal.', true);
+        const e = err as {
+          response?: { data?: { message?: string } };
+          message?: string;
+        };
+        this.notice(
+          e.response?.data?.message || e.message || "Gagal menyimpan proposal.",
+          true,
+        );
       } finally {
         button.disabled = false;
-        document.body.classList.remove('sop-api-busy');
+        document.body.classList.remove("sop-api-busy");
       }
       return;
     }
   }
 
-  private showOpportunityModal(options: {customers: Option[]; owners: Option[]}): Promise<{
+  private showOpportunityModal(options: {
+    customers: Option[];
+    owners: Option[];
+  }): Promise<{
     customer_id: string;
     name: string;
     amount: string;
@@ -269,15 +403,15 @@ export class CrmOpportunityNativeBridge {
     stage: string;
     owner_id?: string;
   } | null> {
-    return new Promise(resolve => {
-      const overlay = document.createElement('div');
-      overlay.className = 'sop-modal-overlay';
+    return new Promise((resolve) => {
+      const overlay = document.createElement("div");
+      overlay.className = "sop-modal-overlay";
 
-      const card = document.createElement('div');
-      card.className = 'sop-modal-card';
+      const card = document.createElement("div");
+      card.className = "sop-modal-card";
 
-      const header = document.createElement('div');
-      header.className = 'sop-modal-header';
+      const header = document.createElement("div");
+      header.className = "sop-modal-header";
       header.innerHTML = `
         <h3 class="sop-modal-title">
           <iconify-icon noobserver icon="lucide:sparkles" style="color:#217346"></iconify-icon>
@@ -286,14 +420,14 @@ export class CrmOpportunityNativeBridge {
         <button type="button" class="sop-modal-close close-btn" aria-label="Tutup">&times;</button>
       `;
 
-      const form = document.createElement('form');
+      const form = document.createElement("form");
       form.innerHTML = `
         <div class="sop-modal-body">
           <div class="sop-form-group">
             <label class="sop-form-label">Pelanggan / Klien <span class="sop-form-req">*</span></label>
             <select name="customer_id" required class="sop-form-select">
               <option value="">-- Pilih Pelanggan --</option>
-              ${options.customers.map(c => `<option value="${c.id}">${c.code ? c.code + ' — ' : ''}${c.name}</option>`).join('')}
+              ${options.customers.map((c) => `<option value="${c.id}">${c.code ? c.code + " — " : ""}${c.name}</option>`).join("")}
             </select>
           </div>
 
@@ -329,7 +463,7 @@ export class CrmOpportunityNativeBridge {
               <label class="sop-form-label">Penanggung Jawab (PIC)</label>
               <select name="owner_id" class="sop-form-select">
                 <option value="">-- Tanpa PIC --</option>
-                ${options.owners.map(o => `<option value="${o.id}">${o.name}</option>`).join('')}
+                ${options.owners.map((o) => `<option value="${o.id}">${o.name}</option>`).join("")}
               </select>
             </div>
           </div>
@@ -345,32 +479,55 @@ export class CrmOpportunityNativeBridge {
       overlay.append(card);
       document.body.append(overlay);
 
-      const close = (val: {customer_id: string; name: string; amount: string; probability: number; stage: string; owner_id?: string} | null) => {
+      const close = (
+        val: {
+          customer_id: string;
+          name: string;
+          amount: string;
+          probability: number;
+          stage: string;
+          owner_id?: string;
+        } | null,
+      ) => {
         overlay.remove();
-        document.removeEventListener('keydown', onEsc);
+        document.removeEventListener("keydown", onEsc);
         resolve(val);
       };
 
-      const onEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') close(null); };
-      document.addEventListener('keydown', onEsc);
+      const onEsc = (e: KeyboardEvent) => {
+        if (e.key === "Escape") close(null);
+      };
+      document.addEventListener("keydown", onEsc);
 
-      header.querySelector('.close-btn')?.addEventListener('click', () => close(null));
-      form.querySelector('.cancel-btn')?.addEventListener('click', () => close(null));
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) close(null); });
+      header
+        .querySelector(".close-btn")
+        ?.addEventListener("click", () => close(null));
+      form
+        .querySelector(".cancel-btn")
+        ?.addEventListener("click", () => close(null));
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) close(null);
+      });
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
         const fd = new FormData(form);
-        const customer_id = String(fd.get('customer_id') || '');
-        const name = String(fd.get('name') || '').trim();
-        const amount = String(fd.get('amount') || '').trim();
-        const probability = Number(fd.get('probability') || 0);
-        const stage = String(fd.get('stage') || 'new');
-        const owner_id = String(fd.get('owner_id') || '') || undefined;
+        const customer_id = String(fd.get("customer_id") || "");
+        const name = String(fd.get("name") || "").trim();
+        const amount = String(fd.get("amount") || "").trim();
+        const probability = Number(fd.get("probability") || 0);
+        const stage = String(fd.get("stage") || "new");
+        const owner_id = String(fd.get("owner_id") || "") || undefined;
 
-        if (!customer_id) { window.alert('Silakan pilih pelanggan.'); return; }
-        if (!name) { window.alert('Nama opportunity tidak boleh kosong.'); return; }
-        close({customer_id, name, amount, probability, stage, owner_id});
+        if (!customer_id) {
+          window.alert("Silakan pilih pelanggan.");
+          return;
+        }
+        if (!name) {
+          window.alert("Nama opportunity tidak boleh kosong.");
+          return;
+        }
+        close({ customer_id, name, amount, probability, stage, owner_id });
       });
     });
   }
@@ -383,15 +540,15 @@ export class CrmOpportunityNativeBridge {
     bid: string;
     status: string;
   } | null> {
-    return new Promise(resolve => {
-      const overlay = document.createElement('div');
-      overlay.className = 'sop-modal-overlay';
+    return new Promise((resolve) => {
+      const overlay = document.createElement("div");
+      overlay.className = "sop-modal-overlay";
 
-      const card = document.createElement('div');
-      card.className = 'sop-modal-card';
+      const card = document.createElement("div");
+      card.className = "sop-modal-card";
 
-      const header = document.createElement('div');
-      header.className = 'sop-modal-header';
+      const header = document.createElement("div");
+      header.className = "sop-modal-header";
       header.innerHTML = `
         <h3 class="sop-modal-title">
           <iconify-icon noobserver icon="lucide:file-signature" style="color:#217346"></iconify-icon>
@@ -400,7 +557,7 @@ export class CrmOpportunityNativeBridge {
         <button type="button" class="sop-modal-close close-btn" aria-label="Tutup">&times;</button>
       `;
 
-      const form = document.createElement('form');
+      const form = document.createElement("form");
       form.innerHTML = `
         <div class="sop-modal-body">
           <div class="sop-form-group">
@@ -444,30 +601,57 @@ export class CrmOpportunityNativeBridge {
       overlay.append(card);
       document.body.append(overlay);
 
-      const close = (val: {name: string; client: string; value: number; deadline: string | null; bid: string; status: string} | null) => {
+      const close = (
+        val: {
+          name: string;
+          client: string;
+          value: number;
+          deadline: string | null;
+          bid: string;
+          status: string;
+        } | null,
+      ) => {
         overlay.remove();
-        document.removeEventListener('keydown', onEsc);
+        document.removeEventListener("keydown", onEsc);
         resolve(val);
       };
 
-      const onEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') close(null); };
-      document.addEventListener('keydown', onEsc);
+      const onEsc = (e: KeyboardEvent) => {
+        if (e.key === "Escape") close(null);
+      };
+      document.addEventListener("keydown", onEsc);
 
-      header.querySelector('.close-btn')?.addEventListener('click', () => close(null));
-      form.querySelector('.cancel-btn')?.addEventListener('click', () => close(null));
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) close(null); });
+      header
+        .querySelector(".close-btn")
+        ?.addEventListener("click", () => close(null));
+      form
+        .querySelector(".cancel-btn")
+        ?.addEventListener("click", () => close(null));
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) close(null);
+      });
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
         const fd = new FormData(form);
-        const name = String(fd.get('name') || '').trim();
-        const client = String(fd.get('client') || '').trim();
-        const valJt = Number(fd.get('valJt') || 0);
-        const deadline = String(fd.get('deadline') || '') || null;
-        const bid = String(fd.get('bid') || 'Pending');
+        const name = String(fd.get("name") || "").trim();
+        const client = String(fd.get("client") || "").trim();
+        const valJt = Number(fd.get("valJt") || 0);
+        const deadline = String(fd.get("deadline") || "") || null;
+        const bid = String(fd.get("bid") || "Pending");
 
-        if (!name || !client) { window.alert('Nama tender dan instansi wajib diisi.'); return; }
-        close({name, client, value: valJt * 1_000_000, deadline, bid, status: 'Open'});
+        if (!name || !client) {
+          window.alert("Nama tender dan instansi wajib diisi.");
+          return;
+        }
+        close({
+          name,
+          client,
+          value: valJt * 1_000_000,
+          deadline,
+          bid,
+          status: "Open",
+        });
       });
     });
   }
@@ -480,15 +664,15 @@ export class CrmOpportunityNativeBridge {
     status: string;
     value: number;
   } | null> {
-    return new Promise(resolve => {
-      const overlay = document.createElement('div');
-      overlay.className = 'sop-modal-overlay';
+    return new Promise((resolve) => {
+      const overlay = document.createElement("div");
+      overlay.className = "sop-modal-overlay";
 
-      const card = document.createElement('div');
-      card.className = 'sop-modal-card';
+      const card = document.createElement("div");
+      card.className = "sop-modal-card";
 
-      const header = document.createElement('div');
-      header.className = 'sop-modal-header';
+      const header = document.createElement("div");
+      header.className = "sop-modal-header";
       header.innerHTML = `
         <h3 class="sop-modal-title">
           <iconify-icon noobserver icon="lucide:file-text" style="color:#217346"></iconify-icon>
@@ -497,7 +681,7 @@ export class CrmOpportunityNativeBridge {
         <button type="button" class="sop-modal-close close-btn" aria-label="Tutup">&times;</button>
       `;
 
-      const form = document.createElement('form');
+      const form = document.createElement("form");
       form.innerHTML = `
         <div class="sop-modal-body">
           <div class="sop-form-group">
@@ -536,31 +720,57 @@ export class CrmOpportunityNativeBridge {
       overlay.append(card);
       document.body.append(overlay);
 
-      const close = (val: {name: string; client: string; template: string; version: string; status: string; value: number} | null) => {
+      const close = (
+        val: {
+          name: string;
+          client: string;
+          template: string;
+          version: string;
+          status: string;
+          value: number;
+        } | null,
+      ) => {
         overlay.remove();
-        document.removeEventListener('keydown', onEsc);
+        document.removeEventListener("keydown", onEsc);
         resolve(val);
       };
 
-      const onEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') close(null); };
-      document.addEventListener('keydown', onEsc);
+      const onEsc = (e: KeyboardEvent) => {
+        if (e.key === "Escape") close(null);
+      };
+      document.addEventListener("keydown", onEsc);
 
-      header.querySelector('.close-btn')?.addEventListener('click', () => close(null));
-      form.querySelector('.cancel-btn')?.addEventListener('click', () => close(null));
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) close(null); });
+      header
+        .querySelector(".close-btn")
+        ?.addEventListener("click", () => close(null));
+      form
+        .querySelector(".cancel-btn")
+        ?.addEventListener("click", () => close(null));
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) close(null);
+      });
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
         const fd = new FormData(form);
-        const name = String(fd.get('name') || '').trim();
-        const client = String(fd.get('client') || '').trim();
-        const template = String(fd.get('template') || 'ERP Proposal');
-        const valJt = Number(fd.get('valJt') || 0);
+        const name = String(fd.get("name") || "").trim();
+        const client = String(fd.get("client") || "").trim();
+        const template = String(fd.get("template") || "ERP Proposal");
+        const valJt = Number(fd.get("valJt") || 0);
 
-        if (!name || !client) { window.alert('Judul proposal dan klien wajib diisi.'); return; }
-        close({name, client, template, version: 'v1', status: 'Draft', value: valJt * 1_000_000});
+        if (!name || !client) {
+          window.alert("Judul proposal dan klien wajib diisi.");
+          return;
+        }
+        close({
+          name,
+          client,
+          template,
+          version: "v1",
+          status: "Draft",
+          value: valJt * 1_000_000,
+        });
       });
     });
   }
 }
-

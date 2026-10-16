@@ -73,13 +73,13 @@ test('CRM commit is persisted through PostgreSQL API',async({page})=>{
   await expect.poll(()=>persisted).toBe(true);
 });
 
-test('CRM CSV export starts a real browser download',async({page})=>{
+test('CRM export starts a real browser download',async({page})=>{
   await session(page);await page.goto('/#/crm-sales');
   await bridgeReady(page,'grid');
   await expect(page.locator('[data-page-id="crm-sales"] [data-crm-act="export"]').first()).toBeVisible();
   const download=page.waitForEvent('download');
   await page.locator('[data-page-id="crm-sales"] [data-crm-act="export"]').first().click();
-  await expect((await download).suggestedFilename()).toMatch(/\.csv$/);
+  await expect((await download).suggestedFilename()).toMatch(/\.(xlsx|csv)$/);
 });
 
 

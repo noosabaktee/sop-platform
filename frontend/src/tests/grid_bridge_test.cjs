@@ -17,7 +17,7 @@ const api={
  }
 };
 const moduleExports={};
-const ctx={exports:moduleExports,require:(n)=>n==='./client'?{api}:require(n),structuredClone,window:{setTimeout,clearTimeout},document:{body:{classList:{toggle:()=>{}}},querySelector:()=>null},crypto:globalThis.crypto,console};
+const ctx={exports:moduleExports,require:(n)=>n==='./client'?{api}:n==='./modalHelper'?{showLockedTransactionModal:()=>Promise.resolve()}:require(n),structuredClone,window:{setTimeout,clearTimeout},document:{body:{classList:{toggle:()=>{}}},querySelector:()=>null},crypto:globalThis.crypto,console};
 vm.runInNewContext(result.outputText,ctx);
 (async()=>{
 const {GridBridge}=moduleExports;
