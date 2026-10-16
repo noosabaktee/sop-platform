@@ -4,8 +4,6 @@ export interface PageProps {
   hidden?: boolean;
 }
 
-const TEMPLATE: string = "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\">\n  <div class=\"dashboard\" data-node-id=\"my-workspace.dashboard\" data-sidebar=\"default\" data-page-title=\"My Workspace\" data-page-title-en=\"My Workspace\" data-export-name=\"my-workspace\">\n    <div class=\"sidebar-region\" data-node-id=\"my-workspace.sidebar\"><aside class=\"c-kravio-sidebar\" data-component=\"kravio-sidebar\" data-node-id=\"my-workspace.sidebar.navigation\" aria-label=\"Primary navigation\">\n  <div class=\"c-kravio-sidebar__brand\" data-part=\"brand\"><button type=\"button\" class=\"c-kravio-sidebar__home\" data-action=\"kravio-sidebar:navigate\" title=\"Overview\" aria-label=\"Buka Overview\"><span class=\"c-kravio-sidebar__logo\" aria-hidden=\"true\">SO</span><strong>Platform</strong></button><button type=\"button\" aria-label=\"Collapse sidebar\" data-action=\"kravio:sidebar\"><iconify-icon noobserver icon=\"lucide:panel-left\" aria-hidden=\"true\"></iconify-icon></button></div>\n  <div class=\"c-kravio-sidebar__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"kravio.navigation-search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Search anything\" aria-label=\"Search anything\" data-action=\"kravio-sidebar:search\" data-part=\"input\">\n</label><kbd>\u2318 K</kbd></div>\n    <nav data-part=\"navigation\">\n    <p class=\"c-kravio-sidebar__caption\">My Workspace</p>\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"My Workspace\"><iconify-icon noobserver icon=\"lucide:home\" aria-hidden=\"true\"></iconify-icon><span>My Workspace</span></button>\n\n    <p class=\"c-kravio-sidebar__caption\">Dashboard</p>\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Dashboard\"><iconify-icon noobserver icon=\"lucide:layout-dashboard\" aria-hidden=\"true\"></iconify-icon><span>Dashboard</span></button>\n\n    <p class=\"c-kravio-sidebar__caption\">Commercial</p>\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"CRM &amp; Sales\"><iconify-icon noobserver icon=\"lucide:briefcase\" aria-hidden=\"true\"></iconify-icon><span>CRM &amp; Sales</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Business Development\"><iconify-icon noobserver icon=\"lucide:trending-up\" aria-hidden=\"true\"></iconify-icon><span>Business Development</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Quotation\"><iconify-icon noobserver icon=\"lucide:file-text\" aria-hidden=\"true\"></iconify-icon><span>Quotation</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Sales\"><iconify-icon noobserver icon=\"lucide:shopping-cart\" aria-hidden=\"true\"></iconify-icon><span>Sales</span></button>\n\n    <p class=\"c-kravio-sidebar__caption\">Delivery &amp; Operations</p>\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Project\"><iconify-icon noobserver icon=\"lucide:folder-kanban\" aria-hidden=\"true\"></iconify-icon><span>Project</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Purchase\"><iconify-icon noobserver icon=\"lucide:clipboard-list\" aria-hidden=\"true\"></iconify-icon><span>Purchase</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Inventory\"><iconify-icon noobserver icon=\"lucide:warehouse\" aria-hidden=\"true\"></iconify-icon><span>Inventory</span></button>\n\n    <p class=\"c-kravio-sidebar__caption\">Finance &amp; Insights</p>\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Finance &amp; Accounting\"><iconify-icon noobserver icon=\"lucide:wallet-cards\" aria-hidden=\"true\"></iconify-icon><span>Finance &amp; Accounting</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Reports &amp; Analytics\"><iconify-icon noobserver icon=\"lucide:bar-chart-3\" aria-hidden=\"true\"></iconify-icon><span>Reports &amp; Analytics</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Management &amp; Executive\"><iconify-icon noobserver icon=\"lucide:chart-no-axes-column-increasing\" aria-hidden=\"true\"></iconify-icon><span>Management &amp; Executive</span></button>\n\n    <p class=\"c-kravio-sidebar__caption\">Data &amp; Documents</p>\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Master Data\"><iconify-icon noobserver icon=\"lucide:database\" aria-hidden=\"true\"></iconify-icon><span>Master Data</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Document Management\"><iconify-icon noobserver icon=\"lucide:files\" aria-hidden=\"true\"></iconify-icon><span>Document Management</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Document Template\"><iconify-icon noobserver icon=\"lucide:layout-template\" aria-hidden=\"true\"></iconify-icon><span>Document Template</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Email &amp; Communication\"><iconify-icon noobserver icon=\"lucide:mail\" aria-hidden=\"true\"></iconify-icon><span>Email &amp; Communication</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Omnichannel\"><iconify-icon noobserver icon=\"lucide:messages-square\" aria-hidden=\"true\"></iconify-icon><span>Omnichannel</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"WhatsApp Integration\"><iconify-icon noobserver icon=\"lucide:message-circle\" aria-hidden=\"true\"></iconify-icon><span>WhatsApp Integration</span></button>\n\n    <p class=\"c-kravio-sidebar__caption\">Governance &amp; Intelligence</p>\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"General Meeting &amp; RUPS\"><iconify-icon noobserver icon=\"lucide:gavel\" aria-hidden=\"true\"></iconify-icon><span>General Meeting &amp; RUPS</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Workflow &amp; Approval\"><iconify-icon noobserver icon=\"lucide:git-merge\" aria-hidden=\"true\"></iconify-icon><span>Workflow &amp; Approval</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Corporate\"><iconify-icon noobserver icon=\"lucide:building-2\" aria-hidden=\"true\"></iconify-icon><span>Corporate</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"AI Assistant\"><iconify-icon noobserver icon=\"lucide:sparkles\" aria-hidden=\"true\"></iconify-icon><span>AI Assistant</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Data Intelligence\"><iconify-icon noobserver icon=\"lucide:brain-circuit\" aria-hidden=\"true\"></iconify-icon><span>Data Intelligence</span></button>\n\n    <p class=\"c-kravio-sidebar__caption\">Administration</p>\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Integrations\"><iconify-icon noobserver icon=\"lucide:plug\" aria-hidden=\"true\"></iconify-icon><span>Integrations</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Security &amp; Audit\"><iconify-icon noobserver icon=\"lucide:shield-check\" aria-hidden=\"true\"></iconify-icon><span>Security &amp; Audit</span></button>\n\n    <button type=\"button\" data-action=\"kravio-sidebar:navigate\" title=\"Settings\"><iconify-icon noobserver icon=\"lucide:settings-2\" aria-hidden=\"true\"></iconify-icon><span>Settings</span></button>\n  </nav>\n  <button type=\"button\" class=\"c-kravio-sidebar__profile\" data-action=\"kravio:profile\"><span class=\"c-kravio-sidebar__avatar\">AP</span><span><strong>Aditya Pratama</strong><small>aditya.pratama@example.com</small></span><iconify-icon noobserver icon=\"lucide:chevrons-up-down\" aria-hidden=\"true\"></iconify-icon></button>\n</aside></div>\n    <div class=\"main-column\">\n      <div class=\"topbar-region\" data-node-id=\"my-workspace.topbar\"><header class=\"c-nuvio-topbar\" data-component=\"nuvio-topbar\" data-node-id=\"my-workspace.topbar.navigation\">\n  <button type=\"button\" aria-label=\"Toggle sidebar\" data-action=\"kravio:sidebar\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon></button>\n  <nav aria-label=\"Breadcrumb\"><a href=\"#/overview\" data-part=\"crumb-home\">My Workspace</a><span aria-hidden=\"true\">/</span><strong data-part=\"crumb-page\">My Workspace</strong></nav>\n  <div class=\"c-nuvio-topbar__lang\"><iconify-icon noobserver icon=\"lucide:languages\" aria-hidden=\"true\"></iconify-icon><select data-action=\"nuvio:lang\" aria-label=\"Pilih bahasa\"><option value=\"id\">ID</option><option value=\"en\">EN</option></select></div>\n  <button type=\"button\" data-action=\"nuvio:theme\" aria-pressed=\"false\" aria-label=\"Aktifkan mode gelap\"><iconify-icon noobserver icon=\"lucide:moon\" aria-hidden=\"true\"></iconify-icon></button>\n  <button type=\"button\" aria-label=\"Notifications\" data-action=\"kravio:notifications\"><iconify-icon noobserver icon=\"lucide:bell\" aria-hidden=\"true\"></iconify-icon></button>\n  <button type=\"button\" aria-label=\"Settings\" data-action=\"kravio:settings\"><iconify-icon noobserver icon=\"lucide:settings-2\" aria-hidden=\"true\"></iconify-icon></button>\n</header></div>\n            <section class=\"page-region\">\n        <h1 class=\"sr-only\">My Workspace</h1>\n        <div class=\"ws-tabs\" role=\"tablist\" aria-label=\"Halaman My Workspace\">\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-my-workspace\" aria-controls=\"ws-panel-my-workspace\" aria-selected=\"true\" tabindex=\"0\" data-action=\"ws:tab\" data-panel=\"my-workspace\"><iconify-icon noobserver icon=\"lucide:list-checks\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Tasks\">My Tasks</span></button>\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-dashboard\" aria-controls=\"ws-panel-dashboard\" aria-selected=\"false\" tabindex=\"-1\" data-action=\"ws:tab\" data-panel=\"dashboard\"><iconify-icon noobserver icon=\"lucide:folder-kanban\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Dashboard\">Dashboard</span></button>\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-crm-sales\" aria-controls=\"ws-panel-crm-sales\" aria-selected=\"false\" tabindex=\"-1\" data-action=\"ws:tab\" data-panel=\"crm-sales\"><iconify-icon noobserver icon=\"lucide:stamp\" aria-hidden=\"true\"></iconify-icon><span data-en=\"CRM &amp; Sales\">CRM &amp; Sales</span></button>\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-business-development\" aria-controls=\"ws-panel-business-development\" aria-selected=\"false\" tabindex=\"-1\" data-action=\"ws:tab\" data-panel=\"business-development\"><iconify-icon noobserver icon=\"lucide:activity\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Activities\">My Activities</span></button>\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-quotation\" aria-controls=\"ws-panel-quotation\" aria-selected=\"false\" tabindex=\"-1\" data-action=\"ws:tab\" data-panel=\"quotation\"><iconify-icon noobserver icon=\"lucide:calendar-days\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Calendar\">My Calendar</span></button>\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-sales\" aria-controls=\"ws-panel-sales\" aria-selected=\"false\" tabindex=\"-1\" data-action=\"ws:tab\" data-panel=\"sales\"><iconify-icon noobserver icon=\"lucide:file-text\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Documents\">My Documents</span></button>\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-projects\" aria-controls=\"ws-panel-projects\" aria-selected=\"false\" tabindex=\"-1\" data-action=\"ws:tab\" data-panel=\"projects\"><iconify-icon noobserver icon=\"lucide:bell\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Notifications\">My Notifications</span></button>\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-purchase\" aria-controls=\"ws-panel-purchase\" aria-selected=\"false\" tabindex=\"-1\" data-action=\"ws:tab\" data-panel=\"purchase\"><iconify-icon noobserver icon=\"lucide:mail\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Email\">My Email</span></button>\n    <button type=\"button\" class=\"ws-tab\" role=\"tab\" id=\"ws-tab-inventory\" aria-controls=\"ws-panel-inventory\" aria-selected=\"false\" tabindex=\"-1\" data-action=\"ws:tab\" data-panel=\"inventory\"><iconify-icon noobserver icon=\"lucide:user\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Profile\">My Profile</span></button>\n        </div>\n        <div class=\"ws-panels\">\n    <div class=\"ws-panel\" id=\"ws-panel-my-workspace\" role=\"tabpanel\" aria-labelledby=\"ws-tab-my-workspace\" data-panel=\"my-workspace\" data-title=\"My Tasks\" data-title-en=\"My Tasks\">\n<header class=\"page-head\">\n          <div><h2 data-en=\"My Tasks\">My Tasks</h2><p data-en=\"Tasks and follow-ups to complete.\">Daftar task dan follow-up yang harus diselesaikan.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Record baru\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Task</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Today's tasks\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Today's tasks\">Tugas hari ini</span><iconify-icon noobserver icon=\"lucide:list-checks\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">12</strong><span class=\"kpi__comparison\"><small data-en=\"4 done\">4 selesai</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"red\" data-action=\"sop:drill\" data-kind=\"Overdue\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Overdue\">Overdue</span><iconify-icon noobserver icon=\"lucide:triangle-alert\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">3</strong><span class=\"kpi__comparison\"><small data-en=\"needs action\">perlu tindakan</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"teal\" data-action=\"sop:drill\" data-kind=\"Done this week\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Done this week\">Selesai minggu ini</span><iconify-icon noobserver icon=\"lucide:check-circle\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">28</strong><span class=\"kpi__comparison\"><small data-en=\"+6 vs last week\">+6 vs minggu lalu</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span>My Tasks</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"my-workspace.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Task<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Modul<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Prioritas<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Status<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"4\">Due<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"5\">Owner<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"High\" data-status=\"In progress\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Follow-up PT Nusantara</label></td><td>CRM & Sales</td><td><span class=\"chip risk\">High</span></td><td><span class=\"chip progress\">In progress</span></td><td>Hari ini 16:30</td><td>Aditya Pratama</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"High\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Review margin Quotation Q-2026-014</label></td><td>Quotation</td><td><span class=\"chip risk\">High</span></td><td><span class=\"chip pending\">Pending</span></td><td>Hari ini 14:00</td><td>Rina Wijaya</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"High\" data-status=\"At risk\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Review mitigation PRJ-042</label></td><td>Project</td><td><span class=\"chip risk\">High</span></td><td><span class=\"chip risk\">At risk</span></td><td>Besok</td><td>Bagus Santoso</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Draft\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Submit approval PR-331</label></td><td>Purchase</td><td><span class=\"chip pending\">Medium</span></td><td><span class=\"chip info\">Draft</span></td><td>7 Okt 2026</td><td>Sari Putri</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Done\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Rekonsiliasi payment INV-088</label></td><td>Finance</td><td><span class=\"chip pending\">Medium</span></td><td><span class=\"chip done\">Done</span></td><td>8 Okt 2026</td><td>Sari Putri</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"In progress\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Update pipeline stage OP-108</label></td><td>CRM & Sales</td><td><span class=\"chip info\">Low</span></td><td><span class=\"chip progress\">In progress</span></td><td>9 Okt 2026</td><td>Aditya Pratama</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Stock opname gudang utama</label></td><td>Inventory</td><td><span class=\"chip pending\">Medium</span></td><td><span class=\"chip pending\">Pending</span></td><td>10 Okt 2026</td><td>Bagus Santoso</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Done\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Siapkan RUPS agenda</label></td><td>Corporate</td><td><span class=\"chip info\">Low</span></td><td><span class=\"chip done\">Done</span></td><td>11 Okt 2026</td><td>Rina Wijaya</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n    <div class=\"ws-panel\" id=\"ws-panel-dashboard\" role=\"tabpanel\" aria-labelledby=\"ws-tab-dashboard\" data-panel=\"dashboard\" data-title=\"Dashboard\" data-title-en=\"Dashboard\" hidden>\n<header class=\"page-head\">\n          <div><h2 data-en=\"Dashboard\">Dashboard</h2><p data-en=\"Projects you manage with status and progress.\">Project yang Anda kelola beserta status dan progres.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Project\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Project</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Active projects\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Active projects\">Project aktif</span><iconify-icon noobserver icon=\"lucide:folder-kanban\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">6</strong><span class=\"kpi__comparison\"><small data-en=\"2 near deadline\">2 mendekati deadline</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"teal\" data-action=\"sop:drill\" data-kind=\"On track\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"On track\">On track</span><iconify-icon noobserver icon=\"lucide:heart-pulse\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">4</strong><span class=\"kpi__comparison\"><small data-en=\"on baseline\">sesuai baseline</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"red\" data-action=\"sop:drill\" data-kind=\"At risk\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"At risk\">At risk</span><iconify-icon noobserver icon=\"lucide:triangle-alert\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">2</strong><span class=\"kpi__comparison\"><small data-en=\"needs escalation\">perlu eskalasi</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span>Dashboard</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"dashboard.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Project<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Customer<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Health<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Progress<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"4\">PM<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"5\">Deadline<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"Low\" data-status=\"On track\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-041 Implementasi ERP</label></td><td>PT Nusantara</td><td><span class=\"chip done\">On track</span></td><td>72%</td><td>Bagus Santoso</td><td>30 Okt 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"High\" data-status=\"At risk\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-042 Rollout Cabang</label></td><td>PT Alpha</td><td><span class=\"chip risk\">At risk</span></td><td>48%</td><td>Aditya Pratama</td><td>15 Okt 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"On track\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-043 Integrasi Payment</label></td><td>Bank Mandiri</td><td><span class=\"chip done\">On track</span></td><td>85%</td><td>Rina Wijaya</td><td>7 Nov 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"On track\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-044 Data Warehouse</label></td><td>PT Beta</td><td><span class=\"chip done\">On track</span></td><td>60%</td><td>Bagus Santoso</td><td>20 Nov 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"High\" data-status=\"At risk\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-045 Aplikasi Mobile</label></td><td>PT Gamma</td><td><span class=\"chip risk\">At risk</span></td><td>35%</td><td>Aditya Pratama</td><td>5 Okt 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"On track\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-046 Migrasi Cloud</label></td><td>PT Delta</td><td><span class=\"chip done\">On track</span></td><td>90%</td><td>Rina Wijaya</td><td>1 Des 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"On track\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-047 Portal Vendor</label></td><td>PT Epsilon</td><td><span class=\"chip done\">On track</span></td><td>55%</td><td>Bagus Santoso</td><td>18 Des 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"High\" data-status=\"At risk\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-048 CRM Rollout</label></td><td>PT Zeta</td><td><span class=\"chip risk\">At risk</span></td><td>40%</td><td>Aditya Pratama</td><td>22 Des 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n    <div class=\"ws-panel\" id=\"ws-panel-crm-sales\" role=\"tabpanel\" aria-labelledby=\"ws-tab-crm-sales\" data-panel=\"crm-sales\" data-title=\"CRM &amp; Sales\" data-title-en=\"CRM &amp; Sales\" hidden>\n<header class=\"page-head\">\n          <div><h2 data-en=\"CRM &amp; Sales\">CRM &amp; Sales</h2><p data-en=\"Approvals awaiting your decision.\">Lead, customer, aktivitas, pipeline, dan forecast.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Approval\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Approval</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"amber\" data-action=\"sop:drill\" data-kind=\"Pending\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Pending\">Menunggu</span><iconify-icon noobserver icon=\"lucide:stamp\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">7</strong><span class=\"kpi__comparison\"><small data-en=\"2 near SLA\">2 mendekati SLA</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Approved this month\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Approved this month\">Disetujui bulan ini</span><iconify-icon noobserver icon=\"lucide:check\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">23</strong><span class=\"kpi__comparison\"><small data-en=\"+4 vs target\">+4 vs target</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"red\" data-action=\"sop:drill\" data-kind=\"Rejected\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Rejected\">Ditolak</span><iconify-icon noobserver icon=\"lucide:x\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">3</strong><span class=\"kpi__comparison\"><small data-en=\"needs revision\">perlu revisi</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span>CRM &amp; Sales</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"crm-sales.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Record<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Tipe<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Nilai<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Requester<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"4\">SLA<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"5\">Status<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Q-2026-014</label></td><td>Quotation</td><td>Rp 480 jt</td><td>Rina Wijaya</td><td>4 jam</td><td><span class=\"chip pending\">Pending</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PR-331</label></td><td>Purchase Request</td><td>Rp 75 jt</td><td>Sari Putri</td><td>8 jam</td><td><span class=\"chip pending\">Pending</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">INV-088</label></td><td>Invoice AP</td><td>Rp 210 jt</td><td>Sari Putri</td><td>1 hari</td><td><span class=\"chip pending\">Pending</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Approved\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">SO-2026-021</label></td><td>Sales Order</td><td>Rp 620 jt</td><td>Aditya Pratama</td><td>3 jam</td><td><span class=\"chip done\">Approved</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">VD-014</label></td><td>Vendor master</td><td>-</td><td>Bagus Santoso</td><td>6 jam</td><td><span class=\"chip pending\">Pending</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Rejected\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">EXP-052</label></td><td>Expense claim</td><td>Rp 12 jt</td><td>Rina Wijaya</td><td>2 hari</td><td><span class=\"chip risk\">Ditolak</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PRJ-CHG-007</label></td><td>Project change</td><td>Rp 95 jt</td><td>Bagus Santoso</td><td>1 hari</td><td><span class=\"chip pending\">Pending</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Approved\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PAY-118</label></td><td>Payment release</td><td>Rp 340 jt</td><td>Sari Putri</td><td>5 jam</td><td><span class=\"chip done\">Approved</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n    <div class=\"ws-panel\" id=\"ws-panel-business-development\" role=\"tabpanel\" aria-labelledby=\"ws-tab-business-development\" data-panel=\"business-development\" data-title=\"Aktivitas Saya\" data-title-en=\"My Activities\" hidden>\n<header class=\"page-head\">\n          <div><h2 data-en=\"My Activities\">Aktivitas Saya</h2><p data-en=\"Your recent activities, tasks and follow-ups.\">Aktivitas, follow-up, meeting, dan email yang perlu ditindaklanjuti.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Activity\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Activity</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Today's activities\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Today's activities\">Aktivitas hari ini</span><iconify-icon noobserver icon=\"lucide:activity\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">9</strong><span class=\"kpi__comparison\"><small data-en=\"3 done\">3 selesai</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"blue\" data-action=\"sop:drill\" data-kind=\"Follow-ups\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Follow-ups\">Follow-up</span><iconify-icon noobserver icon=\"lucide:phone\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">5</strong><span class=\"kpi__comparison\"><small data-en=\"2 scheduled\">2 terjadwal</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"teal\" data-action=\"sop:drill\" data-kind=\"Meetings\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Meetings\">Pertemuan</span><iconify-icon noobserver icon=\"lucide:calendar-check\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">3</strong><span class=\"kpi__comparison\"><small data-en=\"1 upcoming\">1 mendatang</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span>My Activities</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"business-development.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Aktivitas<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Tipe<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Terkait<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Waktu<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"4\">Status<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"Low\" data-status=\"Scheduled\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Telepon customer PT Nusantara</label></td><td>Call</td><td>OP-108</td><td>Hari ini 16:30</td><td><span class=\"chip progress\">Scheduled</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"In progress\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Meeting kickoff PRJ-042</label></td><td>Meeting</td><td>PRJ-042</td><td>Hari ini 14:00</td><td><span class=\"chip progress\">In progress</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Done\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Kirim quotation Q-2026-014</label></td><td>Email</td><td>Q-2026-014</td><td>Hari ini 11:00</td><td><span class=\"chip done\">Done</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Scheduled\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Kunjungan vendor PT Alpha</label></td><td>Visit</td><td>VD-014</td><td>Besok 09:00</td><td><span class=\"chip info\">Scheduled</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Scheduled\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Review dokumen kontrak</label></td><td>Task</td><td>CTR-009</td><td>Besok 13:00</td><td><span class=\"chip info\">Scheduled</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Done\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Follow-up invoice INV-088</label></td><td>Follow Up</td><td>INV-088</td><td>8 Okt 2026</td><td><span class=\"chip done\">Done</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Scheduled\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Presentasi proposal BD</label></td><td>Meeting</td><td>BD-021</td><td>9 Okt 2026</td><td><span class=\"chip info\">Scheduled</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Done\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Update status pipeline</label></td><td>Task</td><td>OP-110</td><td>10 Okt 2026</td><td><span class=\"chip done\">Done</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n    <div class=\"ws-panel\" id=\"ws-panel-quotation\" role=\"tabpanel\" aria-labelledby=\"ws-tab-quotation\" data-panel=\"quotation\" data-title=\"My Calendar\" data-title-en=\"My Calendar\" hidden>\n<header class=\"page-head\">\n          <div><h2 data-en=\"My Calendar\">My Calendar</h2><p data-en=\"Your meetings, deadlines and reminders.\">Meeting, deadline, dan pengingat yang terhubung dengan pekerjaan Anda.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Event\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Event</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Events this week\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Events this week\">Event minggu ini</span><iconify-icon noobserver icon=\"lucide:calendar-days\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">11</strong><span class=\"kpi__comparison\"><small data-en=\"3 today\">3 hari ini</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"blue\" data-action=\"sop:drill\" data-kind=\"Meetings\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Meetings\">Meeting</span><iconify-icon noobserver icon=\"lucide:users\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">6</strong><span class=\"kpi__comparison\"><small data-en=\"2 external\">2 eksternal</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"red\" data-action=\"sop:drill\" data-kind=\"Deadlines\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Deadlines\">Deadline</span><iconify-icon noobserver icon=\"lucide:alarm-clock\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">4</strong><span class=\"kpi__comparison\"><small data-en=\"1 urgent\">1 mendesak</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Calendar\">Kalender Saya</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"quotation.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Agenda<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Tanggal<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Waktu<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Peserta<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"4\">Lokasi<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"5\">Status<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"Low\" data-status=\"Confirmed\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Kickoff PRJ-042</label></td><td>5 Okt 2026</td><td>14:00-15:00</td><td>8 orang</td><td>Meeting Room A</td><td><span class=\"chip done\">Confirmed</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Review quotation Q-2026-014</label></td><td>5 Okt 2026</td><td>16:30-17:00</td><td>3 orang</td><td>Online</td><td><span class=\"chip pending\">Pending</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Confirmed\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Vendor meeting PT Alpha</label></td><td>6 Okt 2026</td><td>09:00-10:00</td><td>5 orang</td><td>Zoom</td><td><span class=\"chip done\">Confirmed</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Confirmed\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Board meeting</label></td><td>7 Okt 2026</td><td>10:00-12:00</td><td>12 orang</td><td>Board Room</td><td><span class=\"chip done\">Confirmed</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"High\" data-status=\"Deadline\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Deadline submit PR-331</label></td><td>7 Okt 2026</td><td>17:00</td><td>Tim Procurement</td><td>Sistem</td><td><span class=\"chip risk\">Deadline</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Tentative\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Presentasi proposal BD-021</label></td><td>9 Okt 2026</td><td>13:00-14:30</td><td>6 orang</td><td>Meeting Room B</td><td><span class=\"chip info\">Tentative</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Confirmed\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">RUPS persiapan</label></td><td>11 Okt 2026</td><td>09:00-11:00</td><td>15 orang</td><td>Auditorium</td><td><span class=\"chip done\">Confirmed</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Tentative\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Review profitability PRJ-041</label></td><td>12 Okt 2026</td><td>15:00-16:00</td><td>4 orang</td><td>Online</td><td><span class=\"chip info\">Tentative</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n    <div class=\"ws-panel\" id=\"ws-panel-sales\" role=\"tabpanel\" aria-labelledby=\"ws-tab-sales\" data-panel=\"sales\" data-title=\"Dokumen Saya\" data-title-en=\"My Documents\" hidden>\n<header class=\"page-head\">\n          <div><h2 data-en=\"My Documents\">Dokumen Saya</h2><p data-en=\"Your documents and approval status.\">Dokumen kerja, versi terbaru, dan approval yang perlu ditindaklanjuti.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Document\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Unggah dokumen</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Total documents\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Total documents\">Total dokumen</span><iconify-icon noobserver icon=\"lucide:files\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">48</strong><span class=\"kpi__comparison\"><small data-en=\"6 new\">6 baru</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"amber\" data-action=\"sop:drill\" data-kind=\"Need approval\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Need approval\">Perlu approval</span><iconify-icon noobserver icon=\"lucide:stamp\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">5</strong><span class=\"kpi__comparison\"><small data-en=\"2 urgent\">2 mendesak</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"blue\" data-action=\"sop:drill\" data-kind=\"Shared\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Shared\">Dibagikan</span><iconify-icon noobserver icon=\"lucide:share-2\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">12</strong><span class=\"kpi__comparison\"><small data-en=\"3 teams\">3 tim</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"My Documents\">Dokumen Saya</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"sales.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Dokumen<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Tipe<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Versi<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Pemilik<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"4\">Updated<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"5\">Status<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Quotation Q-2026-014.pdf</label></td><td>Quotation</td><td>v3</td><td>Rina Wijaya</td><td>Hari ini 10:10</td><td><span class=\"chip pending\">Pending</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Approved\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PO-2026-031.pdf</label></td><td>Purchase Order</td><td>v1</td><td>Sari Putri</td><td>Hari ini 09:40</td><td><span class=\"chip done\">Approved</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Approved\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Kontrak CTR-009.pdf</label></td><td>Contract</td><td>v2</td><td>Bagus Santoso</td><td>Kemarin</td><td><span class=\"chip done\">Approved</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Medium\" data-status=\"Pending\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">BAST PRJ-041.pdf</label></td><td>BAST</td><td>v1</td><td>Bagus Santoso</td><td>Kemarin</td><td><span class=\"chip pending\">Pending</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Done\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Invoice INV-088.pdf</label></td><td>Invoice</td><td>v4</td><td>Sari Putri</td><td>2 hari lalu</td><td><span class=\"chip done\">Done</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Draft\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Proposal BD-021.pdf</label></td><td>Proposal</td><td>v2</td><td>Aditya Pratama</td><td>3 hari lalu</td><td><span class=\"chip info\">Draft</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Approved\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Laporan Mingguan W40.xlsx</label></td><td>Report</td><td>v1</td><td>Rina Wijaya</td><td>3 hari lalu</td><td><span class=\"chip done\">Approved</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Draft\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Surat Penawaran PT Beta.docx</label></td><td>Letter</td><td>v1</td><td>Aditya Pratama</td><td>4 hari lalu</td><td><span class=\"chip info\">Draft</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n    <div class=\"ws-panel\" id=\"ws-panel-projects\" role=\"tabpanel\" aria-labelledby=\"ws-tab-projects\" data-panel=\"projects\" data-title=\"My Notifications\" data-title-en=\"My Notifications\" hidden>\n<header class=\"page-head\">\n          <div><h2 data-en=\"My Notifications\">My Notifications</h2><p data-en=\"Notifications to review and act on.\">Notifikasi yang perlu Anda ketahui dan tindak lanjuti.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Notification\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Notification</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Unread\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Unread\">Belum dibaca</span><iconify-icon noobserver icon=\"lucide:bell\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">8</strong><span class=\"kpi__comparison\"><small data-en=\"3 important\">3 penting</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"red\" data-action=\"sop:drill\" data-kind=\"Needs action\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Needs action\">Perlu tindakan</span><iconify-icon noobserver icon=\"lucide:alert-circle\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">4</strong><span class=\"kpi__comparison\"><small data-en=\"SLA running\">SLA berjalan</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"teal\" data-action=\"sop:drill\" data-kind=\"Archived\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Archived\">Diarsipkan</span><iconify-icon noobserver icon=\"lucide:archive\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">26</strong><span class=\"kpi__comparison\"><small data-en=\"this week\">minggu ini</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span>My Notifications</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"projects.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Notifikasi<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Kanal<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Kategori<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Waktu<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"4\">Status<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"Low\" data-status=\"Unread\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Approval Q-2026-014 menunggu</label></td><td>In-app</td><td>Approval</td><td>Hari ini 10:10</td><td><span class=\"chip pending\">Unread</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Action\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">PR-331 mendekati SLA</label></td><td>Email</td><td>SLA</td><td>Hari ini 09:40</td><td><span class=\"chip risk\">Action</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Read\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Invoice INV-088 three-way match</label></td><td>In-app</td><td>Finance</td><td>Hari ini 09:10</td><td><span class=\"chip done\">Read</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Unread\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Meeting kickoff PRJ-042</label></td><td>WhatsApp</td><td>Meeting</td><td>Hari ini 08:30</td><td><span class=\"chip pending\">Unread</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Read\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Vendor master update disetujui</label></td><td>In-app</td><td>Master</td><td>Kemarin</td><td><span class=\"chip done\">Read</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Unread\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Reminder RUPS 11 Okt</label></td><td>Email</td><td>Corporate</td><td>Kemarin</td><td><span class=\"chip pending\">Unread</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Action\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Stock variance gudang utama</label></td><td>In-app</td><td>Inventory</td><td>2 hari lalu</td><td><span class=\"chip risk\">Action</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Read\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Project PRJ-042 flag risiko</label></td><td>In-app</td><td>Project</td><td>2 hari lalu</td><td><span class=\"chip done\">Read</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n    <div class=\"ws-panel\" id=\"ws-panel-purchase\" role=\"tabpanel\" aria-labelledby=\"ws-tab-purchase\" data-panel=\"purchase\" data-title=\"My Email\" data-title-en=\"My Email\" hidden>\n<header class=\"page-head\">\n          <div><h2 data-en=\"My Email\">My Email</h2><p data-en=\"Inbox and work-linked email.\">Inbox dan email yang tertaut ke pekerjaan Anda.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Email\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Email</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Unread\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Unread\">Belum dibaca</span><iconify-icon noobserver icon=\"lucide:mail\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">17</strong><span class=\"kpi__comparison\"><small data-en=\"5 sent today\">5 terkirim hari ini</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"amber\" data-action=\"sop:drill\" data-kind=\"Drafts\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Drafts\">Draft</span><iconify-icon noobserver icon=\"lucide:file-pen\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">4</strong><span class=\"kpi__comparison\"><small data-en=\"2 to send\">2 menunggu kirim</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"blue\" data-action=\"sop:drill\" data-kind=\"Linked records\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Linked records\">Tertaut record</span><iconify-icon noobserver icon=\"lucide:link\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">9</strong><span class=\"kpi__comparison\"><small data-en=\"quotation & invoice\">quotation & invoice</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span>My Email</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"purchase.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Subject<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Dari<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Terkait<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Tanggal<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"4\">Status<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"Low\" data-status=\"Unread\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Revisi quotation Q-2026-014</label></td><td>[EMAIL_9d1f2a44]</td><td>Q-2026-014</td><td>Hari ini 10:12</td><td><span class=\"chip pending\">Unread</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Read\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Konfirmasi PO-2026-031</label></td><td>[EMAIL_9d1f2a44]</td><td>PO-2026-031</td><td>Hari ini 09:45</td><td><span class=\"chip done\">Read</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Unread\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Reminder pembayaran INV-088</label></td><td>[EMAIL_9d1f2a44]</td><td>INV-088</td><td>Hari ini 09:05</td><td><span class=\"chip pending\">Unread</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Replied\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Jadwal kickoff PRJ-042</label></td><td>[EMAIL_9d1f2a44]</td><td>PRJ-042</td><td>Kemarin</td><td><span class=\"chip done\">Replied</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Unread\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Permintaan penawaran baru</label></td><td>[EMAIL_9d1f2a44]</td><td>BD-021</td><td>Kemarin</td><td><span class=\"chip pending\">Unread</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Read\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Dokumen kontrak CTR-009</label></td><td>[EMAIL_9d1f2a44]</td><td>CTR-009</td><td>2 hari lalu</td><td><span class=\"chip done\">Read</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Draft\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Vendor evaluation PT Alpha</label></td><td>[EMAIL_9d1f2a44]</td><td>VD-014</td><td>2 hari lalu</td><td><span class=\"chip info\">Draft</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"Read\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Laporan mingguan W40</label></td><td>[EMAIL_9d1f2a44]</td><td>-</td><td>3 hari lalu</td><td><span class=\"chip done\">Read</span></td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n    <div class=\"ws-panel\" id=\"ws-panel-inventory\" role=\"tabpanel\" aria-labelledby=\"ws-tab-inventory\" data-panel=\"inventory\" data-title=\"My Profile\" data-title-en=\"My Profile\" hidden>\n<header class=\"page-head\">\n          <div><h2 data-en=\"My Profile\">My Profile</h2><p data-en=\"Your profile, preferences and account security.\">Profil, preferensi, dan keamanan akun Anda.</p></div>\n          <div class=\"page-actions\"><button type=\"button\" class=\"btn-ghost\" data-action=\"sop:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button><button type=\"button\" class=\"btn-primary\" data-action=\"sop:create\" data-kind=\"Update\"><iconify-icon noobserver icon=\"lucide:plus\" aria-hidden=\"true\"></iconify-icon> Update</button></div>\n        </header>\n        <div class=\"kpi-row\"><button type=\"button\" class=\"kpi\" data-tone=\"green\" data-action=\"sop:drill\" data-kind=\"Account security\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Account security\">Keamanan akun</span><iconify-icon noobserver icon=\"lucide:shield-check\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">Baik</strong><span class=\"kpi__comparison\"><small data-en=\"2FA on\">2FA aktif</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"blue\" data-action=\"sop:drill\" data-kind=\"Company\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Company\">Company</span><iconify-icon noobserver icon=\"lucide:building-2\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">SOP Indonesia</strong><span class=\"kpi__comparison\"><small data-en=\"Scope: Commercial\">Scope: Commercial</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button><button type=\"button\" class=\"kpi\" data-tone=\"teal\" data-action=\"sop:drill\" data-kind=\"Today's activity\"><span class=\"kpi__heading\"><span class=\"kpi__title\" data-en=\"Today's activity\">Aktivitas hari ini</span><iconify-icon noobserver icon=\"lucide:activity\" aria-hidden=\"true\"></iconify-icon></span><span class=\"kpi__body\"><span class=\"kpi__main\"><strong class=\"kpi__value\">12</strong><span class=\"kpi__comparison\"><small data-en=\"5 approvals\">5 approval</small></span></span><svg class=\"kpi__spark\" viewBox=\"0 0 90 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><polygon class=\"kpi__spark-area\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40\"></polygon><polyline class=\"kpi__spark-line\" points=\"0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30\"></polyline><circle class=\"kpi__spark-dot\" cx=\"90\" cy=\"30\" r=\"2.5\"></circle></svg></span></button></div>\n        <div class=\"card\">\n  <div class=\"card__head\"><h2><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span>My Profile</span></h2>\n    <div class=\"card__tools\">\n        <div class=\"card__view\" role=\"group\" aria-label=\"Pilih tampilan data\">\n          <button type=\"button\" data-action=\"view:set\" data-view=\"table\" aria-pressed=\"true\"><iconify-icon noobserver icon=\"lucide:table-2\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Table\">Tabel</span></button>\n          <button type=\"button\" data-action=\"view:set\" data-view=\"card\" aria-pressed=\"false\"><iconify-icon noobserver icon=\"lucide:layout-grid\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Card\">Kartu</span></button>\n        </div>\n\n      <div class=\"card__search\"><label class=\"c-kravio-search\" data-component=\"kravio-search\" data-node-id=\"inventory.search\">\n  <iconify-icon noobserver icon=\"lucide:search\" aria-hidden=\"true\"></iconify-icon>\n  <input type=\"search\" placeholder=\"Cari record\" aria-label=\"Cari record\" data-action=\"table:search\" data-part=\"input\">\n</label></div>\n      <details class=\"filter-details\"><summary><iconify-icon noobserver icon=\"lucide:filter\" aria-hidden=\"true\"></iconify-icon><span data-en=\"Filter\">Filter</span></summary><div class=\"filter-panel\">\n        <fieldset><legend>Prioritas</legend><label><input type=\"checkbox\" data-filter=\"priority\" value=\"High\">High</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Medium\">Medium</label><label><input type=\"checkbox\" data-filter=\"priority\" value=\"Low\">Low</label></fieldset>\n        <button type=\"button\" class=\"btn-ghost\" data-action=\"table:reset\">Hapus filter</button>\n      </div></details>\n      <button type=\"button\" class=\"btn-ghost\" data-action=\"table:export\"><iconify-icon noobserver icon=\"lucide:download\" aria-hidden=\"true\"></iconify-icon> <span data-en=\"Export\">Export</span></button>\n    </div>\n  </div>\n  <div class=\"table-wrap\"><table class=\"sop-table\"><thead><tr><th scope=\"col\" aria-sort=\"none\"><input type=\"checkbox\" data-action=\"table:all\" aria-label=\"Pilih semua record\"> &nbsp;<button type=\"button\" data-action=\"table:sort\" data-column=\"0\">Field<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"1\">Nilai<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"2\">Visibilitas<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-sort=\"none\"><button type=\"button\" data-action=\"table:sort\" data-column=\"3\">Diubah<iconify-icon noobserver icon=\"lucide:arrow-down-up\" aria-hidden=\"true\"></iconify-icon></button></th><th scope=\"col\" aria-label=\"Aksi\"></th></tr></thead><tbody><tr data-priority=\"Low\" data-status=\"\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Nama lengkap</label></td><td>Aditya Pratama</td><td>Internal</td><td>1 Sep 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Email</label></td><td>[EMAIL_4b8e1c77]</td><td>Internal</td><td>1 Sep 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Jabatan</label></td><td>Sales Manager</td><td>Internal</td><td>1 Sep 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Company</label></td><td>SOP Indonesia</td><td>Internal</td><td>1 Sep 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Role</label></td><td>Sales Manager</td><td>Restricted</td><td>1 Sep 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Bahasa</label></td><td>Indonesia (ID)</td><td>Personal</td><td>5 Okt 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Zona waktu</label></td><td>Asia/Jakarta (GMT+7)</td><td>Personal</td><td>5 Okt 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr><tr data-priority=\"Low\" data-status=\"\"><td><label style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" data-action=\"table:select\" aria-label=\"Pilih record\">Two-factor auth</label></td><td>Aktif (Authenticator)</td><td>Restricted</td><td>5 Okt 2026</td><td><button type=\"button\" class=\"btn-ghost\" style=\"height:26px;padding:0 8px\" data-action=\"table:detail\" aria-label=\"Detail\">&#8230;</button></td></tr></tbody></table></div>\n    <div class=\"card-list\" role=\"list\" hidden></div>\n<footer class=\"pager\"><span data-part=\"page-info\" aria-live=\"polite\"></span><div class=\"pager__controls\"><label style=\"display:flex;align-items:center;gap:6px\">Baris <select data-action=\"table:size\" aria-label=\"Baris per halaman\"><option value=\"3\">3</option><option value=\"5\" selected>5</option><option value=\"10\">10</option></select></label><button type=\"button\" class=\"pg\" data-action=\"table:first\" aria-label=\"Halaman pertama\"><iconify-icon noobserver icon=\"lucide:chevrons-left\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:prev\" aria-label=\"Halaman sebelumnya\"><iconify-icon noobserver icon=\"lucide:chevron-left\" aria-hidden=\"true\"></iconify-icon></button><span data-part=\"page-pages\" style=\"display:flex;gap:6px\"></span><button type=\"button\" class=\"pg\" data-action=\"table:next\" aria-label=\"Halaman berikutnya\"><iconify-icon noobserver icon=\"lucide:chevron-right\" aria-hidden=\"true\"></iconify-icon></button><button type=\"button\" class=\"pg\" data-action=\"table:last\" aria-label=\"Halaman terakhir\"><iconify-icon noobserver icon=\"lucide:chevrons-right\" aria-hidden=\"true\"></iconify-icon></button></div></footer>\n</div>\n    </div>\n        </div>\n      </section>\n      <button type=\"button\" class=\"sidebar-backdrop\" data-action=\"kravio:sidebar\" aria-label=\"Tutup navigasi\"></button>\n      <div class=\"toast\" role=\"status\" aria-live=\"polite\" hidden></div>\n      <dialog class=\"dialog\" aria-label=\"Detail\"><button type=\"button\" class=\"dialog-close\" data-action=\"kravio:close\" aria-label=\"Tutup dialog\"><iconify-icon noobserver icon=\"lucide:x\" aria-hidden=\"true\"></iconify-icon></button><h2 data-detail=\"title\"></h2><p data-detail=\"description\"></p><p data-detail=\"fields\"></p><small>Prototype interaktif &middot; data contoh SOP</small><footer><button type=\"button\" class=\"c-kravio-button\" data-component=\"kravio-button\" data-node-id=\"my-workspace.dialog.done\" data-tone=\"default\" data-action=\"kravio:close\" aria-label=\"Selesai\">\n  <iconify-icon noobserver icon=\"lucide:check\" aria-hidden=\"true\"></iconify-icon>\n  <span data-part=\"label\">Selesai</span>\n</button></footer></dialog>\n    </div>\n  </div>";
-
 export function MyWorkspacePage({ hidden }: PageProps) {
   return (
     <section
@@ -13,7 +11,3321 @@ export function MyWorkspacePage({ hidden }: PageProps) {
       data-page-id="my-workspace"
       data-route="/my-workspace"
       hidden={hidden}
-      dangerouslySetInnerHTML={{ __html: TEMPLATE }}
-    />
+    >
+       <div className="dashboard" data-node-id="my-workspace.dashboard" data-sidebar="default" data-page-title="My Workspace" data-page-title-en="My Workspace" data-export-name="my-workspace">
+        <div className="sidebar-region" data-node-id="my-workspace.sidebar">
+          <aside className="c-kravio-sidebar" data-component="kravio-sidebar" data-node-id="my-workspace.sidebar.navigation" aria-label="Primary navigation">
+            <div className="c-kravio-sidebar__brand" data-part="brand">
+              <button type="button" className="c-kravio-sidebar__home" data-action="kravio-sidebar:navigate" title="Overview" aria-label="Buka Overview">
+                <span className="c-kravio-sidebar__logo" aria-hidden="true">SO</span>
+                <strong>Platform</strong>
+              </button>
+              <button type="button" aria-label="Collapse sidebar" data-action="kravio:sidebar">
+                <iconify-icon noobserver icon="lucide:panel-left" aria-hidden="true"></iconify-icon>
+              </button>
+            </div>
+            <div className="c-kravio-sidebar__search">
+              <label className="c-kravio-search" data-component="kravio-search" data-node-id="kravio.navigation-search">
+                <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                <input type="search" placeholder="Search anything" aria-label="Search anything" data-action="kravio-sidebar:search" data-part="input" />
+              </label>
+              <kbd>⌘ K</kbd>
+            </div>
+            <nav data-part="navigation">
+              <p className="c-kravio-sidebar__caption">My Workspace</p>
+              <button type="button" data-action="kravio-sidebar:navigate" title="My Workspace">
+                <iconify-icon noobserver icon="lucide:home" aria-hidden="true"></iconify-icon>
+                <span>My Workspace</span>
+              </button>
+              <p className="c-kravio-sidebar__caption">Dashboard</p>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Dashboard">
+                <iconify-icon noobserver icon="lucide:layout-dashboard" aria-hidden="true"></iconify-icon>
+                <span>Dashboard</span>
+              </button>
+              <p className="c-kravio-sidebar__caption">Commercial</p>
+              <button type="button" data-action="kravio-sidebar:navigate" title="CRM & Sales">
+                <iconify-icon noobserver icon="lucide:briefcase" aria-hidden="true"></iconify-icon>
+                <span>CRM & Sales</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Business Development">
+                <iconify-icon noobserver icon="lucide:trending-up" aria-hidden="true"></iconify-icon>
+                <span>Business Development</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Quotation">
+                <iconify-icon noobserver icon="lucide:file-text" aria-hidden="true"></iconify-icon>
+                <span>Quotation</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Sales">
+                <iconify-icon noobserver icon="lucide:shopping-cart" aria-hidden="true"></iconify-icon>
+                <span>Sales</span>
+              </button>
+              <p className="c-kravio-sidebar__caption">Delivery & Operations</p>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Project">
+                <iconify-icon noobserver icon="lucide:folder-kanban" aria-hidden="true"></iconify-icon>
+                <span>Project</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Purchase">
+                <iconify-icon noobserver icon="lucide:clipboard-list" aria-hidden="true"></iconify-icon>
+                <span>Purchase</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Inventory">
+                <iconify-icon noobserver icon="lucide:warehouse" aria-hidden="true"></iconify-icon>
+                <span>Inventory</span>
+              </button>
+              <p className="c-kravio-sidebar__caption">Finance & Insights</p>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Finance & Accounting">
+                <iconify-icon noobserver icon="lucide:wallet-cards" aria-hidden="true"></iconify-icon>
+                <span>Finance & Accounting</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Reports & Analytics">
+                <iconify-icon noobserver icon="lucide:bar-chart-3" aria-hidden="true"></iconify-icon>
+                <span>Reports & Analytics</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Management & Executive">
+                <iconify-icon noobserver icon="lucide:chart-no-axes-column-increasing" aria-hidden="true"></iconify-icon>
+                <span>Management & Executive</span>
+              </button>
+              <p className="c-kravio-sidebar__caption">Data & Documents</p>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Master Data">
+                <iconify-icon noobserver icon="lucide:database" aria-hidden="true"></iconify-icon>
+                <span>Master Data</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Document Management">
+                <iconify-icon noobserver icon="lucide:files" aria-hidden="true"></iconify-icon>
+                <span>Document Management</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Document Template">
+                <iconify-icon noobserver icon="lucide:layout-template" aria-hidden="true"></iconify-icon>
+                <span>Document Template</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Email & Communication">
+                <iconify-icon noobserver icon="lucide:mail" aria-hidden="true"></iconify-icon>
+                <span>Email & Communication</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Omnichannel">
+                <iconify-icon noobserver icon="lucide:messages-square" aria-hidden="true"></iconify-icon>
+                <span>Omnichannel</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="WhatsApp Integration">
+                <iconify-icon noobserver icon="lucide:message-circle" aria-hidden="true"></iconify-icon>
+                <span>WhatsApp Integration</span>
+              </button>
+              <p className="c-kravio-sidebar__caption">Governance & Intelligence</p>
+              <button type="button" data-action="kravio-sidebar:navigate" title="General Meeting & RUPS">
+                <iconify-icon noobserver icon="lucide:gavel" aria-hidden="true"></iconify-icon>
+                <span>General Meeting & RUPS</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Workflow & Approval">
+                <iconify-icon noobserver icon="lucide:git-merge" aria-hidden="true"></iconify-icon>
+                <span>Workflow & Approval</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Corporate">
+                <iconify-icon noobserver icon="lucide:building-2" aria-hidden="true"></iconify-icon>
+                <span>Corporate</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="AI Assistant">
+                <iconify-icon noobserver icon="lucide:sparkles" aria-hidden="true"></iconify-icon>
+                <span>AI Assistant</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Data Intelligence">
+                <iconify-icon noobserver icon="lucide:brain-circuit" aria-hidden="true"></iconify-icon>
+                <span>Data Intelligence</span>
+              </button>
+              <p className="c-kravio-sidebar__caption">Administration</p>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Integrations">
+                <iconify-icon noobserver icon="lucide:plug" aria-hidden="true"></iconify-icon>
+                <span>Integrations</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Security & Audit">
+                <iconify-icon noobserver icon="lucide:shield-check" aria-hidden="true"></iconify-icon>
+                <span>Security & Audit</span>
+              </button>
+              <button type="button" data-action="kravio-sidebar:navigate" title="Settings">
+                <iconify-icon noobserver icon="lucide:settings-2" aria-hidden="true"></iconify-icon>
+                <span>Settings</span>
+              </button>
+            </nav>
+            <button type="button" className="c-kravio-sidebar__profile" data-action="kravio:profile">
+              <span className="c-kravio-sidebar__avatar">AP</span>
+              <span>
+                <strong>Aditya Pratama</strong>
+                <small>aditya.pratama@example.com</small>
+              </span>
+              <iconify-icon noobserver icon="lucide:chevrons-up-down" aria-hidden="true"></iconify-icon>
+            </button>
+          </aside>
+        </div>
+        <div className="main-column">
+          <div className="topbar-region" data-node-id="my-workspace.topbar">
+            <header className="c-nuvio-topbar" data-component="nuvio-topbar" data-node-id="my-workspace.topbar.navigation">
+              <button type="button" aria-label="Toggle sidebar" data-action="kravio:sidebar">
+                <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+              </button>
+              <nav aria-label="Breadcrumb">
+                <a href="#/overview" data-part="crumb-home">My Workspace</a>
+                <span aria-hidden="true">/</span>
+                <strong data-part="crumb-page">My Workspace</strong>
+              </nav>
+              <div className="c-nuvio-topbar__lang">
+                <iconify-icon noobserver icon="lucide:languages" aria-hidden="true"></iconify-icon>
+                <select data-action="nuvio:lang" aria-label="Pilih bahasa">
+                  <option value="id">ID</option>
+                  <option value="en">EN</option>
+                </select>
+              </div>
+              <button type="button" data-action="nuvio:theme" aria-pressed="false" aria-label="Aktifkan mode gelap">
+                <iconify-icon noobserver icon="lucide:moon" aria-hidden="true"></iconify-icon>
+              </button>
+              <button type="button" aria-label="Notifications" data-action="kravio:notifications">
+                <iconify-icon noobserver icon="lucide:bell" aria-hidden="true"></iconify-icon>
+              </button>
+              <button type="button" aria-label="Settings" data-action="kravio:settings">
+                <iconify-icon noobserver icon="lucide:settings-2" aria-hidden="true"></iconify-icon>
+              </button>
+            </header>
+          </div>
+          <section className="page-region">
+            <h1 className="sr-only">My Workspace</h1>
+            <div className="ws-tabs" role="tablist" aria-label="Halaman My Workspace">
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-my-workspace" aria-controls="ws-panel-my-workspace" aria-selected="true" tabIndex={0} data-action="ws:tab" data-panel="my-workspace">
+                <iconify-icon noobserver icon="lucide:list-checks" aria-hidden="true"></iconify-icon>
+                <span data-en="My Tasks">My Tasks</span>
+              </button>
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-dashboard" aria-controls="ws-panel-dashboard" aria-selected="false" tabIndex={-1} data-action="ws:tab" data-panel="dashboard">
+                <iconify-icon noobserver icon="lucide:folder-kanban" aria-hidden="true"></iconify-icon>
+                <span data-en="Dashboard">Dashboard</span>
+              </button>
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-crm-sales" aria-controls="ws-panel-crm-sales" aria-selected="false" tabIndex={-1} data-action="ws:tab" data-panel="crm-sales">
+                <iconify-icon noobserver icon="lucide:stamp" aria-hidden="true"></iconify-icon>
+                <span data-en="CRM & Sales">CRM & Sales</span>
+              </button>
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-business-development" aria-controls="ws-panel-business-development" aria-selected="false" tabIndex={-1} data-action="ws:tab" data-panel="business-development">
+                <iconify-icon noobserver icon="lucide:activity" aria-hidden="true"></iconify-icon>
+                <span data-en="My Activities">My Activities</span>
+              </button>
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-quotation" aria-controls="ws-panel-quotation" aria-selected="false" tabIndex={-1} data-action="ws:tab" data-panel="quotation">
+                <iconify-icon noobserver icon="lucide:calendar-days" aria-hidden="true"></iconify-icon>
+                <span data-en="My Calendar">My Calendar</span>
+              </button>
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-sales" aria-controls="ws-panel-sales" aria-selected="false" tabIndex={-1} data-action="ws:tab" data-panel="sales">
+                <iconify-icon noobserver icon="lucide:file-text" aria-hidden="true"></iconify-icon>
+                <span data-en="My Documents">My Documents</span>
+              </button>
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-projects" aria-controls="ws-panel-projects" aria-selected="false" tabIndex={-1} data-action="ws:tab" data-panel="projects">
+                <iconify-icon noobserver icon="lucide:bell" aria-hidden="true"></iconify-icon>
+                <span data-en="My Notifications">My Notifications</span>
+              </button>
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-purchase" aria-controls="ws-panel-purchase" aria-selected="false" tabIndex={-1} data-action="ws:tab" data-panel="purchase">
+                <iconify-icon noobserver icon="lucide:mail" aria-hidden="true"></iconify-icon>
+                <span data-en="My Email">My Email</span>
+              </button>
+              <button type="button" className="ws-tab" role="tab" id="ws-tab-inventory" aria-controls="ws-panel-inventory" aria-selected="false" tabIndex={-1} data-action="ws:tab" data-panel="inventory">
+                <iconify-icon noobserver icon="lucide:user" aria-hidden="true"></iconify-icon>
+                <span data-en="My Profile">My Profile</span>
+              </button>
+            </div>
+            <div className="ws-panels">
+              <div className="ws-panel" id="ws-panel-my-workspace" role="tabpanel" aria-labelledby="ws-tab-my-workspace" data-panel="my-workspace" data-title="My Tasks" data-title-en="My Tasks">
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="My Tasks">My Tasks</h2>
+                    <p data-en="Tasks and follow-ups to complete.">Daftar task dan follow-up yang harus diselesaikan.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Record baru">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Task
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Today's tasks">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Today's tasks">Tugas hari ini</span>
+                      <iconify-icon noobserver icon="lucide:list-checks" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">12</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="4 done">4 selesai</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="red" data-action="sop:drill" data-kind="Overdue">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Overdue">Overdue</span>
+                      <iconify-icon noobserver icon="lucide:triangle-alert" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">3</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="needs action">perlu tindakan</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Done this week">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Done this week">Selesai minggu ini</span>
+                      <iconify-icon noobserver icon="lucide:check-circle" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">28</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="+6 vs last week">+6 vs minggu lalu</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span>My Tasks</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="my-workspace.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Task
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Modul
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Prioritas
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Status
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="4">
+                              Due
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="5">
+                              Owner
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="High" data-status="In progress">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Follow-up PT Nusantara
+                            </label>
+                          </td>
+                          <td>CRM & Sales</td>
+                          <td>
+                            <span className="chip risk">High</span>
+                          </td>
+                          <td>
+                            <span className="chip progress">In progress</span>
+                          </td>
+                          <td>Hari ini 16:30</td>
+                          <td>Aditya Pratama</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="High" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Review margin Quotation Q-2026-014
+                            </label>
+                          </td>
+                          <td>Quotation</td>
+                          <td>
+                            <span className="chip risk">High</span>
+                          </td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>Hari ini 14:00</td>
+                          <td>Rina Wijaya</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="High" data-status="At risk">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Review mitigation PRJ-042
+                            </label>
+                          </td>
+                          <td>Project</td>
+                          <td>
+                            <span className="chip risk">High</span>
+                          </td>
+                          <td>
+                            <span className="chip risk">At risk</span>
+                          </td>
+                          <td>Besok</td>
+                          <td>Bagus Santoso</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Draft">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Submit approval PR-331
+                            </label>
+                          </td>
+                          <td>Purchase</td>
+                          <td>
+                            <span className="chip pending">Medium</span>
+                          </td>
+                          <td>
+                            <span className="chip info">Draft</span>
+                          </td>
+                          <td>7 Okt 2026</td>
+                          <td>Sari Putri</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Done">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Rekonsiliasi payment INV-088
+                            </label>
+                          </td>
+                          <td>Finance</td>
+                          <td>
+                            <span className="chip pending">Medium</span>
+                          </td>
+                          <td>
+                            <span className="chip done">Done</span>
+                          </td>
+                          <td>8 Okt 2026</td>
+                          <td>Sari Putri</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="In progress">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Update pipeline stage OP-108
+                            </label>
+                          </td>
+                          <td>CRM & Sales</td>
+                          <td>
+                            <span className="chip info">Low</span>
+                          </td>
+                          <td>
+                            <span className="chip progress">In progress</span>
+                          </td>
+                          <td>9 Okt 2026</td>
+                          <td>Aditya Pratama</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Stock opname gudang utama
+                            </label>
+                          </td>
+                          <td>Inventory</td>
+                          <td>
+                            <span className="chip pending">Medium</span>
+                          </td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>10 Okt 2026</td>
+                          <td>Bagus Santoso</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Done">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Siapkan RUPS agenda
+                            </label>
+                          </td>
+                          <td>Corporate</td>
+                          <td>
+                            <span className="chip info">Low</span>
+                          </td>
+                          <td>
+                            <span className="chip done">Done</span>
+                          </td>
+                          <td>11 Okt 2026</td>
+                          <td>Rina Wijaya</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <div className="ws-panel" id="ws-panel-dashboard" role="tabpanel" aria-labelledby="ws-tab-dashboard" data-panel="dashboard" data-title="Dashboard" data-title-en="Dashboard" hidden>
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="Dashboard">Dashboard</h2>
+                    <p data-en="Projects you manage with status and progress.">Project yang Anda kelola beserta status dan progres.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Project">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Project
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Active projects">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Active projects">Project aktif</span>
+                      <iconify-icon noobserver icon="lucide:folder-kanban" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">6</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="2 near deadline">2 mendekati deadline</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="On track">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="On track">On track</span>
+                      <iconify-icon noobserver icon="lucide:heart-pulse" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">4</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="on baseline">sesuai baseline</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="red" data-action="sop:drill" data-kind="At risk">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="At risk">At risk</span>
+                      <iconify-icon noobserver icon="lucide:triangle-alert" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">2</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="needs escalation">perlu eskalasi</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span>Dashboard</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="dashboard.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Project
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Customer
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Health
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Progress
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="4">
+                              PM
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="5">
+                              Deadline
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="Low" data-status="On track">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-041 Implementasi ERP
+                            </label>
+                          </td>
+                          <td>PT Nusantara</td>
+                          <td>
+                            <span className="chip done">On track</span>
+                          </td>
+                          <td>72%</td>
+                          <td>Bagus Santoso</td>
+                          <td>30 Okt 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="High" data-status="At risk">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-042 Rollout Cabang
+                            </label>
+                          </td>
+                          <td>PT Alpha</td>
+                          <td>
+                            <span className="chip risk">At risk</span>
+                          </td>
+                          <td>48%</td>
+                          <td>Aditya Pratama</td>
+                          <td>15 Okt 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="On track">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-043 Integrasi Payment
+                            </label>
+                          </td>
+                          <td>Bank Mandiri</td>
+                          <td>
+                            <span className="chip done">On track</span>
+                          </td>
+                          <td>85%</td>
+                          <td>Rina Wijaya</td>
+                          <td>7 Nov 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="On track">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-044 Data Warehouse
+                            </label>
+                          </td>
+                          <td>PT Beta</td>
+                          <td>
+                            <span className="chip done">On track</span>
+                          </td>
+                          <td>60%</td>
+                          <td>Bagus Santoso</td>
+                          <td>20 Nov 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="High" data-status="At risk">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-045 Aplikasi Mobile
+                            </label>
+                          </td>
+                          <td>PT Gamma</td>
+                          <td>
+                            <span className="chip risk">At risk</span>
+                          </td>
+                          <td>35%</td>
+                          <td>Aditya Pratama</td>
+                          <td>5 Okt 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="On track">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-046 Migrasi Cloud
+                            </label>
+                          </td>
+                          <td>PT Delta</td>
+                          <td>
+                            <span className="chip done">On track</span>
+                          </td>
+                          <td>90%</td>
+                          <td>Rina Wijaya</td>
+                          <td>1 Des 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="On track">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-047 Portal Vendor
+                            </label>
+                          </td>
+                          <td>PT Epsilon</td>
+                          <td>
+                            <span className="chip done">On track</span>
+                          </td>
+                          <td>55%</td>
+                          <td>Bagus Santoso</td>
+                          <td>18 Des 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="High" data-status="At risk">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-048 CRM Rollout
+                            </label>
+                          </td>
+                          <td>PT Zeta</td>
+                          <td>
+                            <span className="chip risk">At risk</span>
+                          </td>
+                          <td>40%</td>
+                          <td>Aditya Pratama</td>
+                          <td>22 Des 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <div className="ws-panel" id="ws-panel-crm-sales" role="tabpanel" aria-labelledby="ws-tab-crm-sales" data-panel="crm-sales" data-title="CRM & Sales" data-title-en="CRM & Sales" hidden>
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="CRM & Sales">CRM & Sales</h2>
+                    <p data-en="Approvals awaiting your decision.">Lead, customer, aktivitas, pipeline, dan forecast.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Approval">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Approval
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="amber" data-action="sop:drill" data-kind="Pending">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Pending">Menunggu</span>
+                      <iconify-icon noobserver icon="lucide:stamp" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">7</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="2 near SLA">2 mendekati SLA</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Approved this month">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Approved this month">Disetujui bulan ini</span>
+                      <iconify-icon noobserver icon="lucide:check" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">23</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="+4 vs target">+4 vs target</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="red" data-action="sop:drill" data-kind="Rejected">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Rejected">Ditolak</span>
+                      <iconify-icon noobserver icon="lucide:x" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">3</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="needs revision">perlu revisi</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span>CRM & Sales</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="crm-sales.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Record
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Tipe
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Nilai
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Requester
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="4">
+                              SLA
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="5">
+                              Status
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Q-2026-014
+                            </label>
+                          </td>
+                          <td>Quotation</td>
+                          <td>Rp 480 jt</td>
+                          <td>Rina Wijaya</td>
+                          <td>4 jam</td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PR-331
+                            </label>
+                          </td>
+                          <td>Purchase Request</td>
+                          <td>Rp 75 jt</td>
+                          <td>Sari Putri</td>
+                          <td>8 jam</td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              INV-088
+                            </label>
+                          </td>
+                          <td>Invoice AP</td>
+                          <td>Rp 210 jt</td>
+                          <td>Sari Putri</td>
+                          <td>1 hari</td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Approved">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              SO-2026-021
+                            </label>
+                          </td>
+                          <td>Sales Order</td>
+                          <td>Rp 620 jt</td>
+                          <td>Aditya Pratama</td>
+                          <td>3 jam</td>
+                          <td>
+                            <span className="chip done">Approved</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              VD-014
+                            </label>
+                          </td>
+                          <td>Vendor master</td>
+                          <td>-</td>
+                          <td>Bagus Santoso</td>
+                          <td>6 jam</td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Rejected">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              EXP-052
+                            </label>
+                          </td>
+                          <td>Expense claim</td>
+                          <td>Rp 12 jt</td>
+                          <td>Rina Wijaya</td>
+                          <td>2 hari</td>
+                          <td>
+                            <span className="chip risk">Ditolak</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PRJ-CHG-007
+                            </label>
+                          </td>
+                          <td>Project change</td>
+                          <td>Rp 95 jt</td>
+                          <td>Bagus Santoso</td>
+                          <td>1 hari</td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Approved">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PAY-118
+                            </label>
+                          </td>
+                          <td>Payment release</td>
+                          <td>Rp 340 jt</td>
+                          <td>Sari Putri</td>
+                          <td>5 jam</td>
+                          <td>
+                            <span className="chip done">Approved</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <div className="ws-panel" id="ws-panel-business-development" role="tabpanel" aria-labelledby="ws-tab-business-development" data-panel="business-development" data-title="Aktivitas Saya" data-title-en="My Activities" hidden>
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="My Activities">Aktivitas Saya</h2>
+                    <p data-en="Your recent activities, tasks and follow-ups.">Aktivitas, follow-up, meeting, dan email yang perlu ditindaklanjuti.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Activity">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Activity
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Today's activities">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Today's activities">Aktivitas hari ini</span>
+                      <iconify-icon noobserver icon="lucide:activity" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">9</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="3 done">3 selesai</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Follow-ups">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Follow-ups">Follow-up</span>
+                      <iconify-icon noobserver icon="lucide:phone" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">5</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="2 scheduled">2 terjadwal</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Meetings">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Meetings">Pertemuan</span>
+                      <iconify-icon noobserver icon="lucide:calendar-check" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">3</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="1 upcoming">1 mendatang</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span>My Activities</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="business-development.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Aktivitas
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Tipe
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Terkait
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Waktu
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="4">
+                              Status
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="Low" data-status="Scheduled">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Telepon customer PT Nusantara
+                            </label>
+                          </td>
+                          <td>Call</td>
+                          <td>OP-108</td>
+                          <td>Hari ini 16:30</td>
+                          <td>
+                            <span className="chip progress">Scheduled</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="In progress">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Meeting kickoff PRJ-042
+                            </label>
+                          </td>
+                          <td>Meeting</td>
+                          <td>PRJ-042</td>
+                          <td>Hari ini 14:00</td>
+                          <td>
+                            <span className="chip progress">In progress</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Done">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Kirim quotation Q-2026-014
+                            </label>
+                          </td>
+                          <td>Email</td>
+                          <td>Q-2026-014</td>
+                          <td>Hari ini 11:00</td>
+                          <td>
+                            <span className="chip done">Done</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Scheduled">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Kunjungan vendor PT Alpha
+                            </label>
+                          </td>
+                          <td>Visit</td>
+                          <td>VD-014</td>
+                          <td>Besok 09:00</td>
+                          <td>
+                            <span className="chip info">Scheduled</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Scheduled">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Review dokumen kontrak
+                            </label>
+                          </td>
+                          <td>Task</td>
+                          <td>CTR-009</td>
+                          <td>Besok 13:00</td>
+                          <td>
+                            <span className="chip info">Scheduled</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Done">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Follow-up invoice INV-088
+                            </label>
+                          </td>
+                          <td>Follow Up</td>
+                          <td>INV-088</td>
+                          <td>8 Okt 2026</td>
+                          <td>
+                            <span className="chip done">Done</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Scheduled">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Presentasi proposal BD
+                            </label>
+                          </td>
+                          <td>Meeting</td>
+                          <td>BD-021</td>
+                          <td>9 Okt 2026</td>
+                          <td>
+                            <span className="chip info">Scheduled</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Done">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Update status pipeline
+                            </label>
+                          </td>
+                          <td>Task</td>
+                          <td>OP-110</td>
+                          <td>10 Okt 2026</td>
+                          <td>
+                            <span className="chip done">Done</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <div className="ws-panel" id="ws-panel-quotation" role="tabpanel" aria-labelledby="ws-tab-quotation" data-panel="quotation" data-title="My Calendar" data-title-en="My Calendar" hidden>
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="My Calendar">My Calendar</h2>
+                    <p data-en="Your meetings, deadlines and reminders.">Meeting, deadline, dan pengingat yang terhubung dengan pekerjaan Anda.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Event">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Event
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Events this week">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Events this week">Event minggu ini</span>
+                      <iconify-icon noobserver icon="lucide:calendar-days" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">11</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="3 today">3 hari ini</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Meetings">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Meetings">Meeting</span>
+                      <iconify-icon noobserver icon="lucide:users" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">6</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="2 external">2 eksternal</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="red" data-action="sop:drill" data-kind="Deadlines">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Deadlines">Deadline</span>
+                      <iconify-icon noobserver icon="lucide:alarm-clock" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">4</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="1 urgent">1 mendesak</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span data-en="My Calendar">Kalender Saya</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="quotation.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Agenda
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Tanggal
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Waktu
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Peserta
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="4">
+                              Lokasi
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="5">
+                              Status
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="Low" data-status="Confirmed">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Kickoff PRJ-042
+                            </label>
+                          </td>
+                          <td>5 Okt 2026</td>
+                          <td>14:00-15:00</td>
+                          <td>8 orang</td>
+                          <td>Meeting Room A</td>
+                          <td>
+                            <span className="chip done">Confirmed</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Review quotation Q-2026-014
+                            </label>
+                          </td>
+                          <td>5 Okt 2026</td>
+                          <td>16:30-17:00</td>
+                          <td>3 orang</td>
+                          <td>Online</td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Confirmed">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Vendor meeting PT Alpha
+                            </label>
+                          </td>
+                          <td>6 Okt 2026</td>
+                          <td>09:00-10:00</td>
+                          <td>5 orang</td>
+                          <td>Zoom</td>
+                          <td>
+                            <span className="chip done">Confirmed</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Confirmed">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Board meeting
+                            </label>
+                          </td>
+                          <td>7 Okt 2026</td>
+                          <td>10:00-12:00</td>
+                          <td>12 orang</td>
+                          <td>Board Room</td>
+                          <td>
+                            <span className="chip done">Confirmed</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="High" data-status="Deadline">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Deadline submit PR-331
+                            </label>
+                          </td>
+                          <td>7 Okt 2026</td>
+                          <td>17:00</td>
+                          <td>Tim Procurement</td>
+                          <td>Sistem</td>
+                          <td>
+                            <span className="chip risk">Deadline</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Tentative">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Presentasi proposal BD-021
+                            </label>
+                          </td>
+                          <td>9 Okt 2026</td>
+                          <td>13:00-14:30</td>
+                          <td>6 orang</td>
+                          <td>Meeting Room B</td>
+                          <td>
+                            <span className="chip info">Tentative</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Confirmed">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              RUPS persiapan
+                            </label>
+                          </td>
+                          <td>11 Okt 2026</td>
+                          <td>09:00-11:00</td>
+                          <td>15 orang</td>
+                          <td>Auditorium</td>
+                          <td>
+                            <span className="chip done">Confirmed</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Tentative">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Review profitability PRJ-041
+                            </label>
+                          </td>
+                          <td>12 Okt 2026</td>
+                          <td>15:00-16:00</td>
+                          <td>4 orang</td>
+                          <td>Online</td>
+                          <td>
+                            <span className="chip info">Tentative</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <div className="ws-panel" id="ws-panel-sales" role="tabpanel" aria-labelledby="ws-tab-sales" data-panel="sales" data-title="Dokumen Saya" data-title-en="My Documents" hidden>
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="My Documents">Dokumen Saya</h2>
+                    <p data-en="Your documents and approval status.">Dokumen kerja, versi terbaru, dan approval yang perlu ditindaklanjuti.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Document">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Unggah dokumen
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Total documents">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Total documents">Total dokumen</span>
+                      <iconify-icon noobserver icon="lucide:files" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">48</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="6 new">6 baru</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="amber" data-action="sop:drill" data-kind="Need approval">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Need approval">Perlu approval</span>
+                      <iconify-icon noobserver icon="lucide:stamp" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">5</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="2 urgent">2 mendesak</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Shared">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Shared">Dibagikan</span>
+                      <iconify-icon noobserver icon="lucide:share-2" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">12</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="3 teams">3 tim</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span data-en="My Documents">Dokumen Saya</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="sales.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Dokumen
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Tipe
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Versi
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Pemilik
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="4">
+                              Updated
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="5">
+                              Status
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Quotation Q-2026-014.pdf
+                            </label>
+                          </td>
+                          <td>Quotation</td>
+                          <td>v3</td>
+                          <td>Rina Wijaya</td>
+                          <td>Hari ini 10:10</td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Approved">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PO-2026-031.pdf
+                            </label>
+                          </td>
+                          <td>Purchase Order</td>
+                          <td>v1</td>
+                          <td>Sari Putri</td>
+                          <td>Hari ini 09:40</td>
+                          <td>
+                            <span className="chip done">Approved</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Approved">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Kontrak CTR-009.pdf
+                            </label>
+                          </td>
+                          <td>Contract</td>
+                          <td>v2</td>
+                          <td>Bagus Santoso</td>
+                          <td>Kemarin</td>
+                          <td>
+                            <span className="chip done">Approved</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Medium" data-status="Pending">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              BAST PRJ-041.pdf
+                            </label>
+                          </td>
+                          <td>BAST</td>
+                          <td>v1</td>
+                          <td>Bagus Santoso</td>
+                          <td>Kemarin</td>
+                          <td>
+                            <span className="chip pending">Pending</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Done">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Invoice INV-088.pdf
+                            </label>
+                          </td>
+                          <td>Invoice</td>
+                          <td>v4</td>
+                          <td>Sari Putri</td>
+                          <td>2 hari lalu</td>
+                          <td>
+                            <span className="chip done">Done</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Draft">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Proposal BD-021.pdf
+                            </label>
+                          </td>
+                          <td>Proposal</td>
+                          <td>v2</td>
+                          <td>Aditya Pratama</td>
+                          <td>3 hari lalu</td>
+                          <td>
+                            <span className="chip info">Draft</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Approved">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Laporan Mingguan W40.xlsx
+                            </label>
+                          </td>
+                          <td>Report</td>
+                          <td>v1</td>
+                          <td>Rina Wijaya</td>
+                          <td>3 hari lalu</td>
+                          <td>
+                            <span className="chip done">Approved</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Draft">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Surat Penawaran PT Beta.docx
+                            </label>
+                          </td>
+                          <td>Letter</td>
+                          <td>v1</td>
+                          <td>Aditya Pratama</td>
+                          <td>4 hari lalu</td>
+                          <td>
+                            <span className="chip info">Draft</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <div className="ws-panel" id="ws-panel-projects" role="tabpanel" aria-labelledby="ws-tab-projects" data-panel="projects" data-title="My Notifications" data-title-en="My Notifications" hidden>
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="My Notifications">My Notifications</h2>
+                    <p data-en="Notifications to review and act on.">Notifikasi yang perlu Anda ketahui dan tindak lanjuti.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Notification">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Notification
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Unread">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Unread">Belum dibaca</span>
+                      <iconify-icon noobserver icon="lucide:bell" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">8</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="3 important">3 penting</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="red" data-action="sop:drill" data-kind="Needs action">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Needs action">Perlu tindakan</span>
+                      <iconify-icon noobserver icon="lucide:alert-circle" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">4</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="SLA running">SLA berjalan</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Archived">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Archived">Diarsipkan</span>
+                      <iconify-icon noobserver icon="lucide:archive" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">26</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="this week">minggu ini</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span>My Notifications</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="projects.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Notifikasi
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Kanal
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Kategori
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Waktu
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="4">
+                              Status
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="Low" data-status="Unread">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Approval Q-2026-014 menunggu
+                            </label>
+                          </td>
+                          <td>In-app</td>
+                          <td>Approval</td>
+                          <td>Hari ini 10:10</td>
+                          <td>
+                            <span className="chip pending">Unread</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Action">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              PR-331 mendekati SLA
+                            </label>
+                          </td>
+                          <td>Email</td>
+                          <td>SLA</td>
+                          <td>Hari ini 09:40</td>
+                          <td>
+                            <span className="chip risk">Action</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Read">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Invoice INV-088 three-way match
+                            </label>
+                          </td>
+                          <td>In-app</td>
+                          <td>Finance</td>
+                          <td>Hari ini 09:10</td>
+                          <td>
+                            <span className="chip done">Read</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Unread">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Meeting kickoff PRJ-042
+                            </label>
+                          </td>
+                          <td>WhatsApp</td>
+                          <td>Meeting</td>
+                          <td>Hari ini 08:30</td>
+                          <td>
+                            <span className="chip pending">Unread</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Read">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Vendor master update disetujui
+                            </label>
+                          </td>
+                          <td>In-app</td>
+                          <td>Master</td>
+                          <td>Kemarin</td>
+                          <td>
+                            <span className="chip done">Read</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Unread">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Reminder RUPS 11 Okt
+                            </label>
+                          </td>
+                          <td>Email</td>
+                          <td>Corporate</td>
+                          <td>Kemarin</td>
+                          <td>
+                            <span className="chip pending">Unread</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Action">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Stock variance gudang utama
+                            </label>
+                          </td>
+                          <td>In-app</td>
+                          <td>Inventory</td>
+                          <td>2 hari lalu</td>
+                          <td>
+                            <span className="chip risk">Action</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Read">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Project PRJ-042 flag risiko
+                            </label>
+                          </td>
+                          <td>In-app</td>
+                          <td>Project</td>
+                          <td>2 hari lalu</td>
+                          <td>
+                            <span className="chip done">Read</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <div className="ws-panel" id="ws-panel-purchase" role="tabpanel" aria-labelledby="ws-tab-purchase" data-panel="purchase" data-title="My Email" data-title-en="My Email" hidden>
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="My Email">My Email</h2>
+                    <p data-en="Inbox and work-linked email.">Inbox dan email yang tertaut ke pekerjaan Anda.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Email">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Email
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Unread">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Unread">Belum dibaca</span>
+                      <iconify-icon noobserver icon="lucide:mail" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">17</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="5 sent today">5 terkirim hari ini</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="amber" data-action="sop:drill" data-kind="Drafts">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Drafts">Draft</span>
+                      <iconify-icon noobserver icon="lucide:file-pen" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">4</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="2 to send">2 menunggu kirim</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Linked records">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Linked records">Tertaut record</span>
+                      <iconify-icon noobserver icon="lucide:link" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">9</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="quotation & invoice">quotation & invoice</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span>My Email</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="purchase.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Subject
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Dari
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Terkait
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Tanggal
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="4">
+                              Status
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="Low" data-status="Unread">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Revisi quotation Q-2026-014
+                            </label>
+                          </td>
+                          <td>[EMAIL_9d1f2a44]</td>
+                          <td>Q-2026-014</td>
+                          <td>Hari ini 10:12</td>
+                          <td>
+                            <span className="chip pending">Unread</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Read">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Konfirmasi PO-2026-031
+                            </label>
+                          </td>
+                          <td>[EMAIL_9d1f2a44]</td>
+                          <td>PO-2026-031</td>
+                          <td>Hari ini 09:45</td>
+                          <td>
+                            <span className="chip done">Read</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Unread">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Reminder pembayaran INV-088
+                            </label>
+                          </td>
+                          <td>[EMAIL_9d1f2a44]</td>
+                          <td>INV-088</td>
+                          <td>Hari ini 09:05</td>
+                          <td>
+                            <span className="chip pending">Unread</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Replied">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Jadwal kickoff PRJ-042
+                            </label>
+                          </td>
+                          <td>[EMAIL_9d1f2a44]</td>
+                          <td>PRJ-042</td>
+                          <td>Kemarin</td>
+                          <td>
+                            <span className="chip done">Replied</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Unread">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Permintaan penawaran baru
+                            </label>
+                          </td>
+                          <td>[EMAIL_9d1f2a44]</td>
+                          <td>BD-021</td>
+                          <td>Kemarin</td>
+                          <td>
+                            <span className="chip pending">Unread</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Read">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Dokumen kontrak CTR-009
+                            </label>
+                          </td>
+                          <td>[EMAIL_9d1f2a44]</td>
+                          <td>CTR-009</td>
+                          <td>2 hari lalu</td>
+                          <td>
+                            <span className="chip done">Read</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Draft">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Vendor evaluation PT Alpha
+                            </label>
+                          </td>
+                          <td>[EMAIL_9d1f2a44]</td>
+                          <td>VD-014</td>
+                          <td>2 hari lalu</td>
+                          <td>
+                            <span className="chip info">Draft</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="Read">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Laporan mingguan W40
+                            </label>
+                          </td>
+                          <td>[EMAIL_9d1f2a44]</td>
+                          <td>-</td>
+                          <td>3 hari lalu</td>
+                          <td>
+                            <span className="chip done">Read</span>
+                          </td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <div className="ws-panel" id="ws-panel-inventory" role="tabpanel" aria-labelledby="ws-tab-inventory" data-panel="inventory" data-title="My Profile" data-title-en="My Profile" hidden>
+                <header className="page-head">
+                  <div>
+                    <h2 data-en="My Profile">My Profile</h2>
+                    <p data-en="Your profile, preferences and account security.">Profil, preferensi, dan keamanan akun Anda.</p>
+                  </div>
+                  <div className="page-actions">
+                    <button type="button" className="btn-ghost" data-action="sop:export">
+                      <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                      <span data-en="Export">Export</span>
+                    </button>
+                    <button type="button" className="btn-primary" data-action="sop:create" data-kind="Update">
+                      <iconify-icon noobserver icon="lucide:plus" aria-hidden="true"></iconify-icon>
+                      {' '}Update
+                    </button>
+                  </div>
+                </header>
+                <div className="kpi-row">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Account security">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Account security">Keamanan akun</span>
+                      <iconify-icon noobserver icon="lucide:shield-check" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">Baik</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="2FA on">2FA aktif</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Company">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Company">Company</span>
+                      <iconify-icon noobserver icon="lucide:building-2" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">SOP Indonesia</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="Scope: Commercial">Scope: Commercial</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Today's activity">
+                    <span className="kpi__heading">
+                      <span className="kpi__title" data-en="Today's activity">Aktivitas hari ini</span>
+                      <iconify-icon noobserver icon="lucide:activity" aria-hidden="true"></iconify-icon>
+                    </span>
+                    <span className="kpi__body">
+                      <span className="kpi__main">
+                        <strong className="kpi__value">12</strong>
+                        <span className="kpi__comparison">
+                          <small data-en="5 approvals">5 approval</small>
+                        </span>
+                      </span>
+                      <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
+                        <polygon className="kpi__spark-area" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30 90,40 0,40" />
+                        <polyline className="kpi__spark-line" points="0,39 10,13 20,15 30,25 40,5 50,24 60,19 70,34 80,20 90,30" />
+                        <circle className="kpi__spark-dot" cx="90" cy="30" r="2.5" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div className="card">
+                  <div className="card__head">
+                    <h2>
+                      <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                      <span>My Profile</span>
+                    </h2>
+                    <div className="card__tools">
+                      <div className="card__view" role="group" aria-label="Pilih tampilan data">
+                        <button type="button" data-action="view:set" data-view="table" aria-pressed="true">
+                          <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
+                          <span data-en="Table">Tabel</span>
+                        </button>
+                        <button type="button" data-action="view:set" data-view="card" aria-pressed="false">
+                          <iconify-icon noobserver icon="lucide:layout-grid" aria-hidden="true"></iconify-icon>
+                          <span data-en="Card">Kartu</span>
+                        </button>
+                      </div>
+                      <div className="card__search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="inventory.search">
+                          <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
+                          <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
+                        </label>
+                      </div>
+                      <details className="filter-details">
+                        <summary>
+                          <iconify-icon noobserver icon="lucide:filter" aria-hidden="true"></iconify-icon>
+                          <span data-en="Filter">Filter</span>
+                        </summary>
+                        <div className="filter-panel">
+                          <fieldset>
+                            <legend>Prioritas</legend>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="High" />
+                              High
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Medium" />
+                              Medium
+                            </label>
+                            <label>
+                              <input type="checkbox" data-filter="priority" value="Low" />
+                              Low
+                            </label>
+                          </fieldset>
+                          <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
+                        </div>
+                      </details>
+                      <button type="button" className="btn-ghost" data-action="table:export">
+                        <iconify-icon noobserver icon="lucide:download" aria-hidden="true"></iconify-icon>
+                        <span data-en="Export">Export</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="table-wrap">
+                    <table className="sop-table">
+                      <thead>
+                        <tr>
+                          <th scope="col" aria-sort="none">
+                            <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
+                            <button type="button" data-action="table:sort" data-column="0">
+                              Field
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="1">
+                              Nilai
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="2">
+                              Visibilitas
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-sort="none">
+                            <button type="button" data-action="table:sort" data-column="3">
+                              Diubah
+                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
+                            </button>
+                          </th>
+                          <th scope="col" aria-label="Aksi"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr data-priority="Low" data-status="">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Nama lengkap
+                            </label>
+                          </td>
+                          <td>Aditya Pratama</td>
+                          <td>Internal</td>
+                          <td>1 Sep 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Email
+                            </label>
+                          </td>
+                          <td>[EMAIL_4b8e1c77]</td>
+                          <td>Internal</td>
+                          <td>1 Sep 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Jabatan
+                            </label>
+                          </td>
+                          <td>Sales Manager</td>
+                          <td>Internal</td>
+                          <td>1 Sep 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Company
+                            </label>
+                          </td>
+                          <td>SOP Indonesia</td>
+                          <td>Internal</td>
+                          <td>1 Sep 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Role
+                            </label>
+                          </td>
+                          <td>Sales Manager</td>
+                          <td>Restricted</td>
+                          <td>1 Sep 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Bahasa
+                            </label>
+                          </td>
+                          <td>Indonesia (ID)</td>
+                          <td>Personal</td>
+                          <td>5 Okt 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Zona waktu
+                            </label>
+                          </td>
+                          <td>Asia/Jakarta (GMT+7)</td>
+                          <td>Personal</td>
+                          <td>5 Okt 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                        <tr data-priority="Low" data-status="">
+                          <td>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
+                              Two-factor auth
+                            </label>
+                          </td>
+                          <td>Aktif (Authenticator)</td>
+                          <td>Restricted</td>
+                          <td>5 Okt 2026</td>
+                          <td>
+                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card-list" role="list" hidden></div>
+                  <footer className="pager">
+                    <span data-part="page-info" aria-live="polite"></span>
+                    <div className="pager__controls">
+                      <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        Baris{' '}
+                        <select data-action="table:size" aria-label="Baris per halaman">
+                          <option value="3">3</option>
+                          <option value="5" selected>5</option>
+                          <option value="10">10</option>
+                        </select>
+                      </label>
+                      <button type="button" className="pg" data-action="table:first" aria-label="Halaman pertama">
+                        <iconify-icon noobserver icon="lucide:chevrons-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:prev" aria-label="Halaman sebelumnya">
+                        <iconify-icon noobserver icon="lucide:chevron-left" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <span data-part="page-pages" style={{ display: "flex", gap: 6 }}></span>
+                      <button type="button" className="pg" data-action="table:next" aria-label="Halaman berikutnya">
+                        <iconify-icon noobserver icon="lucide:chevron-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                      <button type="button" className="pg" data-action="table:last" aria-label="Halaman terakhir">
+                        <iconify-icon noobserver icon="lucide:chevrons-right" aria-hidden="true"></iconify-icon>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+            </div>
+          </section>
+          <button type="button" className="sidebar-backdrop" data-action="kravio:sidebar" aria-label="Tutup navigasi"></button>
+          <div className="toast" role="status" aria-live="polite" hidden></div>
+          <dialog className="dialog" aria-label="Detail">
+            <button type="button" className="dialog-close" data-action="kravio:close" aria-label="Tutup dialog">
+              <iconify-icon noobserver icon="lucide:x" aria-hidden="true"></iconify-icon>
+            </button>
+            <h2 data-detail="title"></h2>
+            <p data-detail="description"></p>
+            <p data-detail="fields"></p>
+            <small>Prototype interaktif · data contoh SOP</small>
+            <footer>
+              <button type="button" className="c-kravio-button" data-component="kravio-button" data-node-id="my-workspace.dialog.done" data-tone="default" data-action="kravio:close" aria-label="Selesai">
+                <iconify-icon noobserver icon="lucide:check" aria-hidden="true"></iconify-icon>
+                <span data-part="label">Selesai</span>
+              </button>
+            </footer>
+          </dialog>
+        </div>
+      </div>
+    </section>
   );
 }
