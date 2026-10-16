@@ -569,9 +569,6 @@ export class GridBridge {
     panel.dataset.domainLocked = "true";
 
     const noAddPanels = [
-      "/sales|order",
-      "/sales|delivery",
-      "/sales|return",
       "/sales|invoice",
       "/sales|payment",
       "/sales|ar",
@@ -763,7 +760,7 @@ export class GridBridge {
       return false;
     if (route === "/projects" && panel === "list") {
       const projectMutation = el.closest<HTMLElement>(
-        '[data-bd-act="add"],select[data-bd-key="status"]',
+        '[data-bd-act="add"],select[data-bd-key="status"],select[data-bd-key="health"]',
       );
       if (projectMutation) return false;
     }
@@ -823,10 +820,17 @@ export class GridBridge {
       this.mounted.get(key(route, panel))?.render();
     }
     if (event.type === "click") {
-      this.message(
-        "Data transaksi ini telah dibukukan secara resmi. Gunakan alur atau formulir transaksi resmi terkait untuk memperbarui.",
-      );
-      void showLockedTransactionModal({ route, panel });
+      const isAction = el.closest('[data-bd-act="delrow"],[data-bd-act="commit"],[data-bd-act="delete"]');
+      if (isAction) {
+        this.message(
+          "Data transaksi ini telah dibukukan secara resmi. Gunakan alur atau formulir transaksi resmi terkait untuk memperbarui.",
+        );
+        void showLockedTransactionModal({ route, panel });
+      } else {
+        this.message(
+          "Data transaksi resmi terkunci demi integritas audit. Gunakan alur atau tombol transaksi resmi di atas.",
+        );
+      }
     }
     return true;
   }

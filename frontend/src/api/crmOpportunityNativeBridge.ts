@@ -173,33 +173,66 @@ export class CrmOpportunityNativeBridge {
         event.preventDefault();
         event.stopImmediatePropagation();
         const value = stage.value.toLowerCase();
-        await api.patch(`/api/v1/operational/crm/opportunities/${id}`, {
-          stage: value,
-        });
-        if (value === "won") {
-          const createProj = await showConfirmModal({
-            title: "Peluang Bisnis Berstatus Won",
-            message:
-              "Peluang bisnis ini berhasil dimenangkan (Won). Apakah Anda ingin langsung membuat Project baru dari peluang ini?",
-            confirmText: "Ya, Buat Project",
-            cancelText: "Nanti Saja",
-          });
-          if (createProj) {
-            const result = await api.post(
-              `/api/v1/operational/crm/opportunities/${id}/project`,
-              {},
-            );
-            this.notice(
-              `Project ${result.data.data.code} berhasil dibuat dari opportunity Won.`,
-            );
-          } else {
-            this.notice("Tahapan peluang bisnis diperbarui menjadi Won.");
-          }
-        } else {
-          this.notice("Tahapan peluang bisnis diperbarui.");
+
+        const cell = stage.closest("td") || stage.parentElement;
+        stage.disabled = true;
+        stage.classList.add("sop-inline-loading");
+
+        let badge = cell?.querySelector<HTMLElement>(".sop-cell-loading-badge, .sop-cell-success-badge");
+        if (!badge && cell) {
+          badge = document.createElement("span");
+          badge.className = "sop-cell-loading-badge";
+          badge.innerHTML = `<span class="sop-spinner-inline" aria-hidden="true"></span> Menyimpan...`;
+          cell.appendChild(badge);
         }
-        await this.refresh();
-        window.dispatchEvent(new Event("sop:domain-updated"));
+
+        document.body.classList.add("sop-api-busy");
+        this.notice("Menyimpan tahapan peluang bisnis...");
+
+        try {
+          await api.patch(`/api/v1/operational/crm/opportunities/${id}`, {
+            stage: value,
+          });
+          if (value === "won") {
+            const createProj = await showConfirmModal({
+              title: "Peluang Bisnis Berstatus Won",
+              message:
+                "Peluang bisnis ini berhasil dimenangkan (Won). Apakah Anda ingin langsung membuat Project baru dari peluang ini?",
+              confirmText: "Ya, Buat Project",
+              cancelText: "Nanti Saja",
+            });
+            if (createProj) {
+              const result = await api.post(
+                `/api/v1/operational/crm/opportunities/${id}/project`,
+                {},
+              );
+              this.notice(
+                `Project ${result.data.data.code} berhasil dibuat dari opportunity Won.`,
+              );
+            } else {
+              this.notice("Tahapan peluang bisnis diperbarui menjadi Won.");
+            }
+          } else {
+            this.notice(`Tahapan peluang bisnis diperbarui ke "${stage.value}".`);
+          }
+          await this.refresh();
+          window.dispatchEvent(new Event("sop:domain-updated"));
+
+          if (badge) {
+            badge.className = "sop-cell-success-badge";
+            badge.innerHTML = `<iconify-icon noobserver icon="lucide:check" aria-hidden="true"></iconify-icon> Tersimpan`;
+            setTimeout(() => badge?.remove(), 2500);
+          }
+        } catch (err: unknown) {
+          badge?.remove();
+          const e = err as { response?: { data?: { message?: string } } };
+          this.notice(e.response?.data?.message || "Gagal memperbarui tahapan peluang bisnis.");
+          await this.refresh();
+        } finally {
+          stage.disabled = false;
+          stage.classList.remove("sop-inline-loading");
+          document.body.classList.remove("sop-api-busy");
+        }
         return;
       }
 

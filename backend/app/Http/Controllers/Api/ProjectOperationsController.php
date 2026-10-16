@@ -71,13 +71,14 @@ class ProjectOperationsController extends Controller
             'name' => ['required', 'string', 'min:2', 'max:255'], 'customer_id' => ['required', 'ulid', Rule::exists('customers', 'id')->where('company_id', $co)],
             'manager_id' => ['nullable', 'ulid', Rule::exists('users', 'id')->where('company_id', $co)], 'started_at' => ['nullable', 'date'],
             'due_at' => ['nullable', 'date', 'after_or_equal:started_at'], 'contract_value' => ['nullable', 'numeric', 'min:0'], 'budget' => ['nullable', 'numeric', 'min:0'],
-            'status' => ['nullable', Rule::in(['planning', 'active', 'at_risk', 'on_hold', 'done'])]]);
+            'status' => ['nullable', Rule::in(['planning', 'active', 'at_risk', 'on_hold', 'done'])],
+            'health' => ['nullable', Rule::in(['on_track', 'at_risk', 'critical'])]]);
 
         return DB::transaction(function () use ($r, $co, $data) {
             $id = (string) Str::ulid();
             $now = now();
             DB::table('projects')->insert(['id' => $id, 'company_id' => $co, 'customer_id' => $data['customer_id'], 'manager_id' => $data['manager_id'] ?? $r->user()->id,
-                'code' => strtoupper($data['code']), 'name' => $data['name'], 'status' => $data['status'] ?? 'planning', 'started_at' => $data['started_at'] ?? null, 'due_at' => $data['due_at'] ?? null,
+                'code' => strtoupper($data['code']), 'name' => $data['name'], 'status' => $data['status'] ?? 'planning', 'health' => $data['health'] ?? 'on_track', 'started_at' => $data['started_at'] ?? null, 'due_at' => $data['due_at'] ?? null,
                 'contract_value' => $data['contract_value'] ?? 0, 'budget' => $data['budget'] ?? 0, 'created_at' => $now, 'updated_at' => $now]);
             AuditService::record($r->user(), 'project.created', 'project', $id, null, ['code' => strtoupper($data['code']), 'name' => $data['name']]);
 
@@ -87,13 +88,17 @@ class ProjectOperationsController extends Controller
 
     public function updateProject(Request $r, string $id)
     {
-        $data = $r->validate(['status' => ['required', Rule::in(['planning', 'active', 'at_risk', 'on_hold', 'done'])]]);
+        $data = $r->validate([
+            'status' => ['sometimes', Rule::in(['planning', 'active', 'at_risk', 'on_hold', 'done'])],
+            'health' => ['sometimes', Rule::in(['on_track', 'at_risk', 'critical'])],
+        ]);
+        abort_if(empty($data), 422, 'Tidak ada data perubahan proyek yang dikirim.');
 
         return DB::transaction(function () use ($r, $id, $data) {
             $project = $this->project($r, $id, true);
             $this->canEdit($r, $project);
             DB::table('projects')->where('id', $id)->update($data + ['updated_at' => now()]);
-            AuditService::record($r->user(), 'project.updated', 'project', $id, ['status' => $project->status], $data);
+            AuditService::record($r->user(), 'project.updated', 'project', $id, ['status' => $project->status, 'health' => $project->health ?? 'on_track'], $data);
 
             return response()->json(['data' => DB::table('projects')->find($id)]);
         });

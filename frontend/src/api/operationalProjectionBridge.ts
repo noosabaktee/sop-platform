@@ -295,6 +295,21 @@ export class OperationalProjectionBridge {
   private async projects() {
     const response = await api.get("/api/v1/operational/projects");
     const data = response.data.data as { projects: Rec[]; tasks: Rec[] };
+    const healthState = (value: unknown) => {
+      const v = String(value || "").toLowerCase().replaceAll(" ", "_");
+      if (v === "at_risk") return "At risk";
+      if (v === "critical") return "Critical";
+      return "On track";
+    };
+    const projectStatus = (value: unknown) => {
+      const v = String(value || "").toLowerCase().replaceAll(" ", "_");
+      if (v === "at_risk") return "At risk";
+      if (v === "on_hold") return "On hold";
+      if (v === "planning") return "Planning";
+      if (v === "active") return "Active";
+      if (v === "done") return "Done";
+      return state(value);
+    };
     numberRows(
       "/projects",
       "list",
@@ -306,8 +321,8 @@ export class OperationalProjectionBridge {
         pm: str(r.manager),
         start: date(r.started_at),
         end: date(r.due_at),
-        status: state(r.status),
-        health: "—",
+        status: projectStatus(r.status),
+        health: healthState(r.health),
       }),
       this.grid,
     );

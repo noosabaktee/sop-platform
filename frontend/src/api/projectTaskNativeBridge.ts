@@ -58,12 +58,47 @@ export class ProjectTaskNativeBridge {
       event.preventDefault();
       event.stopImmediatePropagation();
       const value = status.value.toLowerCase().replaceAll(" ", "_");
-      await api.patch(
-        `/api/v1/operational/project-tasks/${status.dataset.bdId.slice(3)}`,
-        { status: value === "to_do" ? "todo" : value },
-      );
-      await this.refresh();
-      this.notice("Status tugas berhasil diperbarui.");
+      const taskId = status.dataset.bdId.slice(3);
+
+      const cell = status.closest("td") || status.parentElement;
+      status.disabled = true;
+      status.classList.add("sop-inline-loading");
+
+      let badge = cell?.querySelector<HTMLElement>(".sop-cell-loading-badge, .sop-cell-success-badge");
+      if (!badge && cell) {
+        badge = document.createElement("span");
+        badge.className = "sop-cell-loading-badge";
+        badge.innerHTML = `<span class="sop-spinner-inline" aria-hidden="true"></span> Menyimpan...`;
+        cell.appendChild(badge);
+      }
+
+      document.body.classList.add("sop-api-busy");
+      this.notice("Menyimpan status tugas...");
+
+      try {
+        await api.patch(
+          `/api/v1/operational/project-tasks/${taskId}`,
+          { status: value === "to_do" ? "todo" : value },
+        );
+        await this.refresh();
+
+        if (badge) {
+          badge.className = "sop-cell-success-badge";
+          badge.innerHTML = `<iconify-icon noobserver icon="lucide:check" aria-hidden="true"></iconify-icon> Tersimpan`;
+          setTimeout(() => badge?.remove(), 2500);
+        }
+
+        this.notice(`Status tugas berhasil diperbarui ke "${status.value}".`);
+      } catch (err: unknown) {
+        badge?.remove();
+        const e = err as { response?: { data?: { message?: string } } };
+        this.notice(e.response?.data?.message || "Gagal memperbarui status tugas.");
+        await this.refresh();
+      } finally {
+        status.disabled = false;
+        status.classList.remove("sop-inline-loading");
+        document.body.classList.remove("sop-api-busy");
+      }
       return;
     }
     const button = target.closest<HTMLElement>("[data-bd-act]");

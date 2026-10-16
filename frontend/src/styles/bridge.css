@@ -712,8 +712,229 @@
 
 /* 5. In table header, hide empty select checkbox column when all/sel checkboxes are hidden */
 [data-domain-locked="true"] table.bd-table th:first-child:has(input[data-bd-all]),
-[data-domain-locked="true"] table.bd-table td:first-child:has(input[data-bd-sel]) {
+[data-domain-locked="true"] table.bd-table td:first-child:has(input[data-bd-sel]),
+[data-domain-locked="true"] table.qt-table th:first-child:has(input[data-qt-all]),
+[data-domain-locked="true"] table.qt-table td:first-child:has(input[data-qt-sel]) {
   width: 0 !important;
   padding: 0 !important;
   overflow: hidden;
 }
+
+/* 6. Quotation Domain-Locked Table Cells */
+[data-domain-locked="true"] .qt-cell,
+.qt-cell[readonly] {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  cursor: default !important;
+  color: #1e293b !important;
+  padding: 4px 6px !important;
+  user-select: text;
+}
+
+[data-domain-locked="true"] .qt-cell:focus,
+[data-domain-locked="true"] .qt-cell:hover,
+.qt-cell[readonly]:focus,
+.qt-cell[readonly]:hover {
+  background: rgba(241, 245, 249, 0.6) !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-domain-locked="true"] [data-qt-dirty],
+[data-domain-locked="true"] input[data-qt-all],
+[data-domain-locked="true"] input[data-qt-sel] {
+  display: none !important;
+}
+
+/* 7. Inline cell saving / loading indicator for real-time updates */
+.sop-inline-loading {
+  opacity: 0.55;
+  pointer-events: none;
+  cursor: wait !important;
+  background-color: #f1f5f9 !important;
+}
+
+.sop-cell-loading-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #0369a1;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-left: 6px;
+  vertical-align: middle;
+  animation: sopPulse 0.9s infinite alternate;
+}
+
+.sop-spinner-inline {
+  width: 11px;
+  height: 11px;
+  border: 2px solid #38bdf8;
+  border-top-color: #0284c7;
+  border-radius: 50%;
+  animation: sopSpin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes sopSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sopPulse {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+.sop-cell-success-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #15803d;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-left: 6px;
+  vertical-align: middle;
+  animation: sopFadeOut 2.4s forwards;
+}
+
+@keyframes sopFadeOut {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
+/* 8. Quotation Builder Modal & Table Styles */
+.sop-modal-card-xl {
+  max-width: 860px !important;
+  width: 95% !important;
+}
+
+.sop-modal-table-wrap {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 14px 0 8px 0;
+  background: #ffffff;
+}
+
+.sop-modal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.sop-modal-table th {
+  background: #f8fafc;
+  padding: 9px 12px;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.sop-modal-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.sop-modal-table tr:last-child td {
+  border-bottom: none;
+}
+
+.sop-modal-table input,
+.sop-modal-table select {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.sop-modal-table input:focus,
+.sop-modal-table select:focus {
+  border-color: #217346;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33, 115, 70, 0.15);
+}
+
+.sop-modal-summary-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.sop-modal-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #475569;
+}
+
+.sop-modal-summary-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sop-modal-summary-row strong {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.sop-modal-summary-total {
+  border-top: 1px solid #cbd5e1;
+  padding-top: 10px;
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.sop-modal-summary-total strong {
+  font-size: 16px;
+  color: #217346;
+  font-weight: 700;
+}
+
+/* 9. Universal Purge of Prototype Spreadsheet Dummy Buttons on Locked Tables */
+[data-domain-locked="true"] [data-bd-act="delrow"],
+[data-domain-locked="true"] [data-bd-act="commit"],
+[data-domain-locked="true"] [data-bd-act="discard"],
+[data-domain-locked="true"] [data-bd-act="import"],
+[data-domain-locked="true"] [data-bd-act="assign"],
+[data-domain-locked="true"] [data-bd-bulk-owner],
+[data-domain-locked="true"] [data-qt-act="delrow"],
+[data-domain-locked="true"] [data-qt-act="commit"],
+[data-domain-locked="true"] [data-qt-act="discard"],
+[data-domain-locked="true"] [data-qt-act="import"],
+[data-domain-locked="true"] [data-qt-act="assign"],
+[data-domain-locked="true"] [data-qt-bulk-owner],
+[data-domain-locked="true"] input[data-bd-all],
+[data-domain-locked="true"] input[data-bd-sel],
+[data-domain-locked="true"] input[data-qt-all],
+[data-domain-locked="true"] input[data-qt-sel],
+[data-domain-locked="true"] .bd-dirty,
+[data-domain-locked="true"] .qt-dirty {
+  display: none !important;
+}
+

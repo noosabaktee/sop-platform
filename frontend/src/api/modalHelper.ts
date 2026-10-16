@@ -681,3 +681,437 @@ export function showLockedTransactionModal(
     });
   });
 }
+
+export interface QuotationModalItem {
+  description: string;
+  quantity: number;
+  unit_price: number;
+}
+
+export interface QuotationModalOptions {
+  isEdit?: boolean;
+  initialData?: {
+    id?: string;
+    number?: string;
+    customer_id: string;
+    owner_id?: string;
+    contact_name?: string;
+    currency?: string;
+    payment_terms?: string;
+    valid_until?: string;
+    tax_percent?: number;
+    discount_percent?: number;
+    items?: QuotationModalItem[];
+  };
+  options: {
+    customers: Array<{ id: string; name: string }>;
+    owners: Array<{ id: string; name: string }>;
+    products: Array<{ id: string; name: string; code?: string }>;
+  };
+}
+
+export interface QuotationModalResult {
+  submit: boolean;
+  payload: {
+    id: string | null;
+    customer_id: string;
+    owner_id?: string;
+    contact_name: string;
+    currency: string;
+    payment_terms: string;
+    valid_until: string;
+    tax_percent: number;
+    discount_percent: number;
+    items: Array<{
+      description: string;
+      product_id?: string;
+      quantity: number;
+      unit_price: string;
+    }>;
+  };
+}
+
+export function showQuotationModal(
+  opts: QuotationModalOptions,
+): Promise<QuotationModalResult | null> {
+  return new Promise((resolve) => {
+    const isEdit = Boolean(opts.isEdit);
+    const init = opts.initialData;
+
+    const overlay = document.createElement("div");
+    overlay.className = "sop-modal-overlay";
+
+    const card = document.createElement("div");
+    card.className = "sop-modal-card sop-modal-card-xl";
+
+    const titleText = isEdit
+      ? `Edit Draft Penawaran: ${init?.number || "Draft"}`
+      : "Buat Penawaran Harga Baru (Quotation)";
+    const iconName = isEdit ? "lucide:file-edit" : "lucide:file-plus";
+
+    const defaultItems: QuotationModalItem[] =
+      init?.items && init.items.length
+        ? init.items
+        : [
+            {
+              description:
+                opts.options.products[0]?.name || "Lisensi Sistem ERP Terpadu",
+              quantity: 1,
+              unit_price: 15000000,
+            },
+          ];
+
+    const items = defaultItems.map((it) => ({ ...it }));
+
+    const defaultValidUntil = (() => {
+      if (init?.valid_until) return init.valid_until.slice(0, 10);
+      const d = new Date();
+      d.setDate(d.getDate() + 30);
+      return d.toISOString().slice(0, 10);
+    })();
+
+    const header = document.createElement("div");
+    header.className = "sop-modal-header";
+    header.innerHTML = `
+      <h3 class="sop-modal-title">
+        <iconify-icon noobserver icon="${iconName}" style="color:#217346"></iconify-icon>
+        ${escapeHtml(titleText)}
+      </h3>
+      <button type="button" class="sop-modal-close close-btn" aria-label="Tutup">&times;</button>
+    `;
+
+    const body = document.createElement("div");
+    body.className = "sop-modal-body";
+
+    body.innerHTML = `
+      <div class="sop-form-row">
+        <div class="sop-form-group">
+          <label class="sop-form-label">Pelanggan / Klien <span class="sop-form-req">*</span></label>
+          <select id="qt-modal-cust" class="sop-form-select">
+            <option value="">Pilih Pelanggan...</option>
+            ${opts.options.customers
+              .map(
+                (c) =>
+                  `<option value="${escapeHtml(c.id)}" ${init?.customer_id === c.id ? "selected" : ""}>${escapeHtml(c.name)}</option>`,
+              )
+              .join("")}
+          </select>
+        </div>
+        <div class="sop-form-group">
+          <label class="sop-form-label">Sales PIC / Owner</label>
+          <select id="qt-modal-owner" class="sop-form-select">
+            <option value="">Pilih PIC...</option>
+            ${opts.options.owners
+              .map(
+                (o) =>
+                  `<option value="${escapeHtml(o.id)}" ${init?.owner_id === o.id ? "selected" : ""}>${escapeHtml(o.name)}</option>`,
+              )
+              .join("")}
+          </select>
+        </div>
+      </div>
+
+      <div class="sop-form-row">
+        <div class="sop-form-group">
+          <label class="sop-form-label">Nama Kontak Pelanggan</label>
+          <input type="text" id="qt-modal-contact" class="sop-form-input" placeholder="Contoh: Bpk. Andi Wijaya" value="${escapeHtml(init?.contact_name || "")}">
+        </div>
+        <div class="sop-form-group">
+          <label class="sop-form-label">Mata Uang</label>
+          <select id="qt-modal-currency" class="sop-form-select">
+            <option value="IDR" ${init?.currency === "IDR" || !init?.currency ? "selected" : ""}>IDR (Rupiah)</option>
+            <option value="USD" ${init?.currency === "USD" ? "selected" : ""}>USD (US Dollar)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sop-form-row">
+        <div class="sop-form-group">
+          <label class="sop-form-label">Syarat Pembayaran</label>
+          <select id="qt-modal-terms" class="sop-form-select">
+            ${["NET 30", "NET 45", "50% DP / 50% finish", "Cash on Delivery"]
+              .map(
+                (t) =>
+                  `<option value="${escapeHtml(t)}" ${init?.payment_terms === t ? "selected" : ""}>${escapeHtml(t)}</option>`,
+              )
+              .join("")}
+          </select>
+        </div>
+        <div class="sop-form-group">
+          <label class="sop-form-label">Masa Berlaku Penawaran <span class="sop-form-req">*</span></label>
+          <input type="date" id="qt-modal-valid" class="sop-form-input" value="${escapeHtml(defaultValidUntil)}">
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <label class="sop-form-label" style="font-size:13.5px;font-weight:600">Daftar Produk / Jasa Penawaran <span class="sop-form-req">*</span></label>
+          <button type="button" class="sop-btn sop-btn-secondary" id="btn-add-line" style="min-height:30px;padding:3px 12px;font-size:12px;color:#185c37;background:#f0fdf4;border-color:#bbf7d0">
+            <iconify-icon noobserver icon="lucide:plus"></iconify-icon> Tambah Item
+          </button>
+        </div>
+
+        <div class="sop-modal-table-wrap">
+          <table class="sop-modal-table">
+            <thead>
+              <tr>
+                <th style="width:38%">Deskripsi Produk / Jasa</th>
+                <th style="width:16%">Kuantitas</th>
+                <th style="width:24%">Harga Satuan (Rp)</th>
+                <th style="width:16%">Subtotal</th>
+                <th style="width:6%"></th>
+              </tr>
+            </thead>
+            <tbody id="sop-modal-lines-body">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sop-modal-summary-box">
+          <div class="sop-modal-summary-row">
+            <span>Subtotal Produk &amp; Jasa</span>
+            <strong id="qt-sum-subtotal">Rp 0</strong>
+          </div>
+          <div class="sop-modal-summary-row">
+            <span>Diskon <input type="number" min="0" max="100" id="qt-modal-discount" value="${init?.discount_percent ?? 5}" style="width:58px;min-height:28px;padding:2px 6px;text-align:center;margin:0 4px;font-size:12px;border:1px solid #cbd5e1;border-radius:4px">%</span>
+            <strong id="qt-sum-discount">-Rp 0</strong>
+          </div>
+          <div class="sop-modal-summary-row">
+            <span>Pajak (PPN) <input type="number" min="0" max="100" id="qt-modal-tax" value="${init?.tax_percent ?? 11}" style="width:58px;min-height:28px;padding:2px 6px;text-align:center;margin:0 4px;font-size:12px;border:1px solid #cbd5e1;border-radius:4px">%</span>
+            <strong id="qt-sum-tax">+Rp 0</strong>
+          </div>
+          <div class="sop-modal-summary-row sop-modal-summary-total">
+            <span>Grand Total Penawaran</span>
+            <strong id="qt-sum-total">Rp 0</strong>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const footer = document.createElement("div");
+    footer.className = "sop-modal-footer";
+    footer.innerHTML = `
+      <button type="button" class="sop-btn sop-btn-secondary cancel-btn">Batal</button>
+      <button type="button" class="sop-btn sop-btn-secondary draft-btn">
+        <iconify-icon noobserver icon="lucide:save"></iconify-icon> Simpan sebagai Draft
+      </button>
+      <button type="button" class="sop-btn sop-btn-primary submit-btn">
+        <iconify-icon noobserver icon="lucide:stamp"></iconify-icon> ${isEdit ? "Simpan &amp; Ajukan" : "Buat &amp; Ajukan"}
+      </button>
+    `;
+
+    card.append(header, body, footer);
+    overlay.append(card);
+    document.body.append(overlay);
+
+    const tbody = body.querySelector<HTMLTableSectionElement>("#sop-modal-lines-body")!;
+    const discountInput = body.querySelector<HTMLInputElement>("#qt-modal-discount")!;
+    const taxInput = body.querySelector<HTMLInputElement>("#qt-modal-tax")!;
+
+    const formatMoney = (n: number) =>
+      "Rp " + new Intl.NumberFormat("id-ID").format(Math.round(n));
+
+    const recalc = () => {
+      let subtotal = 0;
+      tbody.querySelectorAll<HTMLTableRowElement>("tr").forEach((tr, i) => {
+        const qty = Math.max(1, Number(tr.querySelector<HTMLInputElement>(".line-qty")?.value || 1));
+        const price = Math.max(0, Number(tr.querySelector<HTMLInputElement>(".line-price")?.value || 0));
+        const lineTotal = qty * price;
+        subtotal += lineTotal;
+        const subCell = tr.querySelector<HTMLElement>(".line-subtotal");
+        if (subCell) subCell.textContent = formatMoney(lineTotal);
+        if (items[i]) {
+          items[i].quantity = qty;
+          items[i].unit_price = price;
+        }
+      });
+
+      const discPct = Math.min(100, Math.max(0, Number(discountInput.value || 0)));
+      const taxPct = Math.min(100, Math.max(0, Number(taxInput.value || 0)));
+      const discVal = subtotal * (discPct / 100);
+      const taxVal = (subtotal - discVal) * (taxPct / 100);
+      const grandTotal = subtotal - discVal + taxVal;
+
+      body.querySelector("#qt-sum-subtotal")!.textContent = formatMoney(subtotal);
+      body.querySelector("#qt-sum-discount")!.textContent = "-" + formatMoney(discVal);
+      body.querySelector("#qt-sum-tax")!.textContent = "+" + formatMoney(taxVal);
+      body.querySelector("#qt-sum-total")!.textContent = formatMoney(grandTotal);
+    };
+
+    const renderLines = () => {
+      tbody.innerHTML = items
+        .map(
+          (item, idx) => `
+        <tr data-line-idx="${idx}">
+          <td>
+            <input type="text" class="line-desc" list="qt-prod-datalist" value="${escapeHtml(item.description)}" placeholder="Pilih produk atau ketik..." style="width:100%">
+          </td>
+          <td>
+            <input type="number" min="1" value="${item.quantity}" class="line-qty" style="width:100%">
+          </td>
+          <td>
+            <input type="number" min="0" step="1000" value="${item.unit_price}" class="line-price" style="width:100%">
+          </td>
+          <td class="line-subtotal" style="font-weight:600;white-space:nowrap">
+            ${formatMoney(item.quantity * item.unit_price)}
+          </td>
+          <td style="text-align:center">
+            <button type="button" class="btn-del-line" style="background:transparent;border:none;color:#ef4444;cursor:pointer;padding:4px" title="Hapus baris">
+              <iconify-icon noobserver icon="lucide:trash-2"></iconify-icon>
+            </button>
+          </td>
+        </tr>
+      `,
+        )
+        .join("");
+
+      if (!body.querySelector("#qt-prod-datalist")) {
+        const dl = document.createElement("datalist");
+        dl.id = "qt-prod-datalist";
+        dl.innerHTML = opts.options.products
+          .map((p) => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.code || "")}</option>`)
+          .join("");
+        body.appendChild(dl);
+      }
+
+      recalc();
+    };
+
+    renderLines();
+
+    body.querySelector("#btn-add-line")?.addEventListener("click", () => {
+      items.push({
+        description: opts.options.products[0]?.name || "Item Penawaran",
+        quantity: 1,
+        unit_price: 10000000,
+      });
+      renderLines();
+    });
+
+    tbody.addEventListener("click", (e) => {
+      const del = (e.target as HTMLElement).closest(".btn-del-line");
+      if (!del) return;
+      const tr = del.closest<HTMLTableRowElement>("tr");
+      if (!tr) return;
+      const idx = Number(tr.dataset.lineIdx);
+      if (items.length <= 1) {
+        window.alert("Quotation harus memiliki minimal 1 item.");
+        return;
+      }
+      items.splice(idx, 1);
+      renderLines();
+    });
+
+    tbody.addEventListener("input", (e) => {
+      const target = e.target as HTMLInputElement;
+      const tr = target.closest<HTMLTableRowElement>("tr");
+      if (!tr) return;
+      const idx = Number(tr.dataset.lineIdx);
+      if (target.classList.contains("line-desc") && items[idx]) {
+        items[idx].description = target.value;
+      }
+      recalc();
+    });
+
+    discountInput.addEventListener("input", recalc);
+    taxInput.addEventListener("input", recalc);
+
+    const close = (res: QuotationModalResult | null) => {
+      overlay.remove();
+      document.removeEventListener("keydown", onEsc);
+      resolve(res);
+    };
+
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close(null);
+    };
+    document.addEventListener("keydown", onEsc);
+
+    header.querySelector(".close-btn")?.addEventListener("click", () => close(null));
+    footer.querySelector(".cancel-btn")?.addEventListener("click", () => close(null));
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) close(null);
+    });
+
+    const getPayload = (isSubmit: boolean): QuotationModalResult | null => {
+      const custSelect = body.querySelector<HTMLSelectElement>("#qt-modal-cust")!;
+      const custId = custSelect.value.trim();
+      if (!custId) {
+        custSelect.focus();
+        custSelect.style.borderColor = "#ef4444";
+        window.alert("Silakan pilih Pelanggan terlebih dahulu.");
+        return null;
+      }
+
+      const validUntil = body.querySelector<HTMLInputElement>("#qt-modal-valid")!.value.trim();
+      if (!validUntil) {
+        window.alert("Masa berlaku penawaran wajib diisi.");
+        return null;
+      }
+
+      const lines: Array<{
+        description: string;
+        product_id?: string;
+        quantity: number;
+        unit_price: string;
+      }> = [];
+
+      tbody.querySelectorAll<HTMLTableRowElement>("tr").forEach((tr) => {
+        const desc = tr.querySelector<HTMLInputElement>(".line-desc")?.value.trim() || "";
+        const qty = Number(tr.querySelector<HTMLInputElement>(".line-qty")?.value || 1);
+        const price = Number(tr.querySelector<HTMLInputElement>(".line-price")?.value || 0);
+
+        if (desc && qty > 0) {
+          const matchedProd = opts.options.products.find(
+            (p) => p.name.toLowerCase() === desc.toLowerCase(),
+          );
+          lines.push({
+            description: desc,
+            product_id: matchedProd?.id,
+            quantity: qty,
+            unit_price: price.toFixed(2),
+          });
+        }
+      });
+
+      if (!lines.length) {
+        window.alert("Tambahkan minimal satu item produk/jasa yang valid.");
+        return null;
+      }
+
+      const ownerId = body.querySelector<HTMLSelectElement>("#qt-modal-owner")!.value.trim() || undefined;
+      const contactName = body.querySelector<HTMLInputElement>("#qt-modal-contact")!.value.trim();
+      const currency = body.querySelector<HTMLSelectElement>("#qt-modal-currency")!.value.trim() || "IDR";
+      const terms = body.querySelector<HTMLSelectElement>("#qt-modal-terms")!.value.trim() || "NET 30";
+      const tax = Number(taxInput.value || 0);
+      const discount = Number(discountInput.value || 0);
+
+      return {
+        submit: isSubmit,
+        payload: {
+          id: init?.id || null,
+          customer_id: custId,
+          owner_id: ownerId,
+          contact_name: contactName,
+          currency,
+          payment_terms: terms,
+          valid_until: validUntil,
+          tax_percent: tax,
+          discount_percent: discount,
+          items: lines,
+        },
+      };
+    };
+
+    footer.querySelector(".draft-btn")?.addEventListener("click", () => {
+      const data = getPayload(false);
+      if (data) close(data);
+    });
+
+    footer.querySelector(".submit-btn")?.addEventListener("click", () => {
+      const data = getPayload(true);
+      if (data) close(data);
+    });
+  });
+}
+

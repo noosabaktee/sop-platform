@@ -41,22 +41,61 @@ export class ProjectNativeBridge {
       return;
     const panel = target.closest<HTMLElement>('[data-bd-panel="list"]');
     if (!panel) return;
-    const status = target.closest<HTMLSelectElement>(
-      'select[data-bd-key="status"][data-bd-id]',
+    const select = target.closest<HTMLSelectElement>(
+      'select[data-bd-key="status"][data-bd-id],select[data-bd-key="health"][data-bd-id]',
     );
     if (
-      status &&
+      select &&
       event.type === "change" &&
-      status.dataset.bdId?.startsWith("db-")
+      select.dataset.bdId?.startsWith("db-")
     ) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      await api.patch(
-        `/api/v1/operational/projects/${status.dataset.bdId.slice(3)}`,
-        { status: status.value.toLowerCase().replaceAll(" ", "_") },
-      );
-      await this.refresh();
-      this.notice("Status proyek berhasil diperbarui.");
+      const key = select.dataset.bdKey as "status" | "health";
+      const projectId = select.dataset.bdId.slice(3);
+      const fieldLabel = key === "status" ? "Status" : "Health";
+      const normalizedValue = select.value.toLowerCase().replaceAll(" ", "_");
+
+      const cell = select.closest("td") || select.parentElement;
+      select.disabled = true;
+      select.classList.add("sop-inline-loading");
+
+      let badge = cell?.querySelector<HTMLElement>(".sop-cell-loading-badge, .sop-cell-success-badge");
+      if (!badge && cell) {
+        badge = document.createElement("span");
+        badge.className = "sop-cell-loading-badge";
+        badge.innerHTML = `<span class="sop-spinner-inline" aria-hidden="true"></span> Menyimpan...`;
+        cell.appendChild(badge);
+      }
+
+      document.body.classList.add("sop-api-busy");
+      this.notice(`Menyimpan perubahan ${fieldLabel.toLowerCase()} proyek...`);
+
+      try {
+        await api.patch(`/api/v1/operational/projects/${projectId}`, {
+          [key]: normalizedValue,
+        });
+        await this.refresh();
+
+        if (badge) {
+          badge.className = "sop-cell-success-badge";
+          badge.innerHTML = `<iconify-icon noobserver icon="lucide:check" aria-hidden="true"></iconify-icon> Tersimpan`;
+          setTimeout(() => badge?.remove(), 2500);
+        }
+
+        this.notice(`${fieldLabel} proyek berhasil diperbarui ke "${select.value}".`);
+      } catch (err: unknown) {
+        badge?.remove();
+        const e = err as { response?: { data?: { message?: string } } };
+        this.notice(
+          e.response?.data?.message || `Gagal memperbarui ${fieldLabel.toLowerCase()} proyek.`,
+        );
+        await this.refresh();
+      } finally {
+        select.disabled = false;
+        select.classList.remove("sop-inline-loading");
+        document.body.classList.remove("sop-api-busy");
+      }
       return;
     }
     const button = target.closest<HTMLElement>('[data-bd-act="add"]');
