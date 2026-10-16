@@ -1,4 +1,5 @@
 import React from "react";
+import { QuotationTabsNav, QuotationPanels } from "./tabs";
 
 export interface PageProps {
   hidden?: boolean;
@@ -265,87 +266,8 @@ export function QuotationPage({ hidden }: PageProps) {
                 <strong data-part="dash-fresh-time">09:42</strong>
               </span>
             </div>
-            <div className="ws-tabs" role="tablist" aria-label="Modul Quotation">
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-list" aria-controls="dash-panel-list" aria-selected="true" tabIndex={0} data-action="dash:tab" data-panel="list">
-                <iconify-icon noobserver icon="lucide:file-text" aria-hidden="true"></iconify-icon>
-                <span>Quotation List</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-create" aria-controls="dash-panel-create" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="create">
-                <iconify-icon noobserver icon="lucide:file-plus" aria-hidden="true"></iconify-icon>
-                <span>Create Quotation</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-draft" aria-controls="dash-panel-draft" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="draft">
-                <iconify-icon noobserver icon="lucide:file-pen" aria-hidden="true"></iconify-icon>
-                <span>Draft</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-pending" aria-controls="dash-panel-pending" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="pending">
-                <iconify-icon noobserver icon="lucide:clock" aria-hidden="true"></iconify-icon>
-                <span>Pending Approval</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-sent" aria-controls="dash-panel-sent" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="sent">
-                <iconify-icon noobserver icon="lucide:send" aria-hidden="true"></iconify-icon>
-                <span>Sent</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-negotiation" aria-controls="dash-panel-negotiation" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="negotiation">
-                <iconify-icon noobserver icon="lucide:messages-square" aria-hidden="true"></iconify-icon>
-                <span>Negotiation</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-approved" aria-controls="dash-panel-approved" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="approved">
-                <iconify-icon noobserver icon="lucide:badge-check" aria-hidden="true"></iconify-icon>
-                <span>Approved</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-rejected" aria-controls="dash-panel-rejected" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="rejected">
-                <iconify-icon noobserver icon="lucide:x-circle" aria-hidden="true"></iconify-icon>
-                <span>Rejected</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-expired" aria-controls="dash-panel-expired" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="expired">
-                <iconify-icon noobserver icon="lucide:calendar-x" aria-hidden="true"></iconify-icon>
-                <span>Expired</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-revision" aria-controls="dash-panel-revision" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="revision">
-                <iconify-icon noobserver icon="lucide:history" aria-hidden="true"></iconify-icon>
-                <span>Revision History</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-templates" aria-controls="dash-panel-templates" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="templates">
-                <iconify-icon noobserver icon="lucide:layout-template" aria-hidden="true"></iconify-icon>
-                <span>Quotation Templates</span>
-              </button>
-            </div>
-            <div className="dash-panels">
-              <div className="dash-panel" id="dash-panel-list" role="tabpanel" aria-labelledby="ws-tab-list" data-panel="list" data-title="Quotation List" data-title-en="Quotation List">
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-create" role="tabpanel" aria-labelledby="ws-tab-create" data-panel="create" data-title="Create Quotation" data-title-en="Create Quotation" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-draft" role="tabpanel" aria-labelledby="ws-tab-draft" data-panel="draft" data-title="Draft" data-title-en="Draft" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-pending" role="tabpanel" aria-labelledby="ws-tab-pending" data-panel="pending" data-title="Pending Approval" data-title-en="Pending Approval" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-sent" role="tabpanel" aria-labelledby="ws-tab-sent" data-panel="sent" data-title="Sent" data-title-en="Sent" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-negotiation" role="tabpanel" aria-labelledby="ws-tab-negotiation" data-panel="negotiation" data-title="Negotiation" data-title-en="Negotiation" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-approved" role="tabpanel" aria-labelledby="ws-tab-approved" data-panel="approved" data-title="Approved" data-title-en="Approved" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-rejected" role="tabpanel" aria-labelledby="ws-tab-rejected" data-panel="rejected" data-title="Rejected" data-title-en="Rejected" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-expired" role="tabpanel" aria-labelledby="ws-tab-expired" data-panel="expired" data-title="Expired" data-title-en="Expired" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-revision" role="tabpanel" aria-labelledby="ws-tab-revision" data-panel="revision" data-title="Revision History" data-title-en="Revision History" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-templates" role="tabpanel" aria-labelledby="ws-tab-templates" data-panel="templates" data-title="Quotation Templates" data-title-en="Quotation Templates" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-            </div>
+            <QuotationTabsNav />
+            <QuotationPanels />
           </section>
           <button type="button" className="sidebar-backdrop" data-action="kravio:sidebar" aria-label="Tutup navigasi"></button>
           <div className="toast" role="status" aria-live="polite" hidden></div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { DashboardTabsNav, DashboardPanels } from "./tabs";
 
 export interface PageProps {
   hidden?: boolean;
@@ -242,59 +243,8 @@ export function DashboardPage({ hidden }: PageProps) {
                 <strong data-part="dash-fresh-time">09:42</strong>
               </span>
             </div>
-            <div className="ws-tabs" role="tablist" aria-label="Jenis dashboard">
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-executive" aria-controls="dash-panel-executive" aria-selected="true" tabIndex={0} data-action="dash:tab" data-panel="executive">
-                <iconify-icon noobserver icon="lucide:gauge" aria-hidden="true"></iconify-icon>
-                <span>Executive</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-sales" aria-controls="dash-panel-sales" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="sales">
-                <iconify-icon noobserver icon="lucide:shopping-cart" aria-hidden="true"></iconify-icon>
-                <span>Sales</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-finance" aria-controls="dash-panel-finance" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="finance">
-                <iconify-icon noobserver icon="lucide:landmark" aria-hidden="true"></iconify-icon>
-                <span>Finance</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-project" aria-controls="dash-panel-project" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="project">
-                <iconify-icon noobserver icon="lucide:folder-kanban" aria-hidden="true"></iconify-icon>
-                <span>Project</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-procurement" aria-controls="dash-panel-procurement" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="procurement">
-                <iconify-icon noobserver icon="lucide:package-search" aria-hidden="true"></iconify-icon>
-                <span>Procurement</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-inventory" aria-controls="dash-panel-inventory" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="inventory">
-                <iconify-icon noobserver icon="lucide:boxes" aria-hidden="true"></iconify-icon>
-                <span>Inventory</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-my" aria-controls="dash-panel-my" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="my">
-                <iconify-icon noobserver icon="lucide:user" aria-hidden="true"></iconify-icon>
-                <span>My Dashboard</span>
-              </button>
-            </div>
-            <div className="dash-panels">
-              <div className="dash-panel" id="dash-panel-executive" role="tabpanel" aria-labelledby="ws-tab-executive" data-panel="executive" data-title="Executive Dashboard" data-title-en="Executive Dashboard">
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-sales" role="tabpanel" aria-labelledby="ws-tab-sales" data-panel="sales" data-title="Sales Dashboard" data-title-en="Sales Dashboard" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-finance" role="tabpanel" aria-labelledby="ws-tab-finance" data-panel="finance" data-title="Finance Dashboard" data-title-en="Finance Dashboard" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-project" role="tabpanel" aria-labelledby="ws-tab-project" data-panel="project" data-title="Project Dashboard" data-title-en="Project Dashboard" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-procurement" role="tabpanel" aria-labelledby="ws-tab-procurement" data-panel="procurement" data-title="Procurement Dashboard" data-title-en="Procurement Dashboard" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-inventory" role="tabpanel" aria-labelledby="ws-tab-inventory" data-panel="inventory" data-title="Inventory Dashboard" data-title-en="Inventory Dashboard" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-my" role="tabpanel" aria-labelledby="ws-tab-my" data-panel="my" data-title="My Dashboard" data-title-en="My Dashboard" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-            </div>
+            <DashboardTabsNav />
+            <DashboardPanels />
           </section>
           <button type="button" className="sidebar-backdrop" data-action="kravio:sidebar" aria-label="Tutup navigasi"></button>
           <div className="toast" role="status" aria-live="polite" hidden></div>

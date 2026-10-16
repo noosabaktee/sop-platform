@@ -1,4 +1,5 @@
 import React from "react";
+import { BdTabsNav, BdPanels } from "./tabs/bd";
 
 export interface PageProps {
   hidden?: boolean;
@@ -262,80 +263,8 @@ export function BusinessDevelopmentPage({ hidden }: PageProps) {
                 <strong data-part="dash-fresh-time">09:42</strong>
               </span>
             </div>
-            <div className="ws-tabs" role="tablist" aria-label="Modul Business Development">
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-opportunities" aria-controls="dash-panel-opportunities" aria-selected="true" tabIndex={0} data-action="dash:tab" data-panel="opportunities">
-                <iconify-icon noobserver icon="lucide:target" aria-hidden="true"></iconify-icon>
-                <span>Business Opportunities</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-market" aria-controls="dash-panel-market" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="market">
-                <iconify-icon noobserver icon="lucide:radar" aria-hidden="true"></iconify-icon>
-                <span>Market Intelligence</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-targets" aria-controls="dash-panel-targets" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="targets">
-                <iconify-icon noobserver icon="lucide:building-2" aria-hidden="true"></iconify-icon>
-                <span>Target Accounts</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-mapping" aria-controls="dash-panel-mapping" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="mapping">
-                <iconify-icon noobserver icon="lucide:map" aria-hidden="true"></iconify-icon>
-                <span>Prospect Mapping</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-partnership" aria-controls="dash-panel-partnership" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="partnership">
-                <iconify-icon noobserver icon="lucide:handshake" aria-hidden="true"></iconify-icon>
-                <span>Partnership</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-tender" aria-controls="dash-panel-tender" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="tender">
-                <iconify-icon noobserver icon="lucide:gavel" aria-hidden="true"></iconify-icon>
-                <span>Tender & Bidding</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-pipeline" aria-controls="dash-panel-pipeline" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="pipeline">
-                <iconify-icon noobserver icon="lucide:git-branch" aria-hidden="true"></iconify-icon>
-                <span>Opportunity Pipeline</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-competitors" aria-controls="dash-panel-competitors" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="competitors">
-                <iconify-icon noobserver icon="lucide:swords" aria-hidden="true"></iconify-icon>
-                <span>Competitor Analysis</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-proposal" aria-controls="dash-panel-proposal" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="proposal">
-                <iconify-icon noobserver icon="lucide:file-text" aria-hidden="true"></iconify-icon>
-                <span>Business Proposal</span>
-              </button>
-              <button type="button" className="ws-tab" role="tab" id="ws-tab-reports" aria-controls="dash-panel-reports" aria-selected="false" tabIndex={-1} data-action="dash:tab" data-panel="reports">
-                <iconify-icon noobserver icon="lucide:bar-chart-3" aria-hidden="true"></iconify-icon>
-                <span>BD Reports</span>
-              </button>
-            </div>
-            <div className="dash-panels">
-              <div className="dash-panel" id="dash-panel-opportunities" role="tabpanel" aria-labelledby="ws-tab-opportunities" data-panel="opportunities" data-title="Business Opportunities" data-title-en="Business Opportunities">
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-market" role="tabpanel" aria-labelledby="ws-tab-market" data-panel="market" data-title="Market Intelligence" data-title-en="Market Intelligence" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-targets" role="tabpanel" aria-labelledby="ws-tab-targets" data-panel="targets" data-title="Target Accounts" data-title-en="Target Accounts" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-mapping" role="tabpanel" aria-labelledby="ws-tab-mapping" data-panel="mapping" data-title="Prospect Mapping" data-title-en="Prospect Mapping" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-partnership" role="tabpanel" aria-labelledby="ws-tab-partnership" data-panel="partnership" data-title="Partnership" data-title-en="Partnership" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-tender" role="tabpanel" aria-labelledby="ws-tab-tender" data-panel="tender" data-title="Tender & Bidding" data-title-en="Tender & Bidding" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-pipeline" role="tabpanel" aria-labelledby="ws-tab-pipeline" data-panel="pipeline" data-title="Opportunity Pipeline" data-title-en="Opportunity Pipeline" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-competitors" role="tabpanel" aria-labelledby="ws-tab-competitors" data-panel="competitors" data-title="Competitor Analysis" data-title-en="Competitor Analysis" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-proposal" role="tabpanel" aria-labelledby="ws-tab-proposal" data-panel="proposal" data-title="Business Proposal" data-title-en="Business Proposal" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-              <div className="dash-panel" id="dash-panel-reports" role="tabpanel" aria-labelledby="ws-tab-reports" data-panel="reports" data-title="Business Development Reports" data-title-en="Business Development Reports" hidden>
-                <div className="dash-panel__body"></div>
-              </div>
-            </div>
+            <BdTabsNav />
+            <BdPanels />
           </section>
           <button type="button" className="sidebar-backdrop" data-action="kravio:sidebar" aria-label="Tutup navigasi"></button>
           <div className="toast" role="status" aria-live="polite" hidden></div>
