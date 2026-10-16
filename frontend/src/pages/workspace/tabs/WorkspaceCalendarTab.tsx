@@ -22,14 +22,14 @@ export function WorkspaceCalendarTab() {
                 <div className="kpi-row">
                   <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Events this week">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Events this week">Event minggu ini</span>
+                      <span className="kpi__title" data-en="Events this week">Agenda hari ini</span>
                       <iconify-icon noobserver icon="lucide:calendar-days" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">11</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="3 today">3 hari ini</small>
+                          <small data-en="today">agenda hari ini</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -41,14 +41,14 @@ export function WorkspaceCalendarTab() {
                   </button>
                   <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Meetings">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Meetings">Meeting</span>
+                      <span className="kpi__title" data-en="Meetings">Agenda mendatang</span>
                       <iconify-icon noobserver icon="lucide:users" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">6</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="2 external">2 eksternal</small>
+                          <small data-en="upcoming">terjadwal di database</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -58,16 +58,16 @@ export function WorkspaceCalendarTab() {
                       </svg>
                     </span>
                   </button>
-                  <button type="button" className="kpi" data-tone="red" data-action="sop:drill" data-kind="Deadlines">
+                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Total agenda">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Deadlines">Deadline</span>
-                      <iconify-icon noobserver icon="lucide:alarm-clock" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="Total agenda">Total agenda</span>
+                      <iconify-icon noobserver icon="lucide:calendar-check" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">4</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="1 urgent">1 mendesak</small>
+                          <small data-en="all records">seluruh agenda</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -82,7 +82,7 @@ export function WorkspaceCalendarTab() {
                   <div className="card__head">
                     <h2>
                       <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
-                      <span data-en="My Calendar">Kalender Saya</span>
+                      <span>My Calendar</span>
                     </h2>
                     <div className="card__tools">
                       <div className="card__view" role="group" aria-label="Pilih tampilan data">
@@ -96,7 +96,7 @@ export function WorkspaceCalendarTab() {
                         </button>
                       </div>
                       <div className="card__search">
-                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="quotation.search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="my-calendar.search">
                           <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
                           <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
                         </label>
@@ -108,18 +108,18 @@ export function WorkspaceCalendarTab() {
                         </summary>
                         <div className="filter-panel">
                           <fieldset>
-                            <legend>Prioritas</legend>
+                            <legend>Tipe</legend>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="High" />
-                              High
+                              <input type="checkbox" data-filter="type" value="Meeting" />
+                              Meeting
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Medium" />
-                              Medium
+                              <input type="checkbox" data-filter="type" value="Deadline" />
+                              Deadline
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Low" />
-                              Low
+                              <input type="checkbox" data-filter="type" value="Review" />
+                              Review
                             </label>
                           </fieldset>
                           <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
@@ -144,30 +144,24 @@ export function WorkspaceCalendarTab() {
                           </th>
                           <th scope="col" aria-sort="none">
                             <button type="button" data-action="table:sort" data-column="1">
-                              Tanggal
+                              Tipe
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
                           </th>
                           <th scope="col" aria-sort="none">
                             <button type="button" data-action="table:sort" data-column="2">
-                              Waktu
+                              Konteks / Lokasi
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
                           </th>
                           <th scope="col" aria-sort="none">
                             <button type="button" data-action="table:sort" data-column="3">
-                              Peserta
+                              Waktu
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
                           </th>
                           <th scope="col" aria-sort="none">
                             <button type="button" data-action="table:sort" data-column="4">
-                              Lokasi
-                              <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
-                            </button>
-                          </th>
-                          <th scope="col" aria-sort="none">
-                            <button type="button" data-action="table:sort" data-column="5">
                               Status
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
@@ -176,145 +170,18 @@ export function WorkspaceCalendarTab() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr data-priority="Low" data-status="Confirmed">
+                        <tr data-priority="Low" data-status="Scheduled" data-template-row="true">
                           <td>
                             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
                               <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Kickoff PRJ-042
+                              Memuat agenda...
                             </label>
                           </td>
-                          <td>5 Okt 2026</td>
-                          <td>14:00-15:00</td>
-                          <td>8 orang</td>
-                          <td>Meeting Room A</td>
+                          <td>—</td>
+                          <td>—</td>
+                          <td>—</td>
                           <td>
-                            <span className="chip done">Confirmed</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Pending">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Review quotation Q-2026-014
-                            </label>
-                          </td>
-                          <td>5 Okt 2026</td>
-                          <td>16:30-17:00</td>
-                          <td>3 orang</td>
-                          <td>Online</td>
-                          <td>
-                            <span className="chip pending">Pending</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Confirmed">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Vendor meeting PT Alpha
-                            </label>
-                          </td>
-                          <td>6 Okt 2026</td>
-                          <td>09:00-10:00</td>
-                          <td>5 orang</td>
-                          <td>Zoom</td>
-                          <td>
-                            <span className="chip done">Confirmed</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Confirmed">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Board meeting
-                            </label>
-                          </td>
-                          <td>7 Okt 2026</td>
-                          <td>10:00-12:00</td>
-                          <td>12 orang</td>
-                          <td>Board Room</td>
-                          <td>
-                            <span className="chip done">Confirmed</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="High" data-status="Deadline">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Deadline submit PR-331
-                            </label>
-                          </td>
-                          <td>7 Okt 2026</td>
-                          <td>17:00</td>
-                          <td>Tim Procurement</td>
-                          <td>Sistem</td>
-                          <td>
-                            <span className="chip risk">Deadline</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Tentative">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Presentasi proposal BD-021
-                            </label>
-                          </td>
-                          <td>9 Okt 2026</td>
-                          <td>13:00-14:30</td>
-                          <td>6 orang</td>
-                          <td>Meeting Room B</td>
-                          <td>
-                            <span className="chip info">Tentative</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Confirmed">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              RUPS persiapan
-                            </label>
-                          </td>
-                          <td>11 Okt 2026</td>
-                          <td>09:00-11:00</td>
-                          <td>15 orang</td>
-                          <td>Auditorium</td>
-                          <td>
-                            <span className="chip done">Confirmed</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Tentative">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Review profitability PRJ-041
-                            </label>
-                          </td>
-                          <td>12 Okt 2026</td>
-                          <td>15:00-16:00</td>
-                          <td>4 orang</td>
-                          <td>Online</td>
-                          <td>
-                            <span className="chip info">Tentative</span>
+                            <span className="chip progress">Scheduled</span>
                           </td>
                           <td>
                             <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>

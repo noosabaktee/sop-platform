@@ -46,9 +46,9 @@ export function useAppRouting(
     }
 
     const handleWorkspaceRoute = () => {
-      if (!userRef.current) return;
+      if (!userRef.current && sessionStorage.getItem("sop_authenticated") !== "1") return;
 
-      if (location.hash === "#/my-workspace") {
+      if (location.hash === "#/my-workspace" || location.hash === "" || location.hash === "#/") {
         void refreshNativeWorkspace().catch(console.error);
       }
       if (["#/overview", "#/dashboard"].includes(location.hash)) {
@@ -57,12 +57,13 @@ export function useAppRouting(
     };
 
     const handleDomainUpdated = () => {
-      if (!userRef.current) return;
+      if (!userRef.current && sessionStorage.getItem("sop_authenticated") !== "1") return;
       void refreshNativeKpis().catch(console.error);
       void refreshNativeWorkspace().catch(console.error);
     };
 
     routeGuard();
+    handleWorkspaceRoute();
 
     window.addEventListener("hashchange", routeGuard);
     window.addEventListener("hashchange", handleWorkspaceRoute);

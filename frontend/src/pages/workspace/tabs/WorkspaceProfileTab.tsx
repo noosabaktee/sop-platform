@@ -27,7 +27,7 @@ export function WorkspaceProfileTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">Baik</strong>
+                        <strong className="kpi__value">—</strong>
                         <span className="kpi__comparison">
                           <small data-en="2FA on">2FA aktif</small>
                         </span>
@@ -46,7 +46,7 @@ export function WorkspaceProfileTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">SOP Indonesia</strong>
+                        <strong className="kpi__value">—</strong>
                         <span className="kpi__comparison">
                           <small data-en="Scope: Commercial">Scope: Commercial</small>
                         </span>
@@ -65,7 +65,7 @@ export function WorkspaceProfileTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">12</strong>
+                        <strong className="kpi__value">—</strong>
                         <span className="kpi__comparison">
                           <small data-en="5 approvals">5 approval</small>
                         </span>
@@ -164,114 +164,16 @@ export function WorkspaceProfileTab() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr data-priority="Low" data-status="">
+                        <tr data-priority="Low" data-status="" data-template-row="true">
                           <td>
                             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
                               <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Nama lengkap
+                              Memuat profil...
                             </label>
                           </td>
-                          <td>Aditya Pratama</td>
+                          <td>—</td>
                           <td>Internal</td>
-                          <td>1 Sep 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Email
-                            </label>
-                          </td>
-                          <td>[EMAIL_4b8e1c77]</td>
-                          <td>Internal</td>
-                          <td>1 Sep 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Jabatan
-                            </label>
-                          </td>
-                          <td>Sales Manager</td>
-                          <td>Internal</td>
-                          <td>1 Sep 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Company
-                            </label>
-                          </td>
-                          <td>SOP Indonesia</td>
-                          <td>Internal</td>
-                          <td>1 Sep 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Role
-                            </label>
-                          </td>
-                          <td>Sales Manager</td>
-                          <td>Restricted</td>
-                          <td>1 Sep 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Bahasa
-                            </label>
-                          </td>
-                          <td>Indonesia (ID)</td>
-                          <td>Personal</td>
-                          <td>5 Okt 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Zona waktu
-                            </label>
-                          </td>
-                          <td>Asia/Jakarta (GMT+7)</td>
-                          <td>Personal</td>
-                          <td>5 Okt 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Two-factor auth
-                            </label>
-                          </td>
-                          <td>Aktif (Authenticator)</td>
-                          <td>Restricted</td>
-                          <td>5 Okt 2026</td>
+                          <td>—</td>
                           <td>
                             <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
                           </td>

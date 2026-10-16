@@ -43,6 +43,8 @@ const label = (row: HTMLTableRowElement, value: unknown) => {
   else text(row.cells[0], value);
 };
 
+const tableSkeletonMap = new WeakMap<HTMLTableElement, HTMLTableRowElement>();
+
 function fill(
   panel: HTMLElement | null,
   data: Row[],
@@ -50,16 +52,28 @@ function fill(
 ) {
   const table = panel?.querySelector<HTMLTableElement>("table.sop-table");
   const tbody = table?.tBodies[0];
-  const template = tbody?.querySelector<HTMLTableRowElement>("tr");
-  if (!table || !tbody || !template) return;
+  if (!table || !tbody) return;
 
-  const skeleton = template.cloneNode(true) as HTMLTableRowElement;
+  let skeleton = tableSkeletonMap.get(table);
+  if (!skeleton) {
+    const template = tbody.querySelector<HTMLTableRowElement>("tr");
+    if (template) {
+      skeleton = template.cloneNode(true) as HTMLTableRowElement;
+      skeleton.removeAttribute("data-template-row");
+      tableSkeletonMap.set(table, skeleton);
+    }
+  }
+  if (!skeleton) return;
+
   tbody.replaceChildren();
 
-  if (!data.length) {
+  if (!data || !data.length) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
     cell.colSpan = table.tHead?.rows[0]?.cells.length || 7;
+    cell.style.textAlign = "center";
+    cell.style.padding = "24px";
+    cell.style.color = "var(--text-muted, #64748b)";
     cell.textContent = "Tidak ada data untuk pengguna ini.";
     row.appendChild(cell);
     tbody.appendChild(row);
@@ -310,17 +324,112 @@ export async function refreshNativeWorkspace() {
     row.dataset.status = "";
   });
 
-  // Update KPI in My Tasks tab
-  if (state.summary) {
-    const kpiValues = page.querySelectorAll<HTMLElement>(
-      "#ws-panel-my-workspace .kpi-row .kpi .kpi__value",
-    );
-    if (kpiValues[0])
-      kpiValues[0].textContent = String(state.summary.open_tasks);
-    if (kpiValues[1])
-      kpiValues[1].textContent = String(state.summary.pending_approvals);
-    if (kpiValues[2])
-      kpiValues[2].textContent = String(state.summary.unread_notifications);
+  // 1. My Tasks KPIs
+  const myTasksPanel = panel("my-workspace");
+  if (myTasksPanel) {
+    const kpiValues = myTasksPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    const openTasks = state.tasks.filter((t) => !["done", "completed"].includes(String(t.status))).length;
+    const overdue = state.tasks.filter((t) => t.due_at && new Date(String(t.due_at)) < new Date()).length;
+    const done = state.tasks.filter((t) => ["done", "completed"].includes(String(t.status))).length;
+    if (kpiValues[0]) kpiValues[0].textContent = String(openTasks);
+    if (kpiValues[1]) kpiValues[1].textContent = String(overdue);
+    if (kpiValues[2]) kpiValues[2].textContent = String(done);
+  }
+
+  // 2. Dashboard Projects KPIs
+  const dashPanel = panel("dashboard");
+  if (dashPanel) {
+    const kpiValues = dashPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    const active = state.projects.filter((p) => !["done", "completed", "cancelled"].includes(String(p.status))).length;
+    const onTrack = state.projects.filter((p) => ["in_progress", "active", "on_track"].includes(String(p.status))).length;
+    const atRisk = state.projects.filter((p) => ["at_risk", "risk"].includes(String(p.status))).length;
+    if (kpiValues[0]) kpiValues[0].textContent = String(active);
+    if (kpiValues[1]) kpiValues[1].textContent = String(onTrack);
+    if (kpiValues[2]) kpiValues[2].textContent = String(atRisk);
+  }
+
+  // 3. CRM & Sales Approvals KPIs
+  const crmPanel = panel("crm-sales");
+  if (crmPanel) {
+    const kpiValues = crmPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    const pending = state.approvals.filter((a) => String(a.status) === "pending").length;
+    const approved = state.approvals.filter((a) => String(a.status) === "approved").length;
+    const total = state.approvals.length;
+    if (kpiValues[0]) kpiValues[0].textContent = String(pending);
+    if (kpiValues[1]) kpiValues[1].textContent = String(approved);
+    if (kpiValues[2]) kpiValues[2].textContent = String(total);
+  }
+
+  // 4. Activities KPIs
+  const actPanel = panel("business-development");
+  if (actPanel) {
+    const kpiValues = actPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    const today = state.activities.filter(
+      (a) => a.created_at && new Date(String(a.created_at)).toDateString() === new Date().toDateString(),
+    ).length;
+    const total = state.activities.length;
+    const uniqueEntities = new Set(state.activities.map((a) => a.entity_type)).size;
+    if (kpiValues[0]) kpiValues[0].textContent = String(today);
+    if (kpiValues[1]) kpiValues[1].textContent = String(total);
+    if (kpiValues[2]) kpiValues[2].textContent = String(uniqueEntities);
+  }
+
+  // 5. Calendar KPIs
+  const calPanel = panel("quotation");
+  if (calPanel) {
+    const kpiValues = calPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    const today = state.calendar.filter(
+      (c) => c.starts_at && new Date(String(c.starts_at)).toDateString() === new Date().toDateString(),
+    ).length;
+    const total = state.calendar.length;
+    if (kpiValues[0]) kpiValues[0].textContent = String(today);
+    if (kpiValues[1]) kpiValues[1].textContent = String(total);
+    if (kpiValues[2]) kpiValues[2].textContent = String(total);
+  }
+
+  // 6. Documents KPIs
+  const docPanel = panel("sales");
+  if (docPanel) {
+    const kpiValues = docPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    const active = state.documents.filter((d) => String(d.status) === "active").length;
+    const review = state.documents.filter((d) => ["review", "draft"].includes(String(d.status))).length;
+    const total = state.documents.length;
+    if (kpiValues[0]) kpiValues[0].textContent = String(active);
+    if (kpiValues[1]) kpiValues[1].textContent = String(review);
+    if (kpiValues[2]) kpiValues[2].textContent = String(total);
+  }
+
+  // 7. Notifications KPIs
+  const notifPanel = panel("projects");
+  if (notifPanel) {
+    const kpiValues = notifPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    const unread = state.notifications.filter((n) => !n.read_at).length;
+    const total = state.notifications.length;
+    const read = state.notifications.filter((n) => Boolean(n.read_at)).length;
+    if (kpiValues[0]) kpiValues[0].textContent = String(unread);
+    if (kpiValues[1]) kpiValues[1].textContent = String(total);
+    if (kpiValues[2]) kpiValues[2].textContent = String(read);
+  }
+
+  // 8. Email KPIs
+  const emailPanel = panel("purchase");
+  if (emailPanel) {
+    const kpiValues = emailPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    const sent = state.emails.filter((e) => String(e.status) === "sent").length;
+    const total = state.emails.length;
+    const queued = state.emails.filter((e) => ["queued", "pending", "draft"].includes(String(e.status))).length;
+    if (kpiValues[0]) kpiValues[0].textContent = String(sent);
+    if (kpiValues[1]) kpiValues[1].textContent = String(total);
+    if (kpiValues[2]) kpiValues[2].textContent = String(queued);
+  }
+
+  // 9. Profile KPIs
+  const profPanel = panel("inventory");
+  if (profPanel) {
+    const kpiValues = profPanel.querySelectorAll<HTMLElement>(".kpi-row .kpi .kpi__value");
+    if (kpiValues[0]) kpiValues[0].textContent = state.profile.length ? "100%" : "0%";
+    if (kpiValues[1]) kpiValues[1].textContent = `${state.profile.length} parameter`;
+    if (kpiValues[2]) kpiValues[2].textContent = "Aktif";
   }
 }
 

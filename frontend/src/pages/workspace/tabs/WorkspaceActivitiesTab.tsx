@@ -27,9 +27,9 @@ export function WorkspaceActivitiesTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">9</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="3 done">3 selesai</small>
+                          <small data-en="recorded">tercatat hari ini</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -39,16 +39,16 @@ export function WorkspaceActivitiesTab() {
                       </svg>
                     </span>
                   </button>
-                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Follow-ups">
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Total activities">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Follow-ups">Follow-up</span>
-                      <iconify-icon noobserver icon="lucide:phone" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="Total activities">Total aktivitas</span>
+                      <iconify-icon noobserver icon="lucide:list" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">5</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="2 scheduled">2 terjadwal</small>
+                          <small data-en="all time">audit log database</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -58,16 +58,16 @@ export function WorkspaceActivitiesTab() {
                       </svg>
                     </span>
                   </button>
-                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Meetings">
+                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Entity types">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Meetings">Pertemuan</span>
-                      <iconify-icon noobserver icon="lucide:calendar-check" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="Entity types">Tipe entitas</span>
+                      <iconify-icon noobserver icon="lucide:layers" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">3</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="1 upcoming">1 mendatang</small>
+                          <small data-en="distinct">entitas berbeda</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -82,7 +82,7 @@ export function WorkspaceActivitiesTab() {
                   <div className="card__head">
                     <h2>
                       <iconify-icon noobserver icon="lucide:table-2" aria-hidden="true"></iconify-icon>
-                      <span>My Activities</span>
+                      <span>Aktivitas Saya</span>
                     </h2>
                     <div className="card__tools">
                       <div className="card__view" role="group" aria-label="Pilih tampilan data">
@@ -96,7 +96,7 @@ export function WorkspaceActivitiesTab() {
                         </button>
                       </div>
                       <div className="card__search">
-                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="business-development.search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="my-activities.search">
                           <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
                           <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
                         </label>
@@ -108,18 +108,18 @@ export function WorkspaceActivitiesTab() {
                         </summary>
                         <div className="filter-panel">
                           <fieldset>
-                            <legend>Prioritas</legend>
+                            <legend>Tipe</legend>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="High" />
-                              High
+                              <input type="checkbox" data-filter="type" value="Meeting" />
+                              Meeting
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Medium" />
-                              Medium
+                              <input type="checkbox" data-filter="type" value="Call" />
+                              Call
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Low" />
-                              Low
+                              <input type="checkbox" data-filter="type" value="Email" />
+                              Email
                             </label>
                           </fieldset>
                           <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
@@ -170,137 +170,18 @@ export function WorkspaceActivitiesTab() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr data-priority="Low" data-status="Scheduled">
+                        <tr data-priority="Low" data-status="Done" data-template-row="true">
                           <td>
                             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
                               <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Telepon customer PT Nusantara
+                              Memuat aktivitas...
                             </label>
                           </td>
-                          <td>Call</td>
-                          <td>OP-108</td>
-                          <td>Hari ini 16:30</td>
+                          <td>—</td>
+                          <td>—</td>
+                          <td>—</td>
                           <td>
-                            <span className="chip progress">Scheduled</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="In progress">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Meeting kickoff PRJ-042
-                            </label>
-                          </td>
-                          <td>Meeting</td>
-                          <td>PRJ-042</td>
-                          <td>Hari ini 14:00</td>
-                          <td>
-                            <span className="chip progress">In progress</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Done">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Kirim quotation Q-2026-014
-                            </label>
-                          </td>
-                          <td>Email</td>
-                          <td>Q-2026-014</td>
-                          <td>Hari ini 11:00</td>
-                          <td>
-                            <span className="chip done">Done</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Scheduled">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Kunjungan vendor PT Alpha
-                            </label>
-                          </td>
-                          <td>Visit</td>
-                          <td>VD-014</td>
-                          <td>Besok 09:00</td>
-                          <td>
-                            <span className="chip info">Scheduled</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Scheduled">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Review dokumen kontrak
-                            </label>
-                          </td>
-                          <td>Task</td>
-                          <td>CTR-009</td>
-                          <td>Besok 13:00</td>
-                          <td>
-                            <span className="chip info">Scheduled</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Done">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Follow-up invoice INV-088
-                            </label>
-                          </td>
-                          <td>Follow Up</td>
-                          <td>INV-088</td>
-                          <td>8 Okt 2026</td>
-                          <td>
-                            <span className="chip done">Done</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Scheduled">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Presentasi proposal BD
-                            </label>
-                          </td>
-                          <td>Meeting</td>
-                          <td>BD-021</td>
-                          <td>9 Okt 2026</td>
-                          <td>
-                            <span className="chip info">Scheduled</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Done">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Update status pipeline
-                            </label>
-                          </td>
-                          <td>Task</td>
-                          <td>OP-110</td>
-                          <td>10 Okt 2026</td>
-                          <td>
-                            <span className="chip done">Done</span>
+                            <span className="chip progress">Tercatat</span>
                           </td>
                           <td>
                             <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>

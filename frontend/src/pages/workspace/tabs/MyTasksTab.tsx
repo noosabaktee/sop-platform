@@ -27,9 +27,9 @@ export function MyTasksTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">12</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="4 done">4 selesai</small>
+                          <small data-en="tasks">tugas terbuka</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -46,7 +46,7 @@ export function MyTasksTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">3</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
                           <small data-en="needs action">perlu tindakan</small>
                         </span>
@@ -65,9 +65,9 @@ export function MyTasksTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">28</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="+6 vs last week">+6 vs minggu lalu</small>
+                          <small data-en="completed">telah selesai</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -176,162 +176,22 @@ export function MyTasksTab() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr data-priority="High" data-status="In progress">
+                        <tr data-priority="Medium" data-status="Pending" data-template-row="true">
                           <td>
                             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
                               <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Follow-up PT Nusantara
+                              Memuat tugas...
                             </label>
                           </td>
-                          <td>CRM & Sales</td>
-                          <td>
-                            <span className="chip risk">High</span>
-                          </td>
-                          <td>
-                            <span className="chip progress">In progress</span>
-                          </td>
-                          <td>Hari ini 16:30</td>
-                          <td>Aditya Pratama</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="High" data-status="Pending">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Review margin Quotation Q-2026-014
-                            </label>
-                          </td>
-                          <td>Quotation</td>
-                          <td>
-                            <span className="chip risk">High</span>
-                          </td>
-                          <td>
-                            <span className="chip pending">Pending</span>
-                          </td>
-                          <td>Hari ini 14:00</td>
-                          <td>Rina Wijaya</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="High" data-status="At risk">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Review mitigation PRJ-042
-                            </label>
-                          </td>
-                          <td>Project</td>
-                          <td>
-                            <span className="chip risk">High</span>
-                          </td>
-                          <td>
-                            <span className="chip risk">At risk</span>
-                          </td>
-                          <td>Besok</td>
-                          <td>Bagus Santoso</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Draft">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Submit approval PR-331
-                            </label>
-                          </td>
-                          <td>Purchase</td>
+                          <td>Projects</td>
                           <td>
                             <span className="chip pending">Medium</span>
                           </td>
                           <td>
-                            <span className="chip info">Draft</span>
+                            <span className="chip progress">Pending</span>
                           </td>
-                          <td>7 Okt 2026</td>
-                          <td>Sari Putri</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Done">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Rekonsiliasi payment INV-088
-                            </label>
-                          </td>
-                          <td>Finance</td>
-                          <td>
-                            <span className="chip pending">Medium</span>
-                          </td>
-                          <td>
-                            <span className="chip done">Done</span>
-                          </td>
-                          <td>8 Okt 2026</td>
-                          <td>Sari Putri</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="In progress">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Update pipeline stage OP-108
-                            </label>
-                          </td>
-                          <td>CRM & Sales</td>
-                          <td>
-                            <span className="chip info">Low</span>
-                          </td>
-                          <td>
-                            <span className="chip progress">In progress</span>
-                          </td>
-                          <td>9 Okt 2026</td>
-                          <td>Aditya Pratama</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Pending">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Stock opname gudang utama
-                            </label>
-                          </td>
-                          <td>Inventory</td>
-                          <td>
-                            <span className="chip pending">Medium</span>
-                          </td>
-                          <td>
-                            <span className="chip pending">Pending</span>
-                          </td>
-                          <td>10 Okt 2026</td>
-                          <td>Bagus Santoso</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Done">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Siapkan RUPS agenda
-                            </label>
-                          </td>
-                          <td>Corporate</td>
-                          <td>
-                            <span className="chip info">Low</span>
-                          </td>
-                          <td>
-                            <span className="chip done">Done</span>
-                          </td>
-                          <td>11 Okt 2026</td>
-                          <td>Rina Wijaya</td>
+                          <td>—</td>
+                          <td>—</td>
                           <td>
                             <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
                           </td>

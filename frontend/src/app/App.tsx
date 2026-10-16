@@ -59,6 +59,31 @@ export function App() {
     return () => window.removeEventListener("hashchange", handleRoute);
   }, []);
 
+  // Sync sidebar user profile across all page views from PostgreSQL authenticated user
+  useEffect(() => {
+    if (!user) return;
+    const initials = user.name
+      ? user.name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase()
+      : "US";
+    document
+      .querySelectorAll<HTMLElement>(".c-kravio-sidebar__profile")
+      .forEach((profile) => {
+        const avatar = profile.querySelector<HTMLElement>(
+          ".c-kravio-sidebar__avatar",
+        );
+        const strong = profile.querySelector<HTMLElement>("strong");
+        const small = profile.querySelector<HTMLElement>("small");
+        if (avatar) avatar.textContent = initials;
+        if (strong) strong.textContent = user.name;
+        if (small) small.textContent = user.email;
+      });
+  }, [user, currentRoute]);
+
   // 1. Data loading: snapshots, module states, and users (compiled components, no HTML fetch)
   const { bridge, modules, status, setStatus } = useAppData(
     user,

@@ -1,14 +1,33 @@
 import React from "react";
+import { useAuth } from "../../../app/AuthContext";
 
 export function OverviewWelcome() {
+  const { user } = useAuth();
+  const firstName = user?.name ? user.name.split(" ")[0] : "Pengguna";
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 11
+      ? "Selamat pagi"
+      : hour < 15
+        ? "Selamat siang"
+        : hour < 18
+          ? "Selamat sore"
+          : "Selamat malam";
+  const todayFormatted = new Intl.DateTimeFormat("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
+
   return (
           <section className="welcome-region" data-node-id="nuvio.welcome">
             <div>
               <h1>
-                Selamat pagi, Aditya{' '}
+                {greeting}, {firstName}{' '}
                 <span role="img" aria-label="waving hand">👋</span>
               </h1>
-              <p>My Workspace · Senin, 5 Oktober 2026 · Semua pekerjaan penting dalam satu tempat.</p>
+              <p>My Workspace · {todayFormatted} · Semua pekerjaan penting dalam satu tempat.</p>
             </div>
             <div className="welcome-actions">
               <label className="c-kravio-range" data-component="kravio-range" data-node-id="nuvio.dashboard-range" data-target="dashboard">

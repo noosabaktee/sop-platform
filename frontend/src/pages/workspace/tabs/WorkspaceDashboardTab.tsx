@@ -27,9 +27,9 @@ export function WorkspaceDashboardTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">6</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="2 near deadline">2 mendekati deadline</small>
+                          <small data-en="managed">proyek dikelola</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -46,7 +46,7 @@ export function WorkspaceDashboardTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">4</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
                           <small data-en="on baseline">sesuai baseline</small>
                         </span>
@@ -65,9 +65,9 @@ export function WorkspaceDashboardTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">2</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="needs escalation">perlu eskalasi</small>
+                          <small data-en="needs attention">perlu perhatian</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -108,18 +108,18 @@ export function WorkspaceDashboardTab() {
                         </summary>
                         <div className="filter-panel">
                           <fieldset>
-                            <legend>Prioritas</legend>
+                            <legend>Status</legend>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="High" />
-                              High
+                              <input type="checkbox" data-filter="status" value="On track" />
+                              On track
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Medium" />
-                              Medium
+                              <input type="checkbox" data-filter="status" value="At risk" />
+                              At risk
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Low" />
-                              Low
+                              <input type="checkbox" data-filter="status" value="Completed" />
+                              Completed
                             </label>
                           </fieldset>
                           <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
@@ -150,7 +150,7 @@ export function WorkspaceDashboardTab() {
                           </th>
                           <th scope="col" aria-sort="none">
                             <button type="button" data-action="table:sort" data-column="2">
-                              Health
+                              Status
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
                           </th>
@@ -176,146 +176,20 @@ export function WorkspaceDashboardTab() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr data-priority="Low" data-status="On track">
+                        <tr data-priority="Low" data-status="In progress" data-template-row="true">
                           <td>
                             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
                               <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-041 Implementasi ERP
+                              Memuat proyek...
                             </label>
                           </td>
-                          <td>PT Nusantara</td>
+                          <td>—</td>
                           <td>
-                            <span className="chip done">On track</span>
+                            <span className="chip progress">In progress</span>
                           </td>
-                          <td>72%</td>
-                          <td>Bagus Santoso</td>
-                          <td>30 Okt 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="High" data-status="At risk">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-042 Rollout Cabang
-                            </label>
-                          </td>
-                          <td>PT Alpha</td>
-                          <td>
-                            <span className="chip risk">At risk</span>
-                          </td>
-                          <td>48%</td>
-                          <td>Aditya Pratama</td>
-                          <td>15 Okt 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="On track">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-043 Integrasi Payment
-                            </label>
-                          </td>
-                          <td>Bank Mandiri</td>
-                          <td>
-                            <span className="chip done">On track</span>
-                          </td>
-                          <td>85%</td>
-                          <td>Rina Wijaya</td>
-                          <td>7 Nov 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="On track">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-044 Data Warehouse
-                            </label>
-                          </td>
-                          <td>PT Beta</td>
-                          <td>
-                            <span className="chip done">On track</span>
-                          </td>
-                          <td>60%</td>
-                          <td>Bagus Santoso</td>
-                          <td>20 Nov 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="High" data-status="At risk">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-045 Aplikasi Mobile
-                            </label>
-                          </td>
-                          <td>PT Gamma</td>
-                          <td>
-                            <span className="chip risk">At risk</span>
-                          </td>
-                          <td>35%</td>
-                          <td>Aditya Pratama</td>
-                          <td>5 Okt 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="On track">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-046 Migrasi Cloud
-                            </label>
-                          </td>
-                          <td>PT Delta</td>
-                          <td>
-                            <span className="chip done">On track</span>
-                          </td>
-                          <td>90%</td>
-                          <td>Rina Wijaya</td>
-                          <td>1 Des 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="On track">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-047 Portal Vendor
-                            </label>
-                          </td>
-                          <td>PT Epsilon</td>
-                          <td>
-                            <span className="chip done">On track</span>
-                          </td>
-                          <td>55%</td>
-                          <td>Bagus Santoso</td>
-                          <td>18 Des 2026</td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="High" data-status="At risk">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-048 CRM Rollout
-                            </label>
-                          </td>
-                          <td>PT Zeta</td>
-                          <td>
-                            <span className="chip risk">At risk</span>
-                          </td>
-                          <td>40%</td>
-                          <td>Aditya Pratama</td>
-                          <td>22 Des 2026</td>
+                          <td>0%</td>
+                          <td>Saya</td>
+                          <td>—</td>
                           <td>
                             <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
                           </td>

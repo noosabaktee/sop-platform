@@ -97,6 +97,9 @@ const setText = (node: Element | null | undefined, value: unknown) => {
   if (node) node.textContent = String(value ?? "—");
 };
 
+const overviewTableSkeletonMap = new WeakMap<HTMLTableElement, HTMLTableRowElement>();
+let cachedActivityTemplate: HTMLElement | null = null;
+
 function projectOverview(overview: HTMLElement, data: KPI) {
   const metrics: Record<string, number> = {
     tickets: data.opportunities,
@@ -137,72 +140,104 @@ function projectOverview(overview: HTMLElement, data: KPI) {
       '[data-component="kravio-updates"]',
     ),
     list = updates?.querySelector<HTMLElement>('[data-part="list"]');
-  const activityTemplate = list?.querySelector<HTMLElement>(":scope > div");
-  if (list && activityTemplate) {
-    list.querySelectorAll(":scope > div").forEach((node) => node.remove());
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    data.overview.activities.forEach((item) => {
-      const wrapper = activityTemplate.cloneNode(true) as HTMLElement,
-        date = new Date(item.created_at),
-        days = Math.floor(
-          (today.getTime() -
-            new Date(
-              date.getFullYear(),
-              date.getMonth(),
-              date.getDate(),
-            ).getTime()) /
-            86400000,
-        );
-      wrapper.dataset.period =
-        days <= 0 ? "today" : days === 1 ? "yesterday" : "week";
-      wrapper.hidden = days > 0;
-      const article = wrapper.querySelector<HTMLElement>(
-        '[data-component="kravio-activity"]',
-      );
-      if (article) article.dataset.nodeId = `audit.${item.id}`;
-      setText(wrapper.querySelector('[data-part="title"]'), title(item.action));
+  if (list) {
+    if (!cachedActivityTemplate) {
+      const template = list.querySelector<HTMLElement>(":scope > div");
+      if (template) {
+        cachedActivityTemplate = template.cloneNode(true) as HTMLElement;
+      }
+    }
+
+    if (cachedActivityTemplate) {
+      list.querySelectorAll(":scope > div").forEach((node) => node.remove());
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const emptyEl = list.querySelector<HTMLElement>('[data-part="empty"]');
+      if (!data.overview.activities.length) {
+        if (emptyEl) emptyEl.hidden = false;
+      } else {
+        if (emptyEl) emptyEl.hidden = true;
+        data.overview.activities.forEach((item) => {
+          const wrapper = cachedActivityTemplate!.cloneNode(true) as HTMLElement,
+            date = new Date(item.created_at),
+            days = Math.floor(
+              (today.getTime() -
+                new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate(),
+                ).getTime()) /
+                86400000,
+            );
+          wrapper.dataset.period =
+            days <= 0 ? "today" : days === 1 ? "yesterday" : "week";
+          wrapper.hidden = days > 0;
+          const article = wrapper.querySelector<HTMLElement>(
+            '[data-component="kravio-activity"]',
+          );
+          if (article) article.dataset.nodeId = `audit.${item.id}`;
+          setText(wrapper.querySelector('[data-part="title"]'), title(item.action));
+          setText(
+            wrapper.querySelector('[data-part="time"]'),
+            date.toLocaleTimeString("id-ID", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          );
+          setText(
+            wrapper.querySelector('[data-part="description"]'),
+            `${title(item.entity_type)} ${item.entity_id} · ${item.actor || "Sistem"}`,
+          );
+          list.insertBefore(wrapper, emptyEl);
+        });
+      }
+
       setText(
-        wrapper.querySelector('[data-part="time"]'),
-        date.toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        updates?.querySelector('[data-part="count"] strong'),
+        data.overview.activities.filter(
+          (item) => new Date(item.created_at) >= today,
+        ).length,
       );
-      setText(
-        wrapper.querySelector('[data-part="description"]'),
-        `${title(item.entity_type)} ${item.entity_id} · ${item.actor || "Sistem"}`,
-      );
-      list.insertBefore(wrapper, list.querySelector('[data-part="empty"]'));
-    });
-    setText(
-      updates?.querySelector('[data-part="count"] strong'),
-      data.overview.activities.filter(
-        (item) => new Date(item.created_at) >= today,
-      ).length,
-    );
+    }
   }
+
   const fillTable = (
     table: HTMLTableElement | null,
     items: WorkItem[],
     focus = false,
   ) => {
-    const tbody = table?.tBodies[0],
-      template = tbody?.rows[0]?.cloneNode(true) as
-        HTMLTableRowElement | undefined;
-    if (!tbody || !template) return;
+    const tbody = table?.tBodies[0];
+    if (!table || !tbody) return;
+
+    let skeleton = overviewTableSkeletonMap.get(table);
+    if (!skeleton) {
+      const template = tbody.querySelector<HTMLTableRowElement>("tr");
+      if (template) {
+        skeleton = template.cloneNode(true) as HTMLTableRowElement;
+        skeleton.removeAttribute("data-template-row");
+        overviewTableSkeletonMap.set(table, skeleton);
+      }
+    }
+    if (!skeleton) return;
+
     tbody.replaceChildren();
     if (!items.length) {
       const row = document.createElement("tr"),
         cell = document.createElement("td");
       cell.colSpan = table?.tHead?.rows[0]?.cells.length || 7;
-      cell.textContent = "Tidak ada pekerjaan terbuka.";
+      cell.style.textAlign = "center";
+      cell.style.padding = "24px";
+      cell.style.color = "var(--text-muted, #64748b)";
+      cell.textContent = focus
+        ? "Tidak ada fokus pekerjaan terbuka saat ini."
+        : "Tidak ada pekerjaan atau SLA terbuka.";
       row.appendChild(cell);
       tbody.appendChild(row);
       return;
     }
     items.forEach((item) => {
-      const row = template.cloneNode(true) as HTMLTableRowElement;
+      const row = skeleton!.cloneNode(true) as HTMLTableRowElement;
       row.dataset.record = item.record;
       if (focus) {
         setText(row.cells[1], `${item.record} ${item.context}`);

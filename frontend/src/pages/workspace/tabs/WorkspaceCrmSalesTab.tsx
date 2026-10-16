@@ -27,9 +27,9 @@ export function WorkspaceCrmSalesTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">7</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="2 near SLA">2 mendekati SLA</small>
+                          <small data-en="pending">menunggu persetujuan</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -46,9 +46,9 @@ export function WorkspaceCrmSalesTab() {
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">23</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="+4 vs target">+4 vs target</small>
+                          <small data-en="approved">telah disetujui</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -58,16 +58,16 @@ export function WorkspaceCrmSalesTab() {
                       </svg>
                     </span>
                   </button>
-                  <button type="button" className="kpi" data-tone="red" data-action="sop:drill" data-kind="Rejected">
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="All approvals">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Rejected">Ditolak</span>
-                      <iconify-icon noobserver icon="lucide:x" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="All approvals">Total approval</span>
+                      <iconify-icon noobserver icon="lucide:file-check" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">3</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="needs revision">perlu revisi</small>
+                          <small data-en="all records">semua transaksi</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -108,18 +108,18 @@ export function WorkspaceCrmSalesTab() {
                         </summary>
                         <div className="filter-panel">
                           <fieldset>
-                            <legend>Prioritas</legend>
+                            <legend>Status</legend>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="High" />
-                              High
+                              <input type="checkbox" data-filter="status" value="Pending" />
+                              Pending
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Medium" />
-                              Medium
+                              <input type="checkbox" data-filter="status" value="Approved" />
+                              Approved
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Low" />
-                              Low
+                              <input type="checkbox" data-filter="status" value="Rejected" />
+                              Rejected
                             </label>
                           </fieldset>
                           <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
@@ -138,7 +138,7 @@ export function WorkspaceCrmSalesTab() {
                           <th scope="col" aria-sort="none">
                             <input type="checkbox" data-action="table:all" aria-label="Pilih semua record" />
                             <button type="button" data-action="table:sort" data-column="0">
-                              Record
+                              Dokumen
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
                           </th>
@@ -176,145 +176,19 @@ export function WorkspaceCrmSalesTab() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr data-priority="Medium" data-status="Pending">
+                        <tr data-priority="Medium" data-status="Pending" data-template-row="true">
                           <td>
                             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
                               <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Q-2026-014
+                              Memuat approval...
                             </label>
                           </td>
-                          <td>Quotation</td>
-                          <td>Rp 480 jt</td>
-                          <td>Rina Wijaya</td>
-                          <td>4 jam</td>
+                          <td>—</td>
+                          <td>—</td>
+                          <td>—</td>
+                          <td>—</td>
                           <td>
                             <span className="chip pending">Pending</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Pending">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PR-331
-                            </label>
-                          </td>
-                          <td>Purchase Request</td>
-                          <td>Rp 75 jt</td>
-                          <td>Sari Putri</td>
-                          <td>8 jam</td>
-                          <td>
-                            <span className="chip pending">Pending</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Pending">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              INV-088
-                            </label>
-                          </td>
-                          <td>Invoice AP</td>
-                          <td>Rp 210 jt</td>
-                          <td>Sari Putri</td>
-                          <td>1 hari</td>
-                          <td>
-                            <span className="chip pending">Pending</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Approved">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              SO-2026-021
-                            </label>
-                          </td>
-                          <td>Sales Order</td>
-                          <td>Rp 620 jt</td>
-                          <td>Aditya Pratama</td>
-                          <td>3 jam</td>
-                          <td>
-                            <span className="chip done">Approved</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Pending">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              VD-014
-                            </label>
-                          </td>
-                          <td>Vendor master</td>
-                          <td>-</td>
-                          <td>Bagus Santoso</td>
-                          <td>6 jam</td>
-                          <td>
-                            <span className="chip pending">Pending</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Rejected">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              EXP-052
-                            </label>
-                          </td>
-                          <td>Expense claim</td>
-                          <td>Rp 12 jt</td>
-                          <td>Rina Wijaya</td>
-                          <td>2 hari</td>
-                          <td>
-                            <span className="chip risk">Ditolak</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Medium" data-status="Pending">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PRJ-CHG-007
-                            </label>
-                          </td>
-                          <td>Project change</td>
-                          <td>Rp 95 jt</td>
-                          <td>Bagus Santoso</td>
-                          <td>1 hari</td>
-                          <td>
-                            <span className="chip pending">Pending</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Approved">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PAY-118
-                            </label>
-                          </td>
-                          <td>Payment release</td>
-                          <td>Rp 340 jt</td>
-                          <td>Sari Putri</td>
-                          <td>5 jam</td>
-                          <td>
-                            <span className="chip done">Approved</span>
                           </td>
                           <td>
                             <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>

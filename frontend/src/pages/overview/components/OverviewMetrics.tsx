@@ -10,10 +10,10 @@ export function OverviewMetrics() {
                 </div>
                 <div className="c-kravio-metric__body">
                   <div>
-                    <p className="c-kravio-metric__value" data-part="value">42</p>
+                    <p className="c-kravio-metric__value" data-part="value">0</p>
                     <div className="c-kravio-metric__comparison">
-                      <span className="c-kravio-metric__delta" data-part="delta">+6</span>
-                      <span>vs last week</span>
+                      <span className="c-kravio-metric__delta" data-part="delta">Database</span>
+                      <span>real-time</span>
                     </div>
                   </div>
                   <svg className="c-kravio-metric__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -30,10 +30,10 @@ export function OverviewMetrics() {
                 </div>
                 <div className="c-kravio-metric__body">
                   <div>
-                    <p className="c-kravio-metric__value" data-part="value">7</p>
+                    <p className="c-kravio-metric__value" data-part="value">0</p>
                     <div className="c-kravio-metric__comparison">
-                      <span className="c-kravio-metric__delta" data-part="delta">2 SLA</span>
-                      <span>vs last week</span>
+                      <span className="c-kravio-metric__delta" data-part="delta">Antrean</span>
+                      <span>SLA aktif</span>
                     </div>
                   </div>
                   <svg className="c-kravio-metric__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -50,10 +50,10 @@ export function OverviewMetrics() {
                 </div>
                 <div className="c-kravio-metric__body">
                   <div>
-                    <p className="c-kravio-metric__value" data-part="value">8</p>
+                    <p className="c-kravio-metric__value" data-part="value">0</p>
                     <div className="c-kravio-metric__comparison">
-                      <span className="c-kravio-metric__delta" data-part="delta">2 risiko</span>
-                      <span>vs last week</span>
+                      <span className="c-kravio-metric__delta" data-part="delta">Target</span>
+                      <span>minggu berjalan</span>
                     </div>
                   </div>
                   <svg className="c-kravio-metric__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">

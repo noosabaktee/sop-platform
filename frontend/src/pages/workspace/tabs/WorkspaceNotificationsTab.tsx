@@ -6,7 +6,7 @@ export function WorkspaceNotificationsTab() {
                 <header className="page-head">
                   <div>
                     <h2 data-en="My Notifications">My Notifications</h2>
-                    <p data-en="Notifications to review and act on.">Notifikasi yang perlu Anda ketahui dan tindak lanjuti.</p>
+                    <p data-en="System alerts, workflow updates and mentions.">Pemberitahuan sistem, update approval, dan mention untuk Anda.</p>
                   </div>
                   <div className="page-actions">
                     <button type="button" className="btn-ghost" data-action="sop:export">
@@ -20,16 +20,16 @@ export function WorkspaceNotificationsTab() {
                   </div>
                 </header>
                 <div className="kpi-row">
-                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Unread">
+                  <button type="button" className="kpi" data-tone="amber" data-action="sop:drill" data-kind="Unread">
                     <span className="kpi__heading">
                       <span className="kpi__title" data-en="Unread">Belum dibaca</span>
                       <iconify-icon noobserver icon="lucide:bell" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">8</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="3 important">3 penting</small>
+                          <small data-en="unread">belum dibaca</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -39,16 +39,16 @@ export function WorkspaceNotificationsTab() {
                       </svg>
                     </span>
                   </button>
-                  <button type="button" className="kpi" data-tone="red" data-action="sop:drill" data-kind="Needs action">
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Total notifications">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Needs action">Perlu tindakan</span>
-                      <iconify-icon noobserver icon="lucide:alert-circle" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="Total notifications">Total notifikasi</span>
+                      <iconify-icon noobserver icon="lucide:inbox" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">4</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="SLA running">SLA berjalan</small>
+                          <small data-en="all notifications">seluruh notifikasi</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -58,16 +58,16 @@ export function WorkspaceNotificationsTab() {
                       </svg>
                     </span>
                   </button>
-                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Archived">
+                  <button type="button" className="kpi" data-tone="teal" data-action="sop:drill" data-kind="Read">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Archived">Diarsipkan</span>
-                      <iconify-icon noobserver icon="lucide:archive" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="Read">Sudah dibaca</span>
+                      <iconify-icon noobserver icon="lucide:check-check" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">26</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="this week">minggu ini</small>
+                          <small data-en="read">riwayat terbaca</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -96,7 +96,7 @@ export function WorkspaceNotificationsTab() {
                         </button>
                       </div>
                       <div className="card__search">
-                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="projects.search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="my-notifications.search">
                           <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
                           <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
                         </label>
@@ -108,18 +108,14 @@ export function WorkspaceNotificationsTab() {
                         </summary>
                         <div className="filter-panel">
                           <fieldset>
-                            <legend>Prioritas</legend>
+                            <legend>Status</legend>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="High" />
-                              High
+                              <input type="checkbox" data-filter="status" value="Unread" />
+                              Unread
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Medium" />
-                              Medium
-                            </label>
-                            <label>
-                              <input type="checkbox" data-filter="priority" value="Low" />
-                              Low
+                              <input type="checkbox" data-filter="status" value="Read" />
+                              Read
                             </label>
                           </fieldset>
                           <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
@@ -170,137 +166,18 @@ export function WorkspaceNotificationsTab() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr data-priority="Low" data-status="Unread">
+                        <tr data-priority="Low" data-status="Unread" data-template-row="true">
                           <td>
                             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
                               <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Approval Q-2026-014 menunggu
+                              Memuat notifikasi...
                             </label>
                           </td>
                           <td>In-app</td>
-                          <td>Approval</td>
-                          <td>Hari ini 10:10</td>
+                          <td>System</td>
+                          <td>—</td>
                           <td>
-                            <span className="chip pending">Unread</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Action">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              PR-331 mendekati SLA
-                            </label>
-                          </td>
-                          <td>Email</td>
-                          <td>SLA</td>
-                          <td>Hari ini 09:40</td>
-                          <td>
-                            <span className="chip risk">Action</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Read">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Invoice INV-088 three-way match
-                            </label>
-                          </td>
-                          <td>In-app</td>
-                          <td>Finance</td>
-                          <td>Hari ini 09:10</td>
-                          <td>
-                            <span className="chip done">Read</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Unread">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Meeting kickoff PRJ-042
-                            </label>
-                          </td>
-                          <td>WhatsApp</td>
-                          <td>Meeting</td>
-                          <td>Hari ini 08:30</td>
-                          <td>
-                            <span className="chip pending">Unread</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Read">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Vendor master update disetujui
-                            </label>
-                          </td>
-                          <td>In-app</td>
-                          <td>Master</td>
-                          <td>Kemarin</td>
-                          <td>
-                            <span className="chip done">Read</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Unread">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Reminder RUPS 11 Okt
-                            </label>
-                          </td>
-                          <td>Email</td>
-                          <td>Corporate</td>
-                          <td>Kemarin</td>
-                          <td>
-                            <span className="chip pending">Unread</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Action">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Stock variance gudang utama
-                            </label>
-                          </td>
-                          <td>In-app</td>
-                          <td>Inventory</td>
-                          <td>2 hari lalu</td>
-                          <td>
-                            <span className="chip risk">Action</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Read">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Project PRJ-042 flag risiko
-                            </label>
-                          </td>
-                          <td>In-app</td>
-                          <td>Project</td>
-                          <td>2 hari lalu</td>
-                          <td>
-                            <span className="chip done">Read</span>
+                            <span className="chip progress">Unread</span>
                           </td>
                           <td>
                             <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>

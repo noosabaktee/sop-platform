@@ -6,7 +6,7 @@ export function WorkspaceEmailTab() {
                 <header className="page-head">
                   <div>
                     <h2 data-en="My Email">My Email</h2>
-                    <p data-en="Inbox and work-linked email.">Inbox dan email yang tertaut ke pekerjaan Anda.</p>
+                    <p data-en="Synced email threads and follow-ups.">Email bisnis, follow-up klien, dan log komunikasi terpadu.</p>
                   </div>
                   <div className="page-actions">
                     <button type="button" className="btn-ghost" data-action="sop:export">
@@ -20,16 +20,16 @@ export function WorkspaceEmailTab() {
                   </div>
                 </header>
                 <div className="kpi-row">
-                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Unread">
+                  <button type="button" className="kpi" data-tone="green" data-action="sop:drill" data-kind="Sent emails">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Unread">Belum dibaca</span>
-                      <iconify-icon noobserver icon="lucide:mail" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="Sent emails">Terkirim</span>
+                      <iconify-icon noobserver icon="lucide:send" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">17</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="5 sent today">5 terkirim hari ini</small>
+                          <small data-en="sent">pesan terkirim</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -39,16 +39,16 @@ export function WorkspaceEmailTab() {
                       </svg>
                     </span>
                   </button>
-                  <button type="button" className="kpi" data-tone="amber" data-action="sop:drill" data-kind="Drafts">
+                  <button type="button" className="kpi" data-tone="amber" data-action="sop:drill" data-kind="Queued">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Drafts">Draft</span>
-                      <iconify-icon noobserver icon="lucide:file-pen" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="Queued">Antrean / Draft</span>
+                      <iconify-icon noobserver icon="lucide:clock" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">4</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="2 to send">2 menunggu kirim</small>
+                          <small data-en="pending">dalam proses</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -58,16 +58,16 @@ export function WorkspaceEmailTab() {
                       </svg>
                     </span>
                   </button>
-                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Linked records">
+                  <button type="button" className="kpi" data-tone="blue" data-action="sop:drill" data-kind="Total emails">
                     <span className="kpi__heading">
-                      <span className="kpi__title" data-en="Linked records">Tertaut record</span>
-                      <iconify-icon noobserver icon="lucide:link" aria-hidden="true"></iconify-icon>
+                      <span className="kpi__title" data-en="Total emails">Total pesan</span>
+                      <iconify-icon noobserver icon="lucide:mail-check" aria-hidden="true"></iconify-icon>
                     </span>
                     <span className="kpi__body">
                       <span className="kpi__main">
-                        <strong className="kpi__value">9</strong>
+                        <strong className="kpi__value">0</strong>
                         <span className="kpi__comparison">
-                          <small data-en="quotation & invoice">quotation & invoice</small>
+                          <small data-en="all records">riwayat database</small>
                         </span>
                       </span>
                       <svg className="kpi__spark" viewBox="0 0 90 40" preserveAspectRatio="none" aria-hidden="true">
@@ -96,7 +96,7 @@ export function WorkspaceEmailTab() {
                         </button>
                       </div>
                       <div className="card__search">
-                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="purchase.search">
+                        <label className="c-kravio-search" data-component="kravio-search" data-node-id="my-email.search">
                           <iconify-icon noobserver icon="lucide:search" aria-hidden="true"></iconify-icon>
                           <input type="search" placeholder="Cari record" aria-label="Cari record" data-action="table:search" data-part="input" />
                         </label>
@@ -108,18 +108,18 @@ export function WorkspaceEmailTab() {
                         </summary>
                         <div className="filter-panel">
                           <fieldset>
-                            <legend>Prioritas</legend>
+                            <legend>Status</legend>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="High" />
-                              High
+                              <input type="checkbox" data-filter="status" value="Sent" />
+                              Sent
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Medium" />
-                              Medium
+                              <input type="checkbox" data-filter="status" value="Queued" />
+                              Queued
                             </label>
                             <label>
-                              <input type="checkbox" data-filter="priority" value="Low" />
-                              Low
+                              <input type="checkbox" data-filter="status" value="Draft" />
+                              Draft
                             </label>
                           </fieldset>
                           <button type="button" className="btn-ghost" data-action="table:reset">Hapus filter</button>
@@ -144,19 +144,19 @@ export function WorkspaceEmailTab() {
                           </th>
                           <th scope="col" aria-sort="none">
                             <button type="button" data-action="table:sort" data-column="1">
-                              Dari
+                              Penerima
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
                           </th>
                           <th scope="col" aria-sort="none">
                             <button type="button" data-action="table:sort" data-column="2">
-                              Terkait
+                              Folder
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
                           </th>
                           <th scope="col" aria-sort="none">
                             <button type="button" data-action="table:sort" data-column="3">
-                              Tanggal
+                              Waktu
                               <iconify-icon noobserver icon="lucide:arrow-down-up" aria-hidden="true"></iconify-icon>
                             </button>
                           </th>
@@ -170,137 +170,18 @@ export function WorkspaceEmailTab() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr data-priority="Low" data-status="Unread">
+                        <tr data-priority="Low" data-status="Sent" data-template-row="true">
                           <td>
                             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
                               <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Revisi quotation Q-2026-014
+                              Memuat email...
                             </label>
                           </td>
-                          <td>[EMAIL_9d1f2a44]</td>
-                          <td>Q-2026-014</td>
-                          <td>Hari ini 10:12</td>
+                          <td>—</td>
+                          <td>Outbox</td>
+                          <td>—</td>
                           <td>
-                            <span className="chip pending">Unread</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Read">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Konfirmasi PO-2026-031
-                            </label>
-                          </td>
-                          <td>[EMAIL_9d1f2a44]</td>
-                          <td>PO-2026-031</td>
-                          <td>Hari ini 09:45</td>
-                          <td>
-                            <span className="chip done">Read</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Unread">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Reminder pembayaran INV-088
-                            </label>
-                          </td>
-                          <td>[EMAIL_9d1f2a44]</td>
-                          <td>INV-088</td>
-                          <td>Hari ini 09:05</td>
-                          <td>
-                            <span className="chip pending">Unread</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Replied">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Jadwal kickoff PRJ-042
-                            </label>
-                          </td>
-                          <td>[EMAIL_9d1f2a44]</td>
-                          <td>PRJ-042</td>
-                          <td>Kemarin</td>
-                          <td>
-                            <span className="chip done">Replied</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Unread">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Permintaan penawaran baru
-                            </label>
-                          </td>
-                          <td>[EMAIL_9d1f2a44]</td>
-                          <td>BD-021</td>
-                          <td>Kemarin</td>
-                          <td>
-                            <span className="chip pending">Unread</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Read">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Dokumen kontrak CTR-009
-                            </label>
-                          </td>
-                          <td>[EMAIL_9d1f2a44]</td>
-                          <td>CTR-009</td>
-                          <td>2 hari lalu</td>
-                          <td>
-                            <span className="chip done">Read</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Draft">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Vendor evaluation PT Alpha
-                            </label>
-                          </td>
-                          <td>[EMAIL_9d1f2a44]</td>
-                          <td>VD-014</td>
-                          <td>2 hari lalu</td>
-                          <td>
-                            <span className="chip info">Draft</span>
-                          </td>
-                          <td>
-                            <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>
-                          </td>
-                        </tr>
-                        <tr data-priority="Low" data-status="Read">
-                          <td>
-                            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <input type="checkbox" data-action="table:select" aria-label="Pilih record" />
-                              Laporan mingguan W40
-                            </label>
-                          </td>
-                          <td>[EMAIL_9d1f2a44]</td>
-                          <td>-</td>
-                          <td>3 hari lalu</td>
-                          <td>
-                            <span className="chip done">Read</span>
+                            <span className="chip done">Sent</span>
                           </td>
                           <td>
                             <button type="button" className="btn-ghost" style={{ height: 26, padding: "0 8px" }} data-action="table:detail" aria-label="Detail">…</button>

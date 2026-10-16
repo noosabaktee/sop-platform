@@ -118,187 +118,39 @@ export function OverviewSlaTable() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr data-record="Q-2026-014" data-priority="High" data-status="Pending Approval" data-node-id="sop.record.q2026014">
+                    <tr data-record="—" data-priority="Medium" data-status="Pending" data-template-row="true">
                       <td>
                         <label className="c-kravio-table__ticket">
-                          <input type="checkbox" data-action="kravio-table:select" aria-label="Pilih record Q-2026-014" defaultChecked />
-                          Q-2026-014
+                          <input type="checkbox" data-action="kravio-table:select" aria-label="Pilih record" />
+                          Memuat data...
                         </label>
                       </td>
-                      <td>Quotation PT Nusantara · discount 12%</td>
+                      <td>Memuat pekerjaan dan SLA dari database...</td>
                       <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.q2026014.priority" data-tone="danger">
+                        <span className="c-kravio-status" data-component="kravio-status" data-tone="warning">
                           <iconify-icon noobserver icon="lucide:chart-no-axes-column-increasing" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">High</span>
+                          <span data-part="label">Medium</span>
                         </span>
                       </td>
                       <td>
-                        <span className="c-kravio-avatar" data-component="kravio-avatar" data-node-id="sop.record.q2026014.owner">
+                        <span className="c-kravio-avatar" data-component="kravio-avatar">
                           <span className="c-kravio-avatar__image">
-                            <span aria-hidden="true">RW</span>
+                            <span aria-hidden="true">—</span>
                             <img src="" alt="" loading="lazy" />
                           </span>
-                          <span data-part="name">Rina Wijaya</span>
+                          <span data-part="name">—</span>
                         </span>
                       </td>
                       <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.q2026014.status" data-tone="info">
+                        <span className="c-kravio-status" data-component="kravio-status" data-tone="info">
                           <iconify-icon noobserver icon="lucide:stamp" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">Pending Approval</span>
+                          <span data-part="label">Pending</span>
                         </span>
                       </td>
-                      <td>Quotation</td>
-                      <td>Hari ini 14:00</td>
+                      <td>—</td>
+                      <td>—</td>
                       <td>
-                        <button type="button" className="c-kravio-table__more" aria-label="Aksi untuk Q-2026-014" data-action="kravio-table:detail">
-                          <iconify-icon noobserver icon="lucide:ellipsis-vertical" aria-hidden="true"></iconify-icon>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr data-record="OP-108" data-priority="Medium" data-status="Approved" data-node-id="sop.record.op108">
-                      <td>
-                        <label className="c-kravio-table__ticket">
-                          <input type="checkbox" data-action="kravio-table:select" aria-label="Pilih record OP-108" />
-                          OP-108
-                        </label>
-                      </td>
-                      <td>Opportunity follow-up customer</td>
-                      <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.op108.priority" data-tone="warning">
-                          <iconify-icon noobserver icon="lucide:chart-no-axes-column-increasing" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">Medium</span>
-                        </span>
-                      </td>
-                      <td>
-                        <span className="c-kravio-avatar" data-component="kravio-avatar" data-node-id="sop.record.op108.owner">
-                          <span className="c-kravio-avatar__image">
-                            <span aria-hidden="true">AP</span>
-                            <img src="" alt="" loading="lazy" />
-                          </span>
-                          <span data-part="name">Aditya Pratama</span>
-                        </span>
-                      </td>
-                      <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.op108.status" data-tone="success">
-                          <iconify-icon noobserver icon="lucide:check" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">Approved</span>
-                        </span>
-                      </td>
-                      <td>CRM & Sales</td>
-                      <td>Hari ini 16:30</td>
-                      <td>
-                        <button type="button" className="c-kravio-table__more" aria-label="Aksi untuk OP-108" data-action="kravio-table:detail">
-                          <iconify-icon noobserver icon="lucide:ellipsis-vertical" aria-hidden="true"></iconify-icon>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr data-record="PRJ-042" data-priority="High" data-status="At Risk" data-node-id="sop.record.prj042">
-                      <td>
-                        <label className="c-kravio-table__ticket">
-                          <input type="checkbox" data-action="kravio-table:select" aria-label="Pilih record PRJ-042" />
-                          PRJ-042
-                        </label>
-                      </td>
-                      <td>Project risk review & cost variance</td>
-                      <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.prj042.priority" data-tone="danger">
-                          <iconify-icon noobserver icon="lucide:chart-no-axes-column-increasing" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">High</span>
-                        </span>
-                      </td>
-                      <td>
-                        <span className="c-kravio-avatar" data-component="kravio-avatar" data-node-id="sop.record.prj042.owner">
-                          <span className="c-kravio-avatar__image">
-                            <span aria-hidden="true">BS</span>
-                            <img src="" alt="" loading="lazy" />
-                          </span>
-                          <span data-part="name">Bagus Santoso</span>
-                        </span>
-                      </td>
-                      <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.prj042.status" data-tone="danger">
-                          <iconify-icon noobserver icon="lucide:triangle-alert" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">At Risk</span>
-                        </span>
-                      </td>
-                      <td>Project</td>
-                      <td>Besok</td>
-                      <td>
-                        <button type="button" className="c-kravio-table__more" aria-label="Aksi untuk PRJ-042" data-action="kravio-table:detail">
-                          <iconify-icon noobserver icon="lucide:ellipsis-vertical" aria-hidden="true"></iconify-icon>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr data-record="PR-331" data-priority="Medium" data-status="Draft" data-node-id="sop.record.pr331">
-                      <td>
-                        <label className="c-kravio-table__ticket">
-                          <input type="checkbox" data-action="kravio-table:select" aria-label="Pilih record PR-331" />
-                          PR-331
-                        </label>
-                      </td>
-                      <td>Purchase request budget check</td>
-                      <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.pr331.priority" data-tone="warning">
-                          <iconify-icon noobserver icon="lucide:chart-no-axes-column-increasing" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">Medium</span>
-                        </span>
-                      </td>
-                      <td>
-                        <span className="c-kravio-avatar" data-component="kravio-avatar" data-node-id="sop.record.pr331.owner">
-                          <span className="c-kravio-avatar__image">
-                            <span aria-hidden="true">SP</span>
-                            <img src="" alt="" loading="lazy" />
-                          </span>
-                          <span data-part="name">Sari Putri</span>
-                        </span>
-                      </td>
-                      <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.pr331.status" data-tone="yellow">
-                          <iconify-icon noobserver icon="lucide:pencil" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">Draft</span>
-                        </span>
-                      </td>
-                      <td>Purchase</td>
-                      <td>7 Okt 2026</td>
-                      <td>
-                        <button type="button" className="c-kravio-table__more" aria-label="Aksi untuk PR-331" data-action="kravio-table:detail">
-                          <iconify-icon noobserver icon="lucide:ellipsis-vertical" aria-hidden="true"></iconify-icon>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr data-record="INV-088" data-priority="Low" data-status="Approved" data-node-id="sop.record.inv088">
-                      <td>
-                        <label className="c-kravio-table__ticket">
-                          <input type="checkbox" data-action="kravio-table:select" aria-label="Pilih record INV-088" />
-                          INV-088
-                        </label>
-                      </td>
-                      <td>Invoice AR · three-way match ready</td>
-                      <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.inv088.priority" data-tone="yellow">
-                          <iconify-icon noobserver icon="lucide:chart-no-axes-column-increasing" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">Low</span>
-                        </span>
-                      </td>
-                      <td>
-                        <span className="c-kravio-avatar" data-component="kravio-avatar" data-node-id="sop.record.inv088.owner">
-                          <span className="c-kravio-avatar__image">
-                            <span aria-hidden="true">SP</span>
-                            <img src="" alt="" loading="lazy" />
-                          </span>
-                          <span data-part="name">Sari Putri</span>
-                        </span>
-                      </td>
-                      <td>
-                        <span className="c-kravio-status" data-component="kravio-status" data-node-id="sop.record.inv088.status" data-tone="success">
-                          <iconify-icon noobserver icon="lucide:check" aria-hidden="true"></iconify-icon>
-                          <span data-part="label">Approved</span>
-                        </span>
-                      </td>
-                      <td>Finance</td>
-                      <td>8 Okt 2026</td>
-                      <td>
-                        <button type="button" className="c-kravio-table__more" aria-label="Aksi untuk INV-088" data-action="kravio-table:detail">
+                        <button type="button" className="c-kravio-table__more" aria-label="Aksi" data-action="kravio-table:detail">
                           <iconify-icon noobserver icon="lucide:ellipsis-vertical" aria-hidden="true"></iconify-icon>
                         </button>
                       </td>
