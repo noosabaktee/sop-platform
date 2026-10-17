@@ -36,6 +36,7 @@ import {
   IntegrationsPage,
   SecurityAuditPage,
   SettingsPage,
+  DocsPage,
   LoginPage,
 } from "../pages";
 
@@ -83,6 +84,55 @@ export function App() {
         if (small) small.textContent = user.email;
       });
   }, [user, currentRoute]);
+
+  // Preserve and restore sidebar scroll position across page transitions
+  useEffect(() => {
+    const restoreSidebarScroll = () => {
+      const visibleNav = Array.from(
+        document.querySelectorAll<HTMLElement>(".c-kravio-sidebar nav"),
+      ).find((nav) => nav.offsetParent !== null && nav.clientHeight > 0);
+
+      if (!visibleNav) return;
+
+      let savedScroll = 0;
+      try {
+        const saved = sessionStorage.getItem("sop_sidebar_nav_scroll");
+        if (saved !== null) savedScroll = parseFloat(saved) || 0;
+      } catch {}
+
+      if (savedScroll > 0) {
+        visibleNav.scrollTop = savedScroll;
+      }
+
+      const activeBtn =
+        visibleNav.querySelector<HTMLElement>(`button[data-route="${currentRoute}"]`) ||
+        visibleNav.querySelector<HTMLElement>('button[aria-current="page"]');
+
+      if (activeBtn) {
+        const navRect = visibleNav.getBoundingClientRect();
+        const btnRect = activeBtn.getBoundingClientRect();
+        if (btnRect.top < navRect.top) {
+          visibleNav.scrollTop -= (navRect.top - btnRect.top + 12);
+          try {
+            sessionStorage.setItem("sop_sidebar_nav_scroll", String(visibleNav.scrollTop));
+          } catch {}
+        } else if (btnRect.bottom > navRect.bottom) {
+          visibleNav.scrollTop += (btnRect.bottom - navRect.bottom + 12);
+          try {
+            sessionStorage.setItem("sop_sidebar_nav_scroll", String(visibleNav.scrollTop));
+          } catch {}
+        }
+      }
+    };
+
+    const rafId = requestAnimationFrame(restoreSidebarScroll);
+    const timeoutId = setTimeout(restoreSidebarScroll, 50);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(timeoutId);
+    };
+  }, [currentRoute]);
 
   // 1. Data loading: snapshots, module states, and users (compiled components, no HTML fetch)
   const { bridge, modules, status, setStatus } = useAppData(
@@ -145,6 +195,7 @@ export function App() {
       <IntegrationsPage hidden={currentRoute !== "/integrations"} />
       <SecurityAuditPage hidden={currentRoute !== "/security-audit"} />
       <SettingsPage hidden={currentRoute !== "/settings"} />
+      <DocsPage hidden={currentRoute !== "/docs"} />
       <LoginPage hidden={currentRoute !== "/login"} />
     </AppLayout>
   );

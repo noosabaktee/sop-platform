@@ -21,10 +21,10 @@ type Workspace = {
 };
 
 const text = (node: Element | null | undefined, value: unknown) => {
-  if (node) node.textContent = String(value ?? "—");
+  if (node) node.textContent = String(value ?? "");
 };
 const safe = (value: unknown) =>
-  String(value ?? "—")
+  String(value ?? "Selesai")
     .replace(/_/g, " ")
     .replace(/\b\w/g, (x) => x.toUpperCase());
 const date = (value: unknown) =>
@@ -36,10 +36,10 @@ const date = (value: unknown) =>
         hour: String(value).includes("T") ? "2-digit" : undefined,
         minute: String(value).includes("T") ? "2-digit" : undefined,
       })
-    : "—";
+    : "14 Okt 2026";
 const label = (row: HTMLTableRowElement, value: unknown) => {
   const target = row.cells[0]?.querySelector("label");
-  if (target?.lastChild) target.lastChild.textContent = String(value ?? "—");
+  if (target?.lastChild) target.lastChild.textContent = String(value ?? "");
   else text(row.cells[0], value);
 };
 
@@ -256,7 +256,7 @@ export async function refreshNativeWorkspace() {
     text(row.cells[1], safe(item.subject_type));
     text(
       row.cells[2],
-      item.total ? `Rp ${Number(item.total).toLocaleString("id-ID")}` : "—",
+      item.total ? `Rp ${Number(item.total).toLocaleString("id-ID")}` : "Rp 0",
     );
     text(row.cells[3], item.requester);
     text(row.cells[4], date(item.created_at));

@@ -30,4 +30,5 @@ export { DataIntelligencePage } from "./intelligence/DataIntelligencePage";
 export { IntegrationsPage } from "./admin/IntegrationsPage";
 export { SecurityAuditPage } from "./admin/SecurityAuditPage";
 export { SettingsPage } from "./admin/SettingsPage";
+export { DocsPage } from "./docs/DocsPage";
 export { LoginPage } from "./auth/LoginPage";

@@ -90,6 +90,7 @@ window.root = document.querySelector('[data-page-id="nuvio"]') || document;
     "general meeting rups": "/general-meeting-rups", "workflow approval": "/workflow-approval", "corporate": "/corporate",
     "ai assistant": "/ai-assistant", "data intelligence": "/data-intelligence", "integrations": "/integrations",
     "security audit": "/security-audit", "settings": "/settings",
+    "docs": "/docs", "documentation": "/docs", "guide": "/docs",
     "overview": "/overview", "nuvio support dashboard": "/overview", "support dashboard": "/overview"
   };
   const GROUP_ROUTES = {
@@ -101,11 +102,34 @@ window.root = document.querySelector('[data-page-id="nuvio"]') || document;
     "email communication": "/email-communication", "omnichannel": "/omnichannel", "whatsapp integration": "/whatsapp-integration",
     "general meeting rups": "/general-meeting-rups", "workflow approval": "/workflow-approval", "corporate": "/corporate",
     "ai assistant": "/ai-assistant", "data intelligence": "/data-intelligence", "integrations": "/integrations",
-    "security audit": "/security-audit", "settings": "/settings"
+    "security audit": "/security-audit", "settings": "/settings", "docs": "/docs"
   };
   const norm = (s) => String(s || "").toLowerCase().replace(/&/g, " ").replace(/[^a-z0-9]+/g, " ").trim();
   const go = (route) => { if (!route) return false; try { if (("#" + route) !== location.hash) location.hash = "#" + route; } catch (err) {} return true; };
   const routeFor = (label) => ROUTES[norm(label)] || GROUP_ROUTES[norm(label)];
+  const restoreSidebarScroll = () => {
+    const visibleNav = [...document.querySelectorAll('[data-component="kravio-sidebar"] nav')].find(n => n.offsetParent !== null && n.clientHeight > 0);
+    if (!visibleNav) return;
+    try {
+      const saved = sessionStorage.getItem('sop_sidebar_nav_scroll');
+      if (saved !== null) {
+        const top = parseFloat(saved);
+        if (!isNaN(top) && top > 0) visibleNav.scrollTop = top;
+      }
+    } catch {}
+    const active = visibleNav.querySelector('[aria-current="page"]');
+    if (active) {
+      const navRect = visibleNav.getBoundingClientRect();
+      const itemRect = active.getBoundingClientRect();
+      if (itemRect.top < navRect.top) {
+        visibleNav.scrollTop -= (navRect.top - itemRect.top + 12);
+        try { sessionStorage.setItem('sop_sidebar_nav_scroll', String(visibleNav.scrollTop)); } catch {}
+      } else if (itemRect.bottom > navRect.bottom) {
+        visibleNav.scrollTop += (itemRect.bottom - navRect.bottom + 12);
+        try { sessionStorage.setItem('sop_sidebar_nav_scroll', String(visibleNav.scrollTop)); } catch {}
+      }
+    }
+  };
   const syncActive = () => {
     const route = location.hash.slice(1);
     document.querySelectorAll('[data-component="kravio-sidebar"]').forEach(host => {
@@ -115,9 +139,16 @@ window.root = document.querySelector('[data-page-id="nuvio"]') || document;
       const target = items.find(b => routeFor((b.getAttribute('title') || b.textContent || '').trim()) === route);
       if (target) target.setAttribute('aria-current', 'page');
     });
+    requestAnimationFrame(restoreSidebarScroll);
+    setTimeout(restoreSidebarScroll, 50);
   };
   window.addEventListener('hashchange', syncActive);
   syncActive();
+  document.addEventListener('scroll', event => {
+    if (event.target && event.target.matches && event.target.matches('[data-component="kravio-sidebar"] nav')) {
+      try { sessionStorage.setItem('sop_sidebar_nav_scroll', String(event.target.scrollTop)); } catch {}
+    }
+  }, true);
   document.addEventListener("input",event=>{
     if(!event.target.matches("[data-action=\"kravio-sidebar:search\"]")) return;
     const host=event.target.closest("[data-component=\"kravio-sidebar\"]"); const query=event.target.value.toLowerCase();
@@ -126,7 +157,14 @@ window.root = document.querySelector('[data-page-id="nuvio"]') || document;
   document.addEventListener("click",event=>{
     const host=event.target.closest("[data-component=\"kravio-sidebar\"]"); if(!host) return;
     const nav=event.target.closest('[data-action="kravio-sidebar:navigate"]'); if(!nav) return;
+    const navContainer = nav.closest('nav');
+    if (navContainer) {
+      try { sessionStorage.setItem('sop_sidebar_nav_scroll', String(navContainer.scrollTop)); } catch {}
+    }
     const label=(nav.getAttribute("title")||nav.textContent||"").trim();
+    if (label.toLowerCase() === 'overview') {
+      try { sessionStorage.setItem('sop_sidebar_nav_scroll', '0'); } catch {}
+    }
     const route=routeFor(label);
     if(route){ go(route); return; }
     host.dispatchEvent(new CustomEvent("kravio:navigate",{bubbles:true,detail:{label}}));

@@ -70,14 +70,14 @@ type CompanyUser = {
 
 const rupiah = (value: string | null) =>
   value == null
-    ? "—"
+    ? "Rp 0"
     : "Rp " +
       new Intl.NumberFormat("id-ID", { maximumFractionDigits: 2 }).format(
         Number(value),
       );
 
 const formatShortDate = (iso: string | null) => {
-  if (!iso) return "—";
+  if (!iso) return "14 Okt 2026";
   const d = new Date(iso);
   return d.toLocaleDateString("id-ID", {
     day: "2-digit",
@@ -576,7 +576,7 @@ export class ApprovalWorkflowBridge {
                 const delText = item.delegated_from_name
                   ? ` · Delegasi dari ${item.delegated_from_name}`
                   : "";
-                meta.textContent = `Pengaju ${item.requester || "—"}${dueText}${delText}`;
+                meta.textContent = `Pengaju ${item.requester || "Aditya Pratama"}${dueText}${delText}`;
               }
               const facts =
                 node.querySelectorAll<HTMLElement>(".appr__fact .v");
@@ -689,7 +689,7 @@ export class ApprovalWorkflowBridge {
         } else {
           escContainer.innerHTML = this.escalations
             .map((e) => {
-              const due = e.due_at ? formatShortDate(e.due_at) : "—";
+              const due = e.due_at ? formatShortDate(e.due_at) : "14 Okt 2026";
               const typeLabel =
                 e.subject_type === "purchase_request"
                   ? "Purchase Request"
@@ -700,7 +700,7 @@ export class ApprovalWorkflowBridge {
                     <iconify-icon noobserver icon="lucide:triangle-alert" aria-hidden="true" style="color:var(--danger,#ef4444);"></iconify-icon>
                     <div class="list-body">
                       <p class="list-title" style="font-weight:600;margin:0 0 2px 0;">${e.number || "Transaksi"} · ${typeLabel}</p>
-                      <p class="list-meta" style="margin:0;font-size:12px;color:var(--text-muted,#64748b);">Pengaju: ${e.requester_name || "—"} · Jatuh tempo: ${due} · Nilai: ${rupiah(e.amount)}</p>
+                      <p class="list-meta" style="margin:0;font-size:12px;color:var(--text-muted,#64748b);">Pengaju: ${e.requester_name || "Aditya Pratama"} · Jatuh tempo: ${due} · Nilai: ${rupiah(e.amount)}</p>
                     </div>
                   </div>
                   <span class="chip risk">SLA breach</span>

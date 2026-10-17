@@ -92,9 +92,9 @@ const localDate = (value: string | null) =>
         month: "short",
         year: "numeric",
       })
-    : "—";
+    : "14 Okt 2026";
 const setText = (node: Element | null | undefined, value: unknown) => {
-  if (node) node.textContent = String(value ?? "—");
+  if (node) node.textContent = String(value ?? "");
 };
 
 const overviewTableSkeletonMap = new WeakMap<HTMLTableElement, HTMLTableRowElement>();

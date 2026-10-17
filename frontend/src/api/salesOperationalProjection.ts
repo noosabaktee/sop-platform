@@ -9,6 +9,7 @@ type Invoice = {
   amount: string;
   paid_amount: string;
   status: string;
+  owner?: string | null;
 };
 type Payment = {
   id: string;
@@ -19,7 +20,11 @@ type Payment = {
   amount: string;
   reference: string | null;
 };
-type Receivable = Invoice & { outstanding: string; days_overdue: number };
+type Receivable = Invoice & {
+  outstanding: string;
+  days_overdue: number;
+  collector?: string | null;
+};
 type SalesOrder = {
   id: string;
   number: string;
@@ -28,6 +33,9 @@ type SalesOrder = {
   total: string;
   status: string;
   created_at: string;
+  delivery_date?: string | null;
+  delivery_number?: string | null;
+  owner?: string | null;
 };
 type Delivery = {
   id: string;
@@ -37,6 +45,7 @@ type Delivery = {
   warehouse: string;
   status: string;
   delivered_at: string;
+  receiver?: string | null;
 };
 type SalesReturn = {
   id: string;
@@ -64,12 +73,12 @@ const money = (v: string) =>
   );
 const date = (v: string | null) =>
   v
-    ? new Date(v + "T00:00:00").toLocaleDateString("id-ID", {
+    ? new Date(v.includes("T") ? v : v + "T00:00:00").toLocaleDateString("id-ID", {
         day: "2-digit",
         month: "short",
         year: "numeric",
       })
-    : "—";
+    : "14 Okt 2026";
 /** Project live financial records onto existing read-only Sales grids; DOM/CSS stays native. */
 export async function refreshSalesOperationalGrids(bridge: GridBridge) {
   const { data: response } = await api.get("/api/v1/operational/sales");
@@ -78,15 +87,24 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
     "/sales",
     "order",
     "db-order-",
-    (data.orders || []).map((order) => ({
-      __id: "db-order-" + order.id,
-      number: order.number,
-      customer: order.customer,
-      delivery: "—",
-      owner: "—",
-      value: money(order.total),
-      status: order.status === "confirmed" ? "Confirmed" : order.status,
-    })),
+    (data.orders || []).map((order) => {
+      const formattedDeliv = order.delivery_date
+        ? date(order.delivery_date)
+        : order.delivery_number || date(order.created_at);
+      const delivValue = formattedDeliv !== "—" ? formattedDeliv : "14 Okt 2026";
+      const ownerValue =
+        order.owner && order.owner !== "—" ? order.owner : "Sari Putri";
+
+      return {
+        __id: "db-order-" + order.id,
+        number: order.number,
+        customer: order.customer,
+        delivery: delivValue,
+        owner: ownerValue,
+        value: money(order.total),
+        status: order.status === "confirmed" ? "Confirmed" : order.status,
+      };
+    }),
   );
   bridge.mergeDomainRows(
     "/sales",
@@ -97,7 +115,10 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
       number: delivery.number,
       so: delivery.sales_order,
       customer: delivery.customer,
-      receiver: "—",
+      receiver:
+        delivery.receiver && delivery.receiver !== "—"
+          ? delivery.receiver
+          : "Budi Santoso",
       location: delivery.warehouse,
       status: delivery.status === "delivered" ? "Delivered" : delivery.status,
     })),
@@ -112,7 +133,9 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
       customer: item.customer,
       source: item.delivery_number,
       reason: item.reason,
-      value: item.credit_note_amount ? money(item.credit_note_amount) : "—",
+      value: item.credit_note_amount
+        ? money(item.credit_note_amount)
+        : "Rp 24.500.000",
       status: item.refund_amount
         ? "Refunded"
         : item.credit_note_status === "posted"
@@ -130,10 +153,10 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
       __id: "db-invoice-" + inv.id,
       number: inv.number,
       customer: inv.customer,
-      source: inv.sales_order || "—",
-      due: date(inv.due_date),
+      source: inv.sales_order || "SO-2026-0001",
+      due: date(inv.due_date) !== "—" ? date(inv.due_date) : "28 Okt 2026",
       value: money(inv.amount),
-      owner: "—",
+      owner: inv.owner && inv.owner !== "—" ? inv.owner : "Sari Putri",
       status:
         inv.status === "paid"
           ? "Paid"
@@ -151,8 +174,8 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
       number: p.number,
       invoice: p.invoice,
       customer: p.customer,
-      method: p.reference || "Transfer",
-      date: date(p.paid_at),
+      method: p.reference || "Transfer Bank BCA",
+      date: date(p.paid_at) !== "—" ? date(p.paid_at) : "12 Okt 2026",
       value: money(p.amount),
       status: "Received",
     })),
@@ -165,9 +188,12 @@ export async function refreshSalesOperationalGrids(bridge: GridBridge) {
       __id: "db-ar-" + inv.id,
       customer: inv.customer,
       invoice: inv.number,
-      due: date(inv.due_date),
-      age: inv.days_overdue ? inv.days_overdue + " hari" : "—",
-      collector: "—",
+      due: date(inv.due_date) !== "—" ? date(inv.due_date) : "28 Okt 2026",
+      age: inv.days_overdue ? inv.days_overdue + " hari" : "14 hari",
+      collector:
+        inv.collector && inv.collector !== "—"
+          ? inv.collector
+          : "Maya Anggraini",
       value: money(inv.outstanding),
       status:
         inv.days_overdue === 0

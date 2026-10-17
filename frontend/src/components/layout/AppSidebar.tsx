@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "../../app/AuthContext";
 
 export interface NavItem {
@@ -77,9 +77,31 @@ export const SIDEBAR_NAV_SECTIONS: NavSection[] = [
       { title: "Integrations", icon: "lucide:plug", route: "/integrations" },
       { title: "Security & Audit", icon: "lucide:shield-check", route: "/security-audit" },
       { title: "Settings", icon: "lucide:settings-2", route: "/settings" },
+      { title: "Docs", icon: "lucide:book-open", route: "/docs" },
     ],
   },
 ];
+
+// In-memory fallback scroll cache for seamless sidebar position preservation
+let lastKnownSidebarScroll = 0;
+
+export const setStoredSidebarScroll = (scrollTop: number) => {
+  lastKnownSidebarScroll = scrollTop;
+  try {
+    sessionStorage.setItem("sop_sidebar_nav_scroll", String(scrollTop));
+  } catch {}
+};
+
+export const getStoredSidebarScroll = (): number => {
+  try {
+    const saved = sessionStorage.getItem("sop_sidebar_nav_scroll");
+    if (saved !== null) {
+      const parsed = parseFloat(saved);
+      if (!isNaN(parsed)) return parsed;
+    }
+  } catch {}
+  return lastKnownSidebarScroll;
+};
 
 export interface AppSidebarProps {
   currentRoute?: string;
@@ -111,6 +133,72 @@ export function AppSidebar({
   const sidebarRegionId = regionNodeId || (nodePrefix ? `${nodePrefix}.sidebar` : undefined);
   const sidebarNavId = nodeId || (nodePrefix ? `${nodePrefix}.sidebar.navigation` : "kravio.sidebar.navigation");
 
+  const navRef = useRef<HTMLElement>(null);
+  const [activeRoute, setActiveRoute] = useState<string>(() => {
+    if (currentRoute) return currentRoute;
+    if (typeof window !== "undefined") {
+      return window.location.hash.slice(1) || "/my-workspace";
+    }
+    return "/my-workspace";
+  });
+
+  useEffect(() => {
+    if (currentRoute) {
+      setActiveRoute(currentRoute);
+      return;
+    }
+    const syncRoute = () => {
+      setActiveRoute(window.location.hash.slice(1) || "/my-workspace");
+    };
+    window.addEventListener("hashchange", syncRoute);
+    return () => window.removeEventListener("hashchange", syncRoute);
+  }, [currentRoute]);
+
+  // Keep sidebar scroll position stable and ensure active menu item is comfortably visible
+  const restoreAndFocusNav = useCallback(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    // Only operate if this sidebar is currently visible (not inside a hidden page)
+    if (nav.offsetParent === null && nav.getClientRects().length === 0) {
+      return;
+    }
+
+    // 1. Restore the last known scroll position so the user stays in the same sidebar viewport
+    const savedScroll = getStoredSidebarScroll();
+    if (savedScroll > 0) {
+      nav.scrollTop = savedScroll;
+    }
+
+    // 2. Locate active button matching the current route
+    const activeBtn =
+      nav.querySelector<HTMLElement>(`button[data-route="${activeRoute}"]`) ||
+      nav.querySelector<HTMLElement>('button[aria-current="page"]');
+
+    if (activeBtn) {
+      const navRect = nav.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+
+      // If active menu item is clipped above or below visible nav area, adjust nav.scrollTop directly
+      if (btnRect.top < navRect.top) {
+        nav.scrollTop -= (navRect.top - btnRect.top + 12);
+        setStoredSidebarScroll(nav.scrollTop);
+      } else if (btnRect.bottom > navRect.bottom) {
+        nav.scrollTop += (btnRect.bottom - navRect.bottom + 12);
+        setStoredSidebarScroll(nav.scrollTop);
+      }
+    }
+  }, [activeRoute]);
+
+  useEffect(() => {
+    const rafId = requestAnimationFrame(restoreAndFocusNav);
+    const timeoutId = setTimeout(restoreAndFocusNav, 50);
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(timeoutId);
+    };
+  }, [restoreAndFocusNav, activeRoute]);
+
   return (
     <div className="sidebar-region" data-node-id={sidebarRegionId}>
       <aside
@@ -124,8 +212,10 @@ export function AppSidebar({
             type="button"
             className="c-kravio-sidebar__home"
             data-action="kravio-sidebar:navigate"
+            data-route="/overview"
             title="Overview"
             aria-label="Buka Overview"
+            onClick={() => setStoredSidebarScroll(0)}
           >
             <span className="c-kravio-sidebar__logo" aria-hidden="true">
               SO
@@ -159,7 +249,24 @@ export function AppSidebar({
           <kbd>⌘ K</kbd>
         </div>
 
-        <nav data-part="navigation">
+        <nav
+          ref={navRef}
+          data-part="navigation"
+          onScroll={(e) => {
+            const target = e.currentTarget;
+            if (target.clientHeight > 0) {
+              setStoredSidebarScroll(target.scrollTop);
+            }
+          }}
+          onClick={(e) => {
+            const btn = (e.target as HTMLElement).closest(
+              'button[data-action="kravio-sidebar:navigate"]'
+            );
+            if (btn && navRef.current) {
+              setStoredSidebarScroll(navRef.current.scrollTop);
+            }
+          }}
+        >
           {SIDEBAR_NAV_SECTIONS.map((section) => (
             <React.Fragment key={section.caption}>
               <p className="c-kravio-sidebar__caption">{section.caption}</p>
@@ -168,8 +275,9 @@ export function AppSidebar({
                   key={it.route}
                   type="button"
                   data-action="kravio-sidebar:navigate"
+                  data-route={it.route}
                   title={it.title}
-                  aria-current={currentRoute === it.route ? "page" : undefined}
+                  aria-current={activeRoute === it.route ? "page" : undefined}
                 >
                   <iconify-icon noobserver icon={it.icon} aria-hidden="true"></iconify-icon>
                   <span>{it.title}</span>

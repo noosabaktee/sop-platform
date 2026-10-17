@@ -118,14 +118,14 @@ export function OverviewSlaTable() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr data-record="—" data-priority="Medium" data-status="Pending" data-template-row="true">
+                    <tr data-record="REC-2026-0001" data-priority="Medium" data-status="Pending" data-template-row="true">
                       <td>
                         <label className="c-kravio-table__ticket">
                           <input type="checkbox" data-action="kravio-table:select" aria-label="Pilih record" />
-                          Memuat data...
+                          REC-2026-0001
                         </label>
                       </td>
-                      <td>Memuat pekerjaan dan SLA dari database...</td>
+                      <td>Verifikasi dokumen pengujian implementasi ERP</td>
                       <td>
                         <span className="c-kravio-status" data-component="kravio-status" data-tone="warning">
                           <iconify-icon noobserver icon="lucide:chart-no-axes-column-increasing" aria-hidden="true"></iconify-icon>
@@ -135,10 +135,10 @@ export function OverviewSlaTable() {
                       <td>
                         <span className="c-kravio-avatar" data-component="kravio-avatar">
                           <span className="c-kravio-avatar__image">
-                            <span aria-hidden="true">—</span>
+                            <span aria-hidden="true">AP</span>
                             <img src="" alt="" loading="lazy" />
                           </span>
-                          <span data-part="name">—</span>
+                          <span data-part="name">Aditya Pratama</span>
                         </span>
                       </td>
                       <td>
@@ -147,8 +147,8 @@ export function OverviewSlaTable() {
                           <span data-part="label">Pending</span>
                         </span>
                       </td>
-                      <td>—</td>
-                      <td>—</td>
+                      <td>CRM & Sales</td>
+                      <td>14 Okt 2026</td>
                       <td>
                         <button type="button" className="c-kravio-table__more" aria-label="Aksi" data-action="kravio-table:detail">
                           <iconify-icon noobserver icon="lucide:ellipsis-vertical" aria-hidden="true"></iconify-icon>

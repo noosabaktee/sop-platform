@@ -986,8 +986,8 @@ class DatabaseSeeder extends Seeder
             if (! $cols) {
                 continue;
             }
-            // Generate 10 rich, realistic Indonesian business rows per table
-            for ($i = 0; $i < 10; $i++) {
+            // Generate 20 rich, realistic Indonesian business rows per table (spanning 2023-2026)
+            for ($i = 0; $i < 20; $i++) {
                 $cells = [];
                 foreach ($cols as $col) {
                     $h = strtolower(trim((string) $col));
@@ -1029,38 +1029,68 @@ class DatabaseSeeder extends Seeder
             return '';
         }
 
-        // Customer / Company / Client
+        $years = [2026, 2026, 2026, 2026, 2026, 2026, 2026, 2026, 2025, 2025, 2025, 2025, 2024, 2024, 2024, 2024, 2023, 2023, 2023, 2023];
+        $year = $years[$i % count($years)];
+
+        // Modul
+        if ($name === 'modul') {
+            $modules = [
+                'CRM & Sales', 'Quotation', 'Sales Orders', 'Projects', 'Purchase',
+                'Inventory', 'Finance & GL', 'Security & Audit', 'Master Data', 'Reports',
+                'Workspace', 'General Meeting', 'Workflow Approval', 'Corporate Governance',
+                'Integrations', 'Document Vault', 'WhatsApp Gateway', 'Data Intelligence',
+                'Omnichannel', 'AI Assistant'
+            ];
+            return $modules[$i % count($modules)];
+        }
+
+        // Customer / Company / Client / Instansi
         if (str_contains($name, 'customer') || str_contains($name, 'pelanggan') || str_contains($name, 'perusahaan') || str_contains($name, 'company') || str_contains($name, 'client') || str_contains($name, 'instansi')) {
             $allClients = [
                 'PT Nusantara Teknologi Mandiri', 'PT Telaga Biru Energi', 'PT Mandiri Integrasi Solusindo',
                 'PT Cakra Solusi Otomasi', 'PT Delta Manufaktur Industri', 'PT Sentosa Digital Logistik',
-                'PT Bintang Farma Sejahtera', 'PT Semen Graha Persada', 'PT Surya Agro Makmur', 'PT Mega Ritel Nusantara'
+                'PT Bintang Farma Sejahtera', 'PT Semen Graha Persada', 'PT Surya Agro Makmur', 'PT Mega Ritel Nusantara',
+                'PT Petrokimia Jaya Raya', 'PT Samudera Maritim Logistik', 'PT Telekomunikasi Solusi Prima', 'PT Krakatau Engineering Utama',
+                'PT Barata Multi Industri', 'PT Indofood Agrolestari', 'PT Pupuk Sriwidjaja Palembang', 'PT Pelabuhan Indonesia Persero',
+                'PT Bukit Asam Tbk', 'PT Timah Solusi Industri'
             ];
             return $allClients[$i % count($allClients)];
         }
 
-        // People / Owner / PIC / Assignee
-        if (str_contains($name, 'owner') || str_contains($name, 'pemilik') || str_contains($name, 'pic') || str_contains($name, 'pm') || str_contains($name, 'assignee') || str_contains($name, 'sales') || str_contains($name, 'manager') || str_contains($name, 'collector') || str_contains($name, 'pengaju') || str_contains($name, 'aktor') || str_contains($name, 'diubah oleh') || str_contains($name, 'oleh')) {
+        // Delivery / Pengiriman
+        if (str_contains($name, 'pengiriman') || str_contains($name, 'delivery') || str_contains($name, 'kirim')) {
+            $delivs = [
+                '14 Okt 2026', '12 Okt 2026', '09 Okt 2026', '07 Okt 2026',
+                '02 Okt 2026', '28 Sep 2026', '22 Sep 2026', '15 Sep 2026',
+                '08 Sep 2026', '01 Sep 2026', '15 Nov 2025', '20 Sep 2025',
+                '12 Jun 2025', '04 Mar 2025', '18 Des 2024', '10 Okt 2024',
+                '15 Jul 2024', '02 Feb 2024', '14 Agu 2023', '05 Mei 2023'
+            ];
+            return $delivs[$i % count($delivs)];
+        }
+
+        // Receiver / Penerima
+        if (str_contains($name, 'receiver') || str_contains($name, 'penerima')) {
+            $receivers = [
+                'Budi Santoso', 'Andi Saputra', 'Hendro Wijaya', 'Siti Aminah',
+                'Agus Pranoto', 'Dewi Lestari', 'Rahmat Hidayat', 'Tri Wahyuni',
+                'Fajar Nugroho', 'Eko Prasetyo', 'Doni Kusuma', 'Lina Marlina',
+                'Joko Susilo', 'Rian Hidayat', 'Surya Saputra', 'Nadia Ramadhani',
+                'Ahmad Fauzi', 'Sri Rahayu', 'Hadi Sucipto', 'Yuliana Putri'
+            ];
+            return $receivers[$i % count($receivers)];
+        }
+
+        // People / Owner / PIC / Assignee / PM / Collector / Pengaju / Approver / Manager / Sales / Aktor
+        if (str_contains($name, 'owner') || str_contains($name, 'pemilik') || str_contains($name, 'pic') || str_contains($name, 'pm') || str_contains($name, 'assignee') || str_contains($name, 'sales') || str_contains($name, 'manager') || str_contains($name, 'collector') || str_contains($name, 'penagih') || str_contains($name, 'pengaju') || str_contains($name, 'aktor') || str_contains($name, 'diubah oleh') || str_contains($name, 'oleh') || str_contains($name, 'approver') || str_contains($name, 'requester')) {
             $people = [
                 'Aditya Pratama', 'Rina Wijaya', 'Bagus Santoso', 'Sari Putri',
                 'Hendra Gunawan', 'Dina Lestari', 'Rizky Ramadhan', 'Maya Anggraini',
-                'Bambang Hidayat', 'Dewi Sartika'
+                'Bambang Hidayat', 'Dewi Sartika', 'Andi Saputra', 'Rudi Hermawan',
+                'Lestari Utami', 'Fajar Ramadhan', 'Dedi Kurniawan', 'Indah Permata',
+                'Wahyu Setiawan', 'Siti Fatimah', 'Aris Prasetya', 'Ratna Kusuma'
             ];
             return $people[$i % count($people)];
-        }
-
-        // Lead / Prospect / Name
-        if (str_contains($name, 'lead') || str_contains($name, 'prospect') || str_contains($name, 'nama') || str_contains($name, 'name')) {
-            if (str_contains($name, 'akun') || str_contains($name, 'account')) {
-                $accs = ['Kas Kecil', 'Bank BCA Giro', 'Bank Mandiri', 'Piutang Usaha', 'Persediaan Barang', 'Hutang Usaha', 'Pendapatan Jasa', 'HPP Hardware', 'Beban Gaji', 'Beban Sewa'];
-                return $accs[$i % count($accs)];
-            }
-            if (str_contains($name, 'aset') || str_contains($name, 'asset')) {
-                $assets = ['Server Rack Xeon 1U', 'Laptop ThinkPad T14 Workstation', 'Switch Cisco Catalyst 48-Port', 'Kendaraan Operasional Toyota Hilux', 'Industrial Controller IoT Tester', 'Barcode Scanner Honeywell', 'AC Inverter Ruang Server', 'Generator Set Cummins 25kVA', 'UPS Emerson Liebert 10kVA', 'Furniture Workstation Lab'];
-                return $assets[$i % count($assets)];
-            }
-            $names = ['Aditya Pratama', 'Rina Wijaya', 'Bagus Santoso', 'Sari Putri', 'Hendra Gunawan', 'Dina Lestari', 'Rizky Ramadhan', 'Maya Anggraini', 'Bambang Hidayat', 'Dewi Sartika'];
-            return $names[$i % count($names)];
         }
 
         // Project / Proyek
@@ -1075,9 +1105,92 @@ class DatabaseSeeder extends Seeder
                 'Security Assessment & Audit ISO 27001',
                 'Command Center & Monitoring Dashboard',
                 'Implementasi Asset Tracking Maritim',
-                'Integrasi API Payment & Multi-Bank'
+                'Integrasi API Payment & Multi-Bank',
+                'Otomasi Pembukuan & Pelaporan Keuangan',
+                'Implementasi Fleet Management IoT',
+                'Smart Metering Kelistrikan Site',
+                'Sistem Pengendalian Dokumen & Vault',
+                'Digitalisasi Layanan Pelanggan CRM',
+                'Rollout Pemindai RFID Gudang Utama',
+                'Sistem Monitoring Bahan Baku Real-Time',
+                'Penyelarasan Tata Kelola Perusahaan',
+                'Sistem Evaluasi Pengadaan Vendor',
+                'Integrasi Omnichannel & WhatsApp'
             ];
             return $prjNames[$i % count($prjNames)].' - '.$customer->name;
+        }
+
+        // Task
+        if (str_contains($name, 'task')) {
+            $tasks = [
+                'Implementasi modul accounting & perpajakan',
+                'Konfigurasi server host & reverse proxy SSL',
+                'User Acceptance Testing (UAT) modul sales order',
+                'Migrasi data master customer & vendor riil',
+                'Pelatihan operasional staf gudang & logistik',
+                'Audit sistem keamanan informasi & pentest',
+                'Integrasi API Payment BCA & Mandiri',
+                'Setup barcode scanner & firmware reader',
+                'Penyusunan blueprint arsitektur sistem ERP',
+                'Pengujian stress-test transaksi simultan',
+                'Verifikasi rekonsiliasi mutasi rekening bank',
+                'Konfigurasi matriks approval multi-tier',
+                'Validasi kartu stok & physical count gudang',
+                'Pengaturan parameter notifikasi WhatsApp',
+                'Review berkas legal kontrak kerja sama',
+                'Penerbitan faktur pajak elektronik masa',
+                'Pemeriksaan kepatuhan log audit forensik',
+                'Kalibrasi modul controller IoT di site',
+                'Finalisasi Berita Acara Handover BAST',
+                'Evaluasi pemenuhan SLA bulanan klien'
+            ];
+            return $tasks[$i % count($tasks)];
+        }
+
+        // Next Action
+        if (str_contains($name, 'next action')) {
+            $actions = [
+                'Kirim penawaran final ke klien',
+                'Jadwalkan kick-off meeting implementasi',
+                'Verifikasi kelengkapan dokumen BAST',
+                'Proses pembayaran faktur supplier',
+                'Update kartu stok gudang Cikarang',
+                'Kirim reminder invoice jatuh tempo',
+                'Uji coba kalibrasi sensor di site',
+                'Lakukan rekonsiliasi kas operasional',
+                'Daftarkan sertifikat SSL baru',
+                'Penerbitan delivery order tahap 2',
+                'Review deviasi anggaran proyek',
+                'Pemeriksaan log sesi pengguna aktif',
+                'Tindak lanjut pengajuan garansi unit',
+                'Kirim rekapitulasi faktur pajak',
+                'Koordinasi tim vendor logistik',
+                'Finalisasi berita acara rapat direksi',
+                'Approval purchase request komponen',
+                'Validasi nota kredit retur barang',
+                'Pembaruan database firmware gateway',
+                'Presentasi hasil UAT ke stakeholder'
+            ];
+            return $actions[$i % count($actions)];
+        }
+
+        // Lead / Prospect / Nama
+        if (str_contains($name, 'lead') || str_contains($name, 'prospect') || str_contains($name, 'nama') || str_contains($name, 'name')) {
+            if (str_contains($name, 'akun') || str_contains($name, 'account')) {
+                $accs = ['Kas Kecil', 'Bank BCA Giro', 'Bank Mandiri', 'Piutang Usaha', 'Persediaan Barang', 'Hutang Usaha', 'Pendapatan Jasa', 'HPP Hardware', 'Beban Gaji', 'Beban Sewa', 'Beban Listrik & Air', 'Beban Logistik'];
+                return $accs[$i % count($accs)];
+            }
+            if (str_contains($name, 'aset') || str_contains($name, 'asset')) {
+                $assets = ['Server Rack Xeon 1U', 'Laptop ThinkPad T14 Workstation', 'Switch Cisco Catalyst 48-Port', 'Kendaraan Operasional Toyota Hilux', 'Industrial Controller IoT Tester', 'Barcode Scanner Honeywell', 'AC Inverter Ruang Server', 'Generator Set Cummins 25kVA', 'UPS Emerson Liebert 10kVA', 'Furniture Workstation Lab'];
+                return $assets[$i % count($assets)];
+            }
+            $leadNames = [
+                'Inisiatif ERP Enterprise', 'Otomasi Smart SCADA', 'Smart Warehouse & RFID',
+                'Digitalisasi Supply Chain', 'Infrastruktur Cloud Hybrid', 'Core Accounting System',
+                'Security Assessment ISO 27001', 'Monitoring Dashboard IoT', 'Asset Tracking Maritim',
+                'Payment Gateway Terpadu', 'Otomasi Logistik Marunda', 'Manajemen Mutu ISO'
+            ];
+            return $leadNames[$i % count($leadNames)].' - '.$customer->name;
         }
 
         // Vendors
@@ -1087,7 +1200,8 @@ class DatabaseSeeder extends Seeder
                 'PT Sumber Komponen Presisi', 'PT Arta Sarana Informatika',
                 'PT Sinar Distribusi Otomasi', 'CV Global Office Solusi',
                 'PT Triputra Mitra Security', 'PT Bina Karya Sarana',
-                'PT Cipta Sarana Teknologi', 'CV Multi Solusi Perdana'
+                'PT Cipta Sarana Teknologi', 'CV Multi Solusi Perdana',
+                'PT Daya Mandiri Perkasa', 'PT Mega Cipta Piranti'
             ];
             return $ven[$i % count($ven)];
         }
@@ -1104,12 +1218,17 @@ class DatabaseSeeder extends Seeder
                 'Maintenance & SLA Tahunan 24/7',
                 'Audit Keamanan Sistem & Pentest',
                 'Kabel Industrial Shielded Cat6 STP',
-                'Mounting Bracket & IP67 Enclosure Kit'
+                'Mounting Bracket & IP67 Enclosure Kit',
+                'Sensor Suhu & Kelembaban Presisi',
+                'Barcode Printer Thermal Industrial',
+                'Modul Power Supply Redundant 500W',
+                'Lisensi Enterprise Database Engine',
+                'Smart Gateway LoRaWAN Outdoor'
             ];
             return $items[$i % count($items)];
         }
 
-        // Warehouse / Location / Gudang
+        // Warehouse / Location / Gudang / Kota / Region
         if (str_contains($name, 'gudang') || str_contains($name, 'warehouse') || str_contains($name, 'lokasi') || str_contains($name, 'kota') || str_contains($name, 'region')) {
             $locations = [
                 'Gudang Pusat Cikarang', 'Gudang Transit Bandung',
@@ -1126,7 +1245,7 @@ class DatabaseSeeder extends Seeder
             $emails = [
                 'aditya.pratama@sop.local', 'rina.wijaya@sop.local', 'bagus.santoso@sop.local', 'sari.putri@sop.local',
                 'hendra.gunawan@sop.local', 'dina.lestari@sop.local', 'rizky.ramadhan@sop.local', 'maya.anggraini@sop.local',
-                'procurement@nusantaratech.co.id', 'purchasing@telagabiru.co.id'
+                'procurement@nusantaratech.co.id', 'purchasing@telagabiru.co.id', 'vendor@mandirisolusi.co.id', 'purchasing@cakraotomasi.com'
             ];
             return $emails[$i % count($emails)];
         }
@@ -1136,12 +1255,13 @@ class DatabaseSeeder extends Seeder
             return sprintf('0%d.%03d.%03d.%d-%03d.000', ($i % 3) + 1, 100 + $i * 27, 400 + $i * 15, ($i % 9) + 1, 12 + $i * 3);
         }
         if (str_contains($name, 'nik')) {
-            return 'NIK-202'.($i % 5 + 1).'-'.sprintf('%04d', 40 + $i * 11);
+            return 'NIK-'.$year.'-'.sprintf('%04d', 40 + $i * 11);
         }
 
         // Financial & Rupiah Values
-        if (str_contains($name, 'nilai') || str_contains($name, 'amount') || str_contains($name, 'revenue') || str_contains($name, 'total') || str_contains($name, 'budget') || str_contains($name, 'harga') || str_contains($name, 'ar') || str_contains($name, 'biaya') || str_contains($name, 'cost') || str_contains($name, 'saldo') || str_contains($name, 'balance') || str_contains($name, 'debit') || str_contains($name, 'credit') || str_contains($name, 'subtotal') || str_contains($name, 'komisi')) {
-            $base = [125, 45, 88, 240, 65, 180, 35, 95, 150, 320][$i];
+        if (str_contains($name, 'nilai') || str_contains($name, 'amount') || str_contains($name, 'revenue') || str_contains($name, 'total') || str_contains($name, 'budget') || str_contains($name, 'harga') || str_contains($name, 'ar') || str_contains($name, 'biaya') || str_contains($name, 'cost') || str_contains($name, 'saldo') || str_contains($name, 'balance') || str_contains($name, 'debit') || str_contains($name, 'credit') || str_contains($name, 'subtotal') || str_contains($name, 'komisi') || str_contains($name, 'perolehan') || str_contains($name, 'nilai buku') || str_contains($name, 'rencana') || str_contains($name, 'realisasi') || str_contains($name, 'jumlah')) {
+            $bases = [125, 45, 88, 240, 65, 180, 35, 95, 150, 320, 210, 78, 160, 420, 95, 310, 175, 290, 85, 340];
+            $base = $bases[$i % count($bases)];
             if (str_contains($name, '(jt)')) {
                 return (string) $base;
             }
@@ -1153,15 +1273,15 @@ class DatabaseSeeder extends Seeder
 
         // Serial / Lot / Numbers
         if (str_contains($name, 'serial')) {
-            return 'SN-2026-'.sprintf('%06d', ($i + 1) * 31415);
+            return 'SN-'.$year.'-'.sprintf('%06d', ($i + 1) * 31415);
         }
         if (str_contains($name, 'lot') || str_contains($name, 'batch')) {
-            return 'LOT-2026-Q'.(($i % 4) + 1).'-'.sprintf('%03d', $i + 1);
+            return 'LOT-'.$year.'-Q'.(($i % 4) + 1).'-'.sprintf('%03d', $i + 1);
         }
-        if (str_contains($name, 'nomor') || str_contains($name, 'number') || str_contains($name, 'kode') || str_contains($name, 'no.') || str_contains($name, 'ref') || str_contains($name, 'po') || str_contains($name, 'pr') || str_contains($name, 'so') || str_contains($name, 'inv') || str_contains($name, 'record')) {
+        if (str_contains($name, 'nomor') || str_contains($name, 'number') || str_contains($name, 'kode') || str_contains($name, 'no.') || str_contains($name, 'ref') || str_contains($name, 'po') || str_contains($name, 'pr') || str_contains($name, 'so') || str_contains($name, 'inv') || str_contains($name, 'record') || str_contains($name, 'wbs')) {
             $prefix = strtoupper(substr(trim($route, '/'), 0, 3));
-            if ($prefix === '') $prefix = 'REC';
-            return $prefix.'-2026-'.sprintf('%04d', $i + 1);
+            if ($prefix === '' || $prefix === 'OVE') $prefix = 'REC';
+            return $prefix.'-'.$year.'-'.sprintf('%04d', $i + 1);
         }
 
         // Health / Status
@@ -1174,38 +1294,44 @@ class DatabaseSeeder extends Seeder
             return $statuses[$i % count($statuses)];
         }
 
-        // Dates / Deadlines / Timestamps
-        if (str_contains($name, 'tanggal') || str_contains($name, 'date') || str_contains($name, 'due') || str_contains($name, 'deadline') || str_contains($name, 'mulai') || str_contains($name, 'selesai') || str_contains($name, 'waktu') || str_contains($name, 'updated') || str_contains($name, 'effective') || str_contains($name, 'terakhir') || str_contains($name, 'period') || str_contains($name, 'periode')) {
+        // Dates / Deadlines / Timestamps (2023 - 2026 Multi-Year)
+        if (str_contains($name, 'tanggal') || str_contains($name, 'date') || str_contains($name, 'due') || str_contains($name, 'deadline') || str_contains($name, 'mulai') || str_contains($name, 'selesai') || str_contains($name, 'waktu') || str_contains($name, 'updated') || str_contains($name, 'effective') || str_contains($name, 'terakhir') || str_contains($name, 'period') || str_contains($name, 'periode') || str_contains($name, 'jatuh tempo') || str_contains($name, 'valid until') || str_contains($name, 'berlaku') || str_contains($name, 'need by') || str_contains($name, 'timestamp') || str_contains($name, 'masa pajak')) {
             $dates = [
-                '12 Okt 2026', '16 Okt 2026', '22 Okt 2026', '28 Okt 2026',
-                '04 Nov 2026', '15 Nov 2026', '25 Nov 2026', '08 Des 2026',
-                '20 Des 2026', '15 Jan 2027'
+                '14 Okt 2026', '12 Okt 2026', '28 Sep 2026', '15 Agu 2026',
+                '22 Jun 2026', '10 Mei 2026', '18 Mar 2026', '05 Jan 2026',
+                '15 Nov 2025', '20 Sep 2025', '12 Jun 2025', '04 Mar 2025',
+                '18 Des 2024', '10 Okt 2024', '15 Jul 2024', '02 Feb 2024',
+                '20 Nov 2023', '14 Agu 2023', '05 Mei 2023', '12 Jan 2023'
             ];
             return $dates[$i % count($dates)];
         }
 
-        // Percentages / Probabilities / Progress / Scores
-        if (str_contains($name, 'progress') || str_contains($name, 'score') || str_contains($name, 'prob') || str_contains($name, 'rate') || str_contains($name, '%') || str_contains($name, 'growth')) {
-            $percentages = [100, 85, 90, 75, 60, 95, 70, 80, 50, 100];
+        // Percentages / Probabilities / Progress / Scores / Growth
+        if (str_contains($name, 'progress') || str_contains($name, 'score') || str_contains($name, 'prob') || str_contains($name, 'rate') || str_contains($name, '%') || str_contains($name, 'growth') || str_contains($name, 'bobot') || str_contains($name, 'margin') || str_contains($name, 'alokasi') || str_contains($name, 'achievement') || str_contains($name, 'target') || str_contains($name, 'confidence') || str_contains($name, 'perubahan')) {
+            $percentages = [100, 85, 90, 75, 60, 95, 70, 80, 92, 88, 78, 96, 65, 82, 94, 72, 89, 91, 84, 98];
             return $percentages[$i % count($percentages)].'%';
         }
 
-        // Quantities & Stok
-        if (str_contains($name, 'qty') || str_contains($name, 'quantity') || str_contains($name, 'stok') || str_contains($name, 'on hand') || str_contains($name, 'reserved') || str_contains($name, 'available') || str_contains($name, 'min')) {
-            $qtys = [25, 40, 15, 80, 50, 10, 65, 30, 100, 20];
+        // Quantities, Stok, In, Out, Saldo
+        if (str_contains($name, 'qty') || str_contains($name, 'quantity') || str_contains($name, 'stok') || str_contains($name, 'on hand') || str_contains($name, 'reserved') || str_contains($name, 'available') || str_contains($name, 'min') || str_contains($name, 'in') || str_contains($name, 'out') || str_contains($name, 'saldo')) {
+            $qtys = [25, 40, 15, 80, 50, 10, 65, 30, 100, 20, 45, 12, 75, 35, 90, 60, 18, 55, 85, 22];
             return (string) $qtys[$i % count($qtys)];
         }
 
         // Priorities & Severities
         if (str_contains($name, 'priority') || str_contains($name, 'prioritas') || str_contains($name, 'severity')) {
-            $prio = ['High', 'Medium', 'Low', 'Critical', 'Medium', 'High', 'Medium', 'Low', 'High', 'Medium'];
+            $prio = ['Tinggi', 'Sedang', 'Rendah', 'Kritis', 'Sedang', 'Tinggi', 'Sedang', 'Rendah', 'Tinggi', 'Sedang'];
             return $prio[$i % count($prio)];
         }
 
-        // Terms of Payment
+        // Terms of Payment & Lead Time
         if (str_contains($name, 'terms')) {
-            $terms = ['Net 30', 'Net 14', 'Net 45', 'Net 30', 'CBD (Cash Before Delivery)', 'Net 60', 'Net 30', 'Net 14', 'Net 30', 'Net 45'];
+            $terms = ['Net 30 Hari', 'Net 14 Hari', 'Net 45 Hari', 'Net 30 Hari', 'CBD (Cash Before Delivery)', 'Net 60 Hari', 'Net 30 Hari', 'Net 14 Hari', 'DP 30% + Termin 70%', 'Net 45 Hari'];
             return $terms[$i % count($terms)];
+        }
+        if (str_contains($name, 'lead time')) {
+            $leadTimes = ['7 Hari Kerja', '14 Hari Kalender', '3 Hari Kerja', '21 Hari Kalender', '10 Hari Kerja'];
+            return $leadTimes[$i % count($leadTimes)];
         }
 
         // UOM / Unit
@@ -1217,7 +1343,7 @@ class DatabaseSeeder extends Seeder
         // Documents & Templates
         if (str_contains($name, 'dokumen') || str_contains($name, 'template') || str_contains($name, 'laporan') || str_contains($name, 'report')) {
             $docs = [
-                'SOP-ENG-001 Prosedur Pengujian Hardware & Firmware',
+                'SOP-ENG-001 Standar Pengujian Hardware & Firmware',
                 'CTR-2026 Kontrak Kerja Sama Implementasi ERP',
                 'BAST-2026 Berita Acara Serah Terima Pekerjaan',
                 'SLA-2026 Perjanjian Pemeliharaan Sistem 24/7',
@@ -1234,16 +1360,14 @@ class DatabaseSeeder extends Seeder
         // Tenders
         if (str_contains($name, 'tender')) {
             $tnds = [
-                'TND-44 Modernisasi Data Center Hybrid - LKPP',
-                'TND-47 Smart City Command Center Tahap 3 - Pemkot Surabaya',
-                'TND-49 Sistem Monitoring Distribusi Energi - Pertamina',
-                'TND-52 Warehouse Management & RFID - Pelindo Solusi Logistik',
-                'TND-55 Core ERP Industri Kimia - PT Pupuk Indonesia',
-                'TND-58 Otomasi Pelaporan Finansial - Otoritas Jasa Keuangan',
-                'TND-61 Pelacakan Kontainer Terpadu - PT Samudera Indonesia',
-                'TND-64 Digitalisasi Manajemen Mutu ISO - PT Bio Farma',
-                'TND-67 Security Operations Center - Bank Indonesia',
-                'TND-70 Smart Metering Listrik Industri - PT PLN Nusantara Power'
+                'TND-2026 Modernisasi Data Center Hybrid - LKPP',
+                'TND-2026 Smart City Command Center Tahap 3 - Surabaya',
+                'TND-2025 Sistem Monitoring Distribusi Energi - Pertamina',
+                'TND-2025 Warehouse Management & RFID - Pelindo',
+                'TND-2024 Core ERP Industri Kimia - Pupuk Indonesia',
+                'TND-2024 Otomasi Pelaporan Finansial - OJK',
+                'TND-2023 Pelacakan Kontainer Terpadu - Samudera Indonesia',
+                'TND-2023 Digitalisasi Manajemen Mutu ISO - Bio Farma'
             ];
             return $tnds[$i % count($tnds)];
         }
@@ -1251,16 +1375,14 @@ class DatabaseSeeder extends Seeder
         // Proposals
         if (str_contains($name, 'proposal')) {
             $props = [
-                'PROP-118 Enterprise ERP Solution v2 - PT Krakatau Steel',
-                'PROP-121 Hybrid Cloud Architecture v1 - LKPP',
-                'PROP-119 Smart Logistics & POS v3 - PT Retail Nusantara',
-                'PROP-122 Industrial Automation SCADA v2 - PT Cakra Solusi',
-                'PROP-125 Warehouse Management RFID v1 - Pelindo Logistik',
-                'PROP-128 Core Banking API Integration v2 - Bank Mandiri',
-                'PROP-131 24/7 SLA Managed Services v1 - PT Telaga Biru Energi',
-                'PROP-134 Cyber Security Assessment v1 - OJK RI',
-                'PROP-137 Fleet Tracking IoT Platform v2 - PT Samudera Maritim',
-                'PROP-140 Digital Quality Assurance v1 - PT Bio Farma'
+                'PROP-2026 Enterprise ERP Solution - PT Krakatau Steel',
+                'PROP-2026 Hybrid Cloud Architecture - LKPP',
+                'PROP-2025 Smart Logistics & POS - PT Retail Nusantara',
+                'PROP-2025 Industrial Automation SCADA - PT Cakra Solusi',
+                'PROP-2024 Warehouse Management RFID - Pelindo Logistik',
+                'PROP-2024 Core Banking API Integration - Bank Mandiri',
+                'PROP-2023 24/7 SLA Managed Services - PT Telaga Biru Energi',
+                'PROP-2023 Cyber Security Assessment - OJK RI'
             ];
             return $props[$i % count($props)];
         }
@@ -1275,8 +1397,22 @@ class DatabaseSeeder extends Seeder
             return $banks[$i % count($banks)];
         }
 
-        // Realistic Indonesian Reasons / Notes / Mitigations
-        if (str_contains($name, 'alasan') || str_contains($name, 'reason') || str_contains($name, 'catatan') || str_contains($name, 'mitigasi') || str_contains($name, 'action') || str_contains($name, 'root cause')) {
+        // Segment / Market / Industry
+        if (str_contains($name, 'segment') || str_contains($name, 'segmen')) {
+            $segs = ['Enterprise B2B', 'Manufaktur Presisi', 'Energi & Migas', 'Logistik & Maritim', 'BUMN & Pemerintahan', 'Teknologi & Solusi'];
+            return $segs[$i % count($segs)];
+        }
+        if (str_contains($name, 'market')) {
+            $markets = ['Industri Manufaktur', 'Minyak & Gas Bumi', 'Logistik Nasional', 'Pemerintahan / Smart City', 'Finansial & Perbankan', 'Kesehatan & Farmasi'];
+            return $markets[$i % count($markets)];
+        }
+        if (str_contains($name, 'industry')) {
+            $indus = ['Manufaktur Presisi', 'Minyak & Gas', 'Teknologi Informasi', 'Logistik Terpadu', 'Agroindustri', 'Telekomunikasi'];
+            return $indus[$i % count($indus)];
+        }
+
+        // Realistic Indonesian Reasons / Notes / Mitigations / Root Cause / Actions
+        if (str_contains($name, 'alasan') || str_contains($name, 'reason') || str_contains($name, 'catatan') || str_contains($name, 'mitigasi') || str_contains($name, 'action') || str_contains($name, 'root cause') || str_contains($name, 'deskripsi') || str_contains($name, 'tindakan') || str_contains($name, 'detail')) {
             $reasons = [
                 'Penyesuaian kuantitas fisik hasil stock opname berkala',
                 'Perubahan spesifikasi teknis sesuai addendum kontrak klien',
@@ -1287,7 +1423,9 @@ class DatabaseSeeder extends Seeder
                 'Revisi termin pembayaran dari Net 30 menjadi Net 45',
                 'Integrasi modul otomatisasi pelaporan keuangan konsolidasi',
                 'Penyelarasan firmware modul sensor IoT di lapangan',
-                'Pelatihan penggunaan modul operasional untuk staf klien'
+                'Pelatihan penggunaan modul operasional untuk staf klien',
+                'Pemasangan kit isolasi grounding pada switch rack site',
+                'Sinkronisasi 240 SKU katalog sukses tanpa anomali data'
             ];
             return $reasons[$i % count($reasons)];
         }
@@ -1304,11 +1442,42 @@ class DatabaseSeeder extends Seeder
             return $kpis[$i % count($kpis)];
         }
 
-        // Fallback default realistic Indonesian text
+        // Technical Network / Security
+        if (str_contains($name, 'ip')) {
+            return '192.168.1.'.(10 + ($i * 7));
+        }
+        if (str_contains($name, 'device')) {
+            $devices = ['Windows 11 / Chrome 129', 'macOS Sonoma / Safari 18', 'Ubuntu 24.04 / Firefox 131', 'Android 15 / SOP Mobile App'];
+            return $devices[$i % count($devices)];
+        }
+        if (str_contains($name, 'method')) {
+            $methods = ['POST', 'GET', 'PUT', 'PATCH', 'DELETE'];
+            return $methods[$i % count($methods)];
+        }
+        if (str_contains($name, 'endpoint')) {
+            $eps = ['/api/v1/quotations', '/api/v1/sales-orders', '/api/v1/invoices', '/api/v1/payments', '/api/v1/inventory/transfers'];
+            return $eps[$i % count($eps)];
+        }
+        if (str_contains($name, 'code')) {
+            $codes = ['200 OK', '201 Created', '200 OK', '204 No Content', '304 Not Modified'];
+            return $codes[$i % count($codes)];
+        }
+        if (str_contains($name, 'keputusan')) {
+            $deps = ['Allowed (Diizinkan)', 'Authorized (Terotentikasi)', 'Allowed (Diizinkan)', 'Challenged (2FA Verified)'];
+            return $deps[$i % count($deps)];
+        }
+        if (str_contains($name, 'sebelum')) {
+            return 'status: draft';
+        }
+        if (str_contains($name, 'sesudah')) {
+            return 'status: approved';
+        }
+
+        // Fallback default realistic Indonesian text (Never empty or dash)
         $defaults = [
-            'Selesai sesuai SLA', 'Dalam proses implementasi', 'Menunggu persetujuan manajemen',
+            'Selesai sesuai SLA', 'Dalam proses implementasi', 'Persetujuan manajemen diverifikasi',
             'Telah diverifikasi tim audit', 'Sesuai anggaran operasional', 'Sedang dalam pengujian UAT',
-            'Terdokumentasi lengkap', 'Aktif & termonitor', 'Dalam tinjauan berkala', 'Operasional normal'
+            'Terdokumentasi lengkap di vault', 'Aktif & termonitor 24/7', 'Dalam tinjauan berkala berkala', 'Operasional normal'
         ];
         return $defaults[$i % count($defaults)];
     }

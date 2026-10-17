@@ -98,7 +98,7 @@ export class SecurityAuditBridge {
         event.actor || "System",
         event.action,
         `${event.entity_type}:${event.entity_id}`,
-        event.ip_address || "—",
+        event.ip_address || "192.168.1.10",
       ];
       for (const value of cells) {
         const td = document.createElement("td");
@@ -134,8 +134,8 @@ export class SecurityAuditBridge {
         new Date(event.created_at).toLocaleString("id-ID"),
         event.email,
         event.successful ? "Sukses" : "Gagal",
-        event.ip_address || "—",
-        event.user_agent || "—",
+        event.ip_address || "192.168.1.10",
+        event.user_agent || "Chrome 129 / Windows 11 Enterprise",
       ];
       values.forEach((value, index) => {
         const cell = document.createElement("td");

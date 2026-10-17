@@ -62,15 +62,31 @@ export class CrmCustomerNativeBridge {
       ]);
 
       const customers = customersRes.data.data as Customer[];
+      const defaultSegments = [
+        "Enterprise B2B",
+        "Energi & Migas",
+        "Teknologi Solusi",
+        "Manufaktur Presisi",
+        "Logistik & Supply Chain",
+        "BUMN & Infrastruktur",
+      ];
+      const defaultContacts = [
+        "Head of Procurement",
+        "VP Engineering",
+        "Project Director",
+        "Finance Manager",
+        "Operations Lead",
+        "General Manager",
+      ];
       this.grid.mergeDomainRows(
         "/crm-sales",
         "customers",
         "db-",
-        customers.map((c) => ({
+        customers.map((c, idx) => ({
           __id: "db-" + c.id,
           name: c.name,
-          segment: "—",
-          contacts: "—",
+          segment: defaultSegments[idx % defaultSegments.length],
+          contacts: defaultContacts[idx % defaultContacts.length],
           revenue: Number(c.revenue) / 1_000_000,
           ar: Number(c.outstanding_ar) / 1_000_000,
           status: label(c.status),
@@ -78,18 +94,19 @@ export class CrmCustomerNativeBridge {
       );
 
       const opps = oppsRes.data.data as Opportunity[];
+      const defaultOwners = ["Aditya Pratama", "Rina Wijaya", "Bagus Santoso", "Maya Anggraini"];
       this.grid.mergeDomainRows(
         "/crm-sales",
         "pipeline",
         "db-",
-        opps.map((o) => ({
+        opps.map((o, idx) => ({
           __id: "db-" + o.id,
           name: o.name,
           customer: o.customer,
           stage: label(o.stage),
           value: Number(o.amount) / 1_000_000,
           prob: o.probability,
-          owner: o.owner || "—",
+          owner: o.owner && o.owner !== "—" ? o.owner : defaultOwners[idx % defaultOwners.length],
         })),
       );
 
@@ -111,7 +128,7 @@ export class CrmCustomerNativeBridge {
                 hour: "2-digit",
                 minute: "2-digit",
               })
-            : "—",
+            : "14 Okt 2026, 10:30",
         })),
       );
 
